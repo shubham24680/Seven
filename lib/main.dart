@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:netflix/routes/routes.dart';
 import 'package:netflix/theme/dark.dart';
 import 'package:netflix/view/home/home.dart';
-import 'package:netflix/view_model/show_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:netflix/view_model/shows_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => ShowProvider(),
+          create: (context) => ShowsProvider(),
         ),
       ],
       child: MaterialApp(

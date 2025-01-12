@@ -7,8 +7,8 @@ class Api {
   static const String baseUrl = "https://api.tvmaze.com";
 
   // fetch the products from Rapid
-  Future<List<Item>> fetchShows(String genre) async {
-    final url = Uri.parse('$baseUrl/search/shows');
+  Future<List<Item>> fetchShows() async {
+    final url = Uri.parse('$baseUrl/search/shows?q=all');
 
     try {
       final response = await http.get(url);
