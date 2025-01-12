@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +13,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<ShowsProvider>(context, listen: false).fetchCategories();
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -31,7 +34,7 @@ class Home extends StatelessWidget {
         body: Consumer<ShowsProvider>(
           builder: (_, value, __) {
             final shows = value.shows;
-            print(shows.toString());
+            log(shows.toString());
             return ShowList(shows: shows);
           },
         ),

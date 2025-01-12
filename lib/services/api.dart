@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:netflix/model/item.dart';
 
@@ -9,9 +10,9 @@ class Api {
   // fetch the products from Rapid
   Future<List<Item>> fetchShows() async {
     final url = Uri.parse('$baseUrl/search/shows?q=all');
-
+    final response = await http.get(url);
+    log(response.body);
     try {
-      final response = await http.get(url);
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = json.decode(response.body);
         return jsonData
