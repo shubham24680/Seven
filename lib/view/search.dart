@@ -6,13 +6,8 @@ class Search extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Quicksand(text: "Search"),
-      ),
-      body: Center(
-        child: Quicksand(text: "Search"),
-      ),
+    return Center(
+      child: Quicksand(text: "Search"),
     );
   }
 }

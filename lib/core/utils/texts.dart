@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:netflix/core/utils/colors.dart';
 
 class Quicksand extends StatelessWidget {
-  const Quicksand(
-      {super.key,
-      required this.text,
-      this.color,
-      this.size,
-      this.weight,
-      this.maxLines});
+  const Quicksand({
+    super.key,
+    required this.text,
+    this.color,
+    this.size,
+    this.weight,
+    this.maxLines,
+  });
 
   final String text;
   final Color? color;
@@ -26,7 +27,7 @@ class Quicksand extends StatelessWidget {
         fontFamily: 'Quicksand',
         color: color ?? white,
         fontSize: size ?? 12,
-        fontWeight: weight ?? FontWeight.normal,
+        fontWeight: weight ?? FontWeight.bold,
       ),
     );
   }
