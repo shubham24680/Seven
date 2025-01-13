@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:netflix/core/utils/texts.dart';
+import 'package:netflix/core/widgets/texts.dart';
 
 class TextTile extends StatelessWidget {
   const TextTile({super.key, required this.question, required this.answer});

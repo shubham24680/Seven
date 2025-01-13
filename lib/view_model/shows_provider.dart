@@ -5,7 +5,7 @@ import 'package:netflix/services/api.dart';
 class ShowsProvider extends ChangeNotifier {
   final Api _api = Api();
   int _currentIndex = 0;
-  final List<Item> _shows = [];
+  List<Item> _shows = [];
 
   List<Item> get shows => _shows;
   int get currentIndex => _currentIndex;
@@ -17,7 +17,7 @@ class ShowsProvider extends ChangeNotifier {
 
   Future<void> fetchCategories() async {
     _shows.clear();
-    _shows.addAll(await _api.fetchShows());
+    _shows = await _api.fetchShows("all");
     notifyListeners();
   }
 }
