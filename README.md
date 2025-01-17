@@ -1,4 +1,4 @@
 # Screenshots 📱
-<p align="center"><img src="https://github.com/shubham24680/Fit_Fusion/blob/main/assets/pictures/Splash%20screen.png" alt="Splash Screen" width="250">
-<img src="https://github.com/shubham24680/Fit_Fusion/blob/main/assets/pictures/Onboarding%20Screen.png" alt="Onboarding Screen" width="250">
-<img src="https://github.com/shubham24680/Fit_Fusion/blob/main/assets/pictures/Home.png" alt="Home Screen" width="250"></p>
+<p align="center"><img src="https://github.com/shubham24680/Netflix/blob/main/assets/pictures/Day%204.png" alt="App Screen">
+<img src="https://github.com/shubham24680/Netflix/blob/main/assets/pictures/Day%204%20desktop.png" alt="Desktop Screen">
+<img src="https://github.com/shubham24680/Netflix/blob/main/assets/pictures/Day%204%20details.png" alt="Details Screen"></p>
