@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:netflix/core/widgets/icon_buttons.dart';
 import 'package:provider/provider.dart';
 
 import 'package:netflix/view_model/shows_provider.dart';
