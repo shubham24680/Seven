@@ -12,7 +12,7 @@
   description: Tasks related to user sign-in, sign-up, and auth flows.
 
 - name: services
-  color: 006b75
+  color: '006b75'
   description: 3rd-party APIs, Firebase, or microservices.
 
 - name: optimize
@@ -32,7 +32,7 @@
   description: Design system, assets, or UI/UX updates.
 
 - name: deployment
-  color: 0052cc
+  color: '0052cc'
   description: CI/CD, build pipeline, or publishing to stores.
 
 - name: research
