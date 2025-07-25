@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:seven/app/app.dart';
 
 Color white = Colors.white;
 Color grey = Colors.grey.shade800;
