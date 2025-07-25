@@ -1,0 +1,48 @@
+# 💻 General development labels
+- name: frontend
+  color: 1d76db
+  description: Tasks related to UI and client-side code.
+
+- name: backend
+  color: 119DA4
+  description: Server-side logic, APIs, and cloud functions.
+
+- name: authentication
+  color: b60205
+  description: Tasks related to user sign-in, sign-up, and auth flows.
+
+- name: services
+  color: 006b75
+  description: 3rd-party APIs, Firebase, or microservices.
+
+- name: optimize
+  color: f9d0c4
+  description: Performance improvements or refactoring.
+
+- name: minor improvement
+  color: c5def5
+  description: Small UI/UX tweaks or polish.
+
+- name: test
+  color: fbca04
+  description: Writing or fixing unit, widget, or integration tests.
+
+- name: design
+  color: ffcc00
+  description: Design system, assets, or UI/UX updates.
+
+- name: deployment
+  color: 0052cc
+  description: CI/CD, build pipeline, or publishing to stores.
+
+- name: research
+  color: d4c5f9
+  description: Spikes, experiments, or investigations.
+
+- name: security
+  color: b60205
+  description: Tasks related to vulnerabilities or data protection.
+
+- name: blocker
+  color: b60205
+  description: This issue blocks progress on other work.
