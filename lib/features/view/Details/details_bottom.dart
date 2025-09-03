@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:seven/core/common/icon_buttons.dart';
-import 'package:seven/core/common/texts.dart';
+import 'package:seven/core/custom/buttons/icon_buttons.dart';
+import 'package:seven/core/custom/text.dart';
 import 'package:seven/model/item.dart';
 import 'package:seven/features/view/Details/text_tile.dart';
 import 'package:seven/features/view/home/heading.dart';
@@ -17,7 +17,7 @@ class DetailsBottom extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Summary
-        Quicksand(
+        CustomText(
           maxLines: 10,
           text: show.summary,
           // text: "To create a BottomNavigationBar in Flutter using the"

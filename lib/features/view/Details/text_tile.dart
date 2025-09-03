@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:seven/core/common/texts.dart';
+import 'package:seven/core/custom/text.dart';
 
 class TextTile extends StatelessWidget {
   const TextTile({super.key, required this.question, required this.answer});
@@ -12,10 +12,10 @@ class TextTile extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: Wrap(
         children: [
-          Quicksand(
+          CustomText(
             text: question,
           ),
-          Quicksand(
+          CustomText(
             text: answer,
             weight: FontWeight.normal,
           ),

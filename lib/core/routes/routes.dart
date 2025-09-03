@@ -2,11 +2,11 @@ import 'package:seven/app/app.dart';
 
 final GoRouter routes = GoRouter(
   routes: List.generate(
-    AppConstants.appRoutes.length,
+    AppConstants.APP_ROUTES.length,
     (index) => GoRoute(
-      path: AppConstants.appRoutes[index].path,
+      path: AppConstants.APP_ROUTES[index].path,
       pageBuilder: (context, state) =>
-          FadeTransistionPage(child: AppConstants.appRoutes[index].child),
+          FadeTransistionPage(child: AppConstants.APP_ROUTES[index].child),
     ),
   ),
 );

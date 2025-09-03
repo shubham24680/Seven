@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:seven/core/utils/colors.dart';
-import 'package:seven/core/common/icon_buttons.dart';
-import 'package:seven/core/common/texts.dart';
+import 'package:seven/core/custom/buttons/icon_buttons.dart';
+import 'package:seven/core/custom/text.dart';
 
 Align closeButton(BuildContext context) {
   return Align(
@@ -43,7 +43,7 @@ class EButton extends StatelessWidget {
         children: [
           Icon(icons, color: forgroundColor),
           SizedBox(width: 5),
-          Quicksand(text: text, color: forgroundColor),
+          CustomText(text: text, color: forgroundColor),
         ],
       ),
     );

@@ -1,12 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:seven/core/routes/routes.dart';
-import 'package:seven/core/theme/dark_theme.dart';
-import 'package:seven/features/view_model/search_provider.dart';
-import 'package:seven/features/view_model/shows_provider.dart';
-import 'package:provider/provider.dart';
+import 'dart:io';
+import 'package:seven/app/app.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    setWindowTitle('Seven');
+    // setWindowMaxSize(const Size(max_width, max_height));
+    setWindowMinSize(const Size(700, 600));
+  }
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -14,15 +17,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => ShowsProvider()),
-        ChangeNotifierProvider(create: (context) => SearchProvider()),
-      ],
+    return ScreenUtilInit(
+      minTextAdapt: true,
       child: MaterialApp.router(
-        routerConfig: routes,
-        theme: dark,
         debugShowCheckedModeBanner: false,
+        title: "Seven",
+        routerConfig: routes,
+        theme: darkTheme,
       ),
     );
   }

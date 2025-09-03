@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:seven/core/utils/colors.dart';
-import 'package:seven/core/common/texts.dart';
+import 'package:seven/core/custom/text.dart';
 import 'package:seven/features/view_model/shows_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -25,7 +25,7 @@ class HomeSearch extends StatelessWidget {
           children: [
             Icon(Icons.search, color: grey),
             SizedBox(width: 5),
-            Quicksand(
+            CustomText(
               text: "Search Shows, Animation...",
               color: grey,
               size: 16,

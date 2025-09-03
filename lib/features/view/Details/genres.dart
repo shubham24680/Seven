@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:seven/core/common/texts.dart';
+import 'package:seven/core/custom/text.dart';
 
 Widget genres(List<dynamic> showGenres) {
   return // Genres
@@ -8,11 +8,11 @@ Widget genres(List<dynamic> showGenres) {
       showGenres.length,
       (index) => Wrap(
         children: [
-          Quicksand(
+          CustomText(
             text: showGenres[index],
             weight: FontWeight.normal,
           ),
-          if (index < showGenres.length - 1) Quicksand(text: " • "),
+          if (index < showGenres.length - 1) CustomText(text: " • "),
         ],
       ),
     ),

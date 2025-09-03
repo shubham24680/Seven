@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:seven/core/common/texts.dart';
+import 'package:seven/core/custom/text.dart';
 import 'package:seven/app/mobile/details.dart';
 import 'package:seven/features/view/Details/details.dart';
 import 'package:seven/features/view_model/shows_provider.dart';
@@ -58,8 +58,8 @@ class ShowList extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 10),
-                      Quicksand(text: show.title, weight: FontWeight.bold),
-                      Quicksand(
+                      CustomText(text: show.title, weight: FontWeight.bold),
+                      CustomText(
                         text: show.summary,
                         size: 10,
                         maxLines: 3,

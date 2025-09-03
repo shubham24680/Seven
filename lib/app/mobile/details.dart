@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:seven/core/common/texts.dart';
+import 'package:seven/core/custom/text.dart';
 import 'package:seven/model/item.dart';
 import 'package:seven/features/view/Details/buttons.dart';
 import 'package:seven/features/view/Details/details_bottom.dart';
@@ -30,7 +30,7 @@ class MobileDetails extends StatelessWidget {
               SizedBox(height: 20),
 
               // Title
-              Quicksand(text: show.title, size: 24),
+              CustomText(text: show.title, size: 24),
               genres(show.genres),
               SizedBox(height: 20),
               play,
