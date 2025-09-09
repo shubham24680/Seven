@@ -12,6 +12,8 @@ export 'routes/routes.dart';
 
 // SERVICES
 export 'services/api.dart';
+export 'services/base_services.dart';
+export 'services/movies_services.dart';
 
 // STORAGE
 export 'storage/storage.dart';
