@@ -86,7 +86,7 @@ class OnboadingScreen extends ConsumerWidget {
           decoration: BoxDecoration(
             // BACKGROUND IMAGE
             image: DecorationImage(
-              image: AssetImage(AppAssets.ONBOARDING_IMAGE[index]),
+              image: AssetImage(AppAssets.ONBOARDING_IMAGES[index]),
               fit: BoxFit.cover,
               alignment: const Alignment(-0.4, 0.0),
             ),

@@ -5,23 +5,42 @@ class Movies extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentIndex = ref.watch(currentIndexProvider);
+    final movieState = ref.watch(movieProvider);
+    final movieController = ref.read(movieProvider.notifier);
+
+    Widget buildIcon(String icon, int index) {
+      return SvgPicture.asset(
+        icon,
+        colorFilter: ColorFilter.mode(
+            (index == movieState.currentIndex) ? vividNightfall5 : black1,
+            BlendMode.srcIn),
+      );
+    }
 
     return Scaffold(
-      body: const Center(child: CustomText(text: "text")),
+      body: PageView.builder(
+        controller: movieState.pageController,
+        itemCount: AppAssets.BOTTOM_NAVIGATION_ICONS.length,
+        onPageChanged: (index) => movieController.moveToPage(index),
+        itemBuilder: (context, index) =>
+            AppAssets.BOTTOM_NAVIGATION_ICONS[index].screen,
+      ),
       bottomNavigationBar: BottomNavigationBar(
-        onTap: (index) => ref.read(currentIndexProvider.notifier).state = index,
-        currentIndex: currentIndex,
+        onTap: (index) => movieController.jumpToPage(index),
+        currentIndex: movieState.currentIndex,
         backgroundColor: black4,
         selectedItemColor: vividNightfall5,
         unselectedItemColor: black1,
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-        ],
+        items: List.generate(
+          AppAssets.BOTTOM_NAVIGATION_ICONS.length,
+          (index) => BottomNavigationBarItem(
+            icon:
+                buildIcon(AppAssets.BOTTOM_NAVIGATION_ICONS[index].icon, index),
+            label: "Item$index",
+          ),
+        ),
       ),
     );
   }

@@ -8,5 +8,4 @@ export 'movies/providers/movies_provider.dart';
 export 'movies/screens/movies.dart';
 export 'movies/screens/home_screen.dart';
 export 'movies/screens/search_screen.dart';
-
-// PROFILE
+export 'movies/screens/profile_screen.dart';
