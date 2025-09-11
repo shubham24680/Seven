@@ -5,6 +5,11 @@ import 'package:seven/app/app.dart';
 enum ResponseType { GET, POST, PUT, DELETE }
 
 class BaseService {
+  static BaseService? _instance;
+
+  BaseService._();
+  static BaseService get instance => _instance ??= BaseService._();
+
   Map<String, String> _headers({bool isJson = true}) {
     return {
       "Authorization": "Bearer ${ApiConstants.API_KEY}",
@@ -17,15 +22,16 @@ class BaseService {
       {required String apiHost,
       required String endPoint,
       required ResponseType responseType,
-      Map<String, String>? para}) {
+      Map<String, String>? body,
+      Map<String, String>? queryParams}) {
     String baseUrl = apiHost + endPoint;
     switch (responseType) {
       case ResponseType.GET:
-        return _get(baseUrl, queryParams: para);
+        return _get(baseUrl, queryParams: queryParams);
       case ResponseType.POST:
-        return _post(baseUrl, body: para);
+        return _post(baseUrl, body: body);
       case ResponseType.PUT:
-        return _put(baseUrl, body: para);
+        return _put(baseUrl, body: body);
       case ResponseType.DELETE:
         return _delete(baseUrl);
     }

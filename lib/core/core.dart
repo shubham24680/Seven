@@ -11,9 +11,10 @@ export 'packages/app_packages.dart';
 export 'routes/routes.dart';
 
 // SERVICES
-export 'services/api.dart';
+export 'services/api.dart'; //TODO - Replace the code with new one.
 export 'services/base_services.dart';
 export 'services/movies_services.dart';
+export 'services/network.dart';
 
 // STORAGE
 export 'storage/storage.dart';

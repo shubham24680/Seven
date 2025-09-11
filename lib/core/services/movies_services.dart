@@ -1,14 +1,13 @@
 import 'package:seven/app/app.dart';
 
 class MoviesServices {
-  final BaseService _services = BaseService();
+  Future<List<MoviesModel>> fetchData() async {
+    final response = await BaseService.instance.fetchData(
+      apiHost: ApiConstants.API_HOST,
+      endPoint: ApiConstants.MOVIES,
+      responseType: ResponseType.GET,
+    );
 
-  // List<MoviesModel> fetchData() {
-  //   final response = _services.fetchData(
-  //       apiHost: ApiConstants.API_HOST,
-  //       endPoint: ApiConstants.MOVIES,
-  //       responseType: ResponseType.GET);
-
-  //   return response.map<MoviesModel>((json) => MoviesModel.fromJson(json)).toList();
-  // }
+    return response.map((json) => MoviesModel.fromJson(json)).toList();
+  }
 }
