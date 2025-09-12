@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:seven/app/app.dart';
 
@@ -6,14 +7,12 @@ enum ResponseType { GET, POST, PUT, DELETE }
 
 class BaseService {
   static BaseService? _instance;
-
   BaseService._();
   static BaseService get instance => _instance ??= BaseService._();
 
-  Map<String, String> _headers({bool isJson = true}) {
+  Map<String, String> _headers() {
     return {
-      "Authorization": "Bearer ${ApiConstants.API_KEY}",
-      if (isJson) "Content-Type": "application/json",
+      "Content-Type": "application/json",
       "Accept": "application/json",
     };
   }
@@ -24,9 +23,10 @@ class BaseService {
       required ResponseType responseType,
       Map<String, String>? body,
       Map<String, String>? queryParams}) {
-    String baseUrl = apiHost + endPoint;
+    String baseUrl = "$apiHost$endPoint?api_key=${ApiConstants.API_KEY}";
     switch (responseType) {
       case ResponseType.GET:
+        log("GET");
         return _get(baseUrl, queryParams: queryParams);
       case ResponseType.POST:
         return _post(baseUrl, body: body);
@@ -83,8 +83,10 @@ class BaseService {
     final body = response.body.isNotEmpty ? jsonDecode(response.body) : null;
 
     if (statusCode >= 200 && statusCode < 300) {
+      log("body -> $body");
       return body;
     } else {
+      log("BASE SERVICE ERROR");
       throw ApiException(
         statusCode: statusCode,
         message: body?["status_message"] ?? "Something went wrong",

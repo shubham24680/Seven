@@ -13,7 +13,7 @@ export 'routes/routes.dart';
 // SERVICES
 export 'services/api.dart'; //TODO - Replace the code with new one.
 export 'services/base_services.dart';
-export 'services/movies_services.dart';
+export 'services/shows_services.dart';
 export 'services/network.dart';
 
 // STORAGE

@@ -1,36 +1,36 @@
 import 'package:seven/app/app.dart';
 
-class Movies extends ConsumerWidget {
-  const Movies({super.key});
+class Shows extends ConsumerWidget {
+  const Shows({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final movieState = ref.watch(movieProvider);
-    final movieController = ref.read(movieProvider.notifier);
+    final showsState = ref.watch(showsProvider);
+    final showsController = ref.read(showsProvider.notifier);
 
     Widget buildIcon(String icon, int index) {
       return SvgPicture.asset(
         icon,
         colorFilter: ColorFilter.mode(
-            (index == movieState.currentIndex) ? vividNightfall5 : black1,
+            (index == showsState.currentIndex) ? vividNightfall5 : black1,
             BlendMode.srcIn),
       );
     }
 
     return Scaffold(
       body: PageView.builder(
-        controller: movieState.pageController,
+        controller: showsState.pageController,
         itemCount: AppAssets.BOTTOM_NAVIGATION_ICONS.length,
-        onPageChanged: (index) => movieController.moveToPage(index),
+        onPageChanged: (index) => showsController.moveToPage(index),
         itemBuilder: (context, index) =>
             AppAssets.BOTTOM_NAVIGATION_ICONS[index].screen,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        onTap: (index) => movieController.jumpToPage(index),
-        currentIndex: movieState.currentIndex,
+        onTap: (index) => showsController.jumpToPage(index),
+        currentIndex: showsState.currentIndex,
         backgroundColor: black4,
         selectedItemColor: vividNightfall5,
-        unselectedItemColor: black1,
+        unselectedItemColor: lightSteel1,
         showSelectedLabels: false,
         showUnselectedLabels: false,
         items: List.generate(

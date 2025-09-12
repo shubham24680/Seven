@@ -7,7 +7,7 @@ final ThemeData darkTheme = ThemeData(
   ),
   colorScheme: ColorScheme.dark(
     primary: lightSteel1,
-    secondary: voilet,
+    secondary: vividNightfall4,
     tertiary: lightSteel9,
   ),
 );

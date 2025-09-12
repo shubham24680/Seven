@@ -1,32 +1,17 @@
-import 'package:seven/app/app.dart';
-
-// class MoviesResponse extends Network<MoviesModel> {
-//   final MoviesModel? data;
-//   final String? message;
-//   final int? statusCode;
-
-//   MoviesResponse({required this.data, required this.message, required this.statusCode,});
-
-//   factory MoviesResponse.fromJson(Map<String, dynamic> json) {
-//     return MoviesResponse(data: json[], message: message, statusCode: statusCode)
-//   }
-
-// }
-
-class MoviesModel extends Network<MoviesModel> {
+class ShowsModel {
   final int? page;
   final List<Result>? results;
   final int? totalPages;
   final int? totalResults;
 
-  MoviesModel({
-    required this.page,
-    required this.results,
-    required this.totalPages,
-    required this.totalResults,
+  ShowsModel({
+    this.page,
+    this.results,
+    this.totalPages,
+    this.totalResults,
   });
 
-  factory MoviesModel.fromJson(Map<String, dynamic> json) => MoviesModel(
+  factory ShowsModel.fromJson(Map<String, dynamic> json) => ShowsModel(
         page: json["page"],
         results: json["results"]?.map((x) => Result.fromJson(x)).toList(),
         totalPages: json["total_pages"],
@@ -45,7 +30,7 @@ class MoviesModel extends Network<MoviesModel> {
 class Result {
   final bool? adult;
   final String? backdropPath;
-  final List<int>? genreIds;
+  final List<dynamic>? genreIds;
   final int? id;
   final String? originalLanguage;
   final String? originalTitle;
@@ -59,20 +44,20 @@ class Result {
   final int? voteCount;
 
   Result({
-    required this.adult,
-    required this.backdropPath,
-    required this.genreIds,
-    required this.id,
-    required this.originalLanguage,
-    required this.originalTitle,
-    required this.overview,
-    required this.popularity,
-    required this.posterPath,
-    required this.releaseDate,
-    required this.title,
-    required this.video,
-    required this.voteAverage,
-    required this.voteCount,
+    this.adult,
+    this.backdropPath,
+    this.genreIds,
+    this.id,
+    this.originalLanguage,
+    this.originalTitle,
+    this.overview,
+    this.popularity,
+    this.posterPath,
+    this.releaseDate,
+    this.title,
+    this.video,
+    this.voteAverage,
+    this.voteCount,
   });
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
