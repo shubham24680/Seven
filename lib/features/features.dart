@@ -7,5 +7,6 @@ export 'movies/providers/shows_provider.dart';
 
 export 'movies/screens/shows.dart';
 export 'movies/screens/home_screen.dart';
-export 'movies/screens/search_screen.dart';
 export 'movies/screens/profile_screen.dart';
+export 'movies/screens/save_screen.dart';
+export 'movies/screens/search_screen.dart';

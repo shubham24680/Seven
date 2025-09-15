@@ -7,6 +7,8 @@ Color grey = Colors.grey.shade800;
 Color darkGrey = Colors.grey.shade900;
 Color red = Colors.red;
 
+Color transparent = Colors.transparent;
+
 Color lightSteel1 = const Color(0xFFF8F9FA);
 Color lightSteel2 = const Color(0xFFE9ECEF);
 Color lightSteel3 = const Color(0xFFDEE2E6);

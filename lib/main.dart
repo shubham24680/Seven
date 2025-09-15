@@ -1,14 +1,7 @@
-import 'dart:io';
 import 'package:seven/app/app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    setWindowTitle('Seven');
-    // setWindowMaxSize(const Size(max_width, max_height));
-    setWindowMinSize(const Size(700, 600));
-  }
   runApp(const ProviderScope(child: MyApp()));
 }
 

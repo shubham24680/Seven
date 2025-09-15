@@ -1,56 +1,83 @@
+import 'dart:developer';
+
 import 'package:seven/app/app.dart';
 
+// ignore: must_be_immutable
 class HomeScreen extends ConsumerWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
+
+  final List<String> _collections = [
+    "Top 20 Movies",
+    "Action",
+    "Adventures",
+    "TV Shows",
+    "Horror"
+  ];
+  final horizontalPadding = 15.0;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final showsState = ref.watch(showsProvider);
     final showsController = ref.read(showsProvider.notifier);
+    final width = 1.sw;
+    final height = 1.5 * width;
 
-    return Builder(builder: (context) {
-      if (showsState.status.isLoading) {
-        return Center(child: CircularProgressIndicator(color: vividNightfall4));
+    if (showsState.status.isInitial) {
+      Future.microtask(() {
+        showsController.loadShows();
+      });
+    }
+
+    if (showsState.status.isLoading || showsState.status.isSuccess) {
+      Widget buildHeader() {
+        return SizedBox(
+            width: width,
+            height: height,
+            child: (showsState.status.isLoading)
+                ? customShimmer()
+                : PageView.builder(
+                    itemCount: showsState.shows.results!.length,
+                    itemBuilder: (context, index) => Stack(children: [
+                      CustomImage(
+                        imageUrl: showsState.shows.results![index].posterPath,
+                        placeholder: customShimmer(),
+                      ),
+                      Align(
+                          alignment: Alignment.topRight,
+                          child: const CustomIconButton(icon: AppAssets.PROFILE)
+                              .paddingFromLTRB(top: 40, right: 20))
+                    ]),
+                  ));
       }
 
-      if (showsState.status.isError) {
-        return Center(
-            child:
-                CustomText(text: "Error -> ${showsState.status.errorMessage}"));
-      }
-
-      if (showsState.status.isInitial) {
-        Future.microtask(() {
-          showsController.loadShows();
-        });
-        return const Center(child: CustomText(text: "Initial"));
-      }
-
-      if (showsState.status.isEmpty) {
-        return const Center(child: CustomText(text: "Empty"));
-      }
-
-      return Center(
-        child: (showsState.shows.results == null)
-            ? CustomText(
-                text: "Success -> ${showsState.status.successMessage}",
-              )
-            : CustomText(
-                text: "Title -> ${showsState.shows.results?[0].originalTitle}"),
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            buildHeader(),
+            ...List.generate(
+                _collections.length,
+                (index) => Column(children: [
+                      if (index != 0)
+                        Divider(
+                          color: black2,
+                        ).paddingSymmetric(horizontal: horizontalPadding),
+                      CustomCollection(
+                          collectionName: _collections[index],
+                          isLoading: showsState.status.isLoading,
+                          result: showsState.shows.results)
+                    ]))
+          ],
+        ),
       );
-    });
+    }
 
-    // return SingleChildScrollView(child:
-    // Column(
-    //   children: [
-    //     Image.asset("assets/images/one_piece.jpg"),
-    //     const CustomGenre(title: "Top 10 Movies"),
-    //     const CustomGenre(title: "Top 10 TV shows"),
-    //     const CustomGenre(title: "Apple TV+"),
-    //     const CustomGenre(title: "Action"),
-    //     const CustomGenre(title: "Adventure"),
-    //   ],
-    // ),
-    // );
+    if (showsState.status.isEmpty) {
+      return Center(
+          child:
+              CustomText(text: showsState.status.errorMessage ?? "No Shows"));
+    }
+
+    return Center(
+        child: CustomText(text: "Error -> ${showsState.status.errorMessage}"));
   }
 }

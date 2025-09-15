@@ -5,8 +5,9 @@ class CustomText extends StatelessWidget {
     super.key,
     required this.text,
     this.align,
-    this.family,
     this.maxLines,
+    this.overflow,
+    this.family,
     this.color,
     this.size,
     this.weight,
@@ -16,6 +17,7 @@ class CustomText extends StatelessWidget {
   final String text;
   final TextAlign? align;
   final int? maxLines;
+  final TextOverflow? overflow;
   final String? family;
   final Color? color;
   final double? size;
@@ -28,11 +30,11 @@ class CustomText extends StatelessWidget {
       text,
       textAlign: align,
       maxLines: maxLines,
-      overflow: TextOverflow.fade,
+      overflow: overflow ?? TextOverflow.clip,
       style: TextStyle(
         fontFamily: family ?? AppAssets.POPPINS,
         color: color,
-        fontSize: size,
+        fontSize: size ?? 0.02.sh,
         fontWeight: weight,
         height: height,
       ),

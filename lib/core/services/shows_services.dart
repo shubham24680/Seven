@@ -15,11 +15,7 @@ class ShowsServices {
         responseType: ResponseType.GET,
       );
 
-      if (response == null) {
-        throw ApiException(statusCode: 0, message: "No data");
-      }
-
-      return ShowsModel.fromJson(response);
+      return response != null ? ShowsModel.fromJson(response) : ShowsModel();
     } on ApiException {
       rethrow;
     } catch (e) {

@@ -4,21 +4,13 @@ import 'package:seven/app/app.dart';
 class ShowsState {
   final ShowsModel shows;
   final Network status;
-  final PageController pageController;
   final int currentIndex;
 
   ShowsState(
-      {required this.shows,
-      required this.status,
-      required this.pageController,
-      required this.currentIndex});
+      {required this.shows, required this.status, required this.currentIndex});
 
   factory ShowsState.initial() {
-    return ShowsState(
-        shows: ShowsModel(),
-        status: Network(),
-        pageController: PageController(initialPage: 0),
-        currentIndex: 0);
+    return ShowsState(shows: ShowsModel(), status: Network(), currentIndex: 0);
   }
 
   // To Change Value
@@ -26,7 +18,6 @@ class ShowsState {
     return ShowsState(
         shows: shows ?? this.shows,
         status: status ?? this.status,
-        pageController: pageController,
         currentIndex: currentIndex ?? this.currentIndex);
   }
 }
@@ -42,13 +33,20 @@ class ShowsProvider extends StateNotifier<ShowsState> {
 
     try {
       final shows = await ShowsServices.instance.fetchShows();
-      state = state.copyWith(
-        shows: shows,
-        status: Network(
-          apiStatus: ApiStatus.SUCCESS,
-          successMessage: 'Shows loaded successfully',
-        ),
-      );
+
+      if (shows.results != null) {
+        state = state.copyWith(
+          shows: shows,
+          status: Network(
+            apiStatus: ApiStatus.SUCCESS,
+            successMessage: "Shows loaded successfully",
+          ),
+        );
+      } else {
+        state = state.copyWith(
+            status:
+                Network(apiStatus: ApiStatus.EMPTY, errorMessage: "No Shows"));
+      }
     } on ApiException catch (e) {
       state = state.copyWith(
           status:
@@ -67,15 +65,6 @@ class ShowsProvider extends StateNotifier<ShowsState> {
   void moveToPage(int index) {
     state = state.copyWith(currentIndex: index);
     log("INDEX -> ${state.currentIndex}");
-  }
-
-  // Move page using button
-  void jumpToPage(int index) {
-    state.pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
   }
 }
 

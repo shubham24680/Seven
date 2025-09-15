@@ -29,11 +29,7 @@ class OnboadingScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           // HEADING
-          ResponsiveLayout(
-            desktop: buildHeading(index),
-            tablet: buildHeading(index),
-            mobile: buildHeading(index, size: 32.sp),
-          ),
+          buildHeading(index, size: 32.sp),
           const SizedBox(height: 20),
 
           // DESCRIPTION

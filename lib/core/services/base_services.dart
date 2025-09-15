@@ -26,7 +26,7 @@ class BaseService {
     String baseUrl = "$apiHost$endPoint?api_key=${ApiConstants.API_KEY}";
     switch (responseType) {
       case ResponseType.GET:
-        log("GET");
+        // log("GET");
         return _get(baseUrl, queryParams: queryParams);
       case ResponseType.POST:
         return _post(baseUrl, body: body);

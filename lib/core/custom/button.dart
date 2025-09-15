@@ -31,3 +31,32 @@ class CustomElevatedButton extends StatelessWidget {
     );
   }
 }
+
+class CustomIconButton extends StatelessWidget {
+  const CustomIconButton({super.key, required this.icon, this.onTap});
+
+  final String icon;
+  final void Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return blurEffect(
+        3,
+        GestureDetector(
+          onTap: onTap ?? () {},
+          child: Container(
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                color: black5.withAlpha(70),
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: SvgPicture.asset(
+                icon,
+                height: 32,
+                colorFilter: ColorFilter.mode(
+                    lightSteel1.withAlpha(150), BlendMode.srcIn),
+              )),
+        ),
+        borderRadius: BorderRadius.circular(100));
+  }
+}
