@@ -28,56 +28,62 @@ class HomeScreen extends ConsumerWidget {
       });
     }
 
-    if (showsState.status.isLoading || showsState.status.isSuccess) {
-      Widget buildHeader() {
-        return SizedBox(
-            width: width,
-            height: height,
-            child: (showsState.status.isLoading)
-                ? customShimmer()
-                : PageView.builder(
-                    itemCount: showsState.shows.results!.length,
-                    itemBuilder: (context, index) => Stack(children: [
-                      CustomImage(
-                        imageUrl: showsState.shows.results![index].posterPath,
-                        placeholder: customShimmer(),
-                      ),
-                      Align(
-                          alignment: Alignment.topRight,
-                          child: const CustomIconButton(icon: AppAssets.PROFILE)
-                              .paddingFromLTRB(top: 40, right: 20))
-                    ]),
-                  ));
-      }
+    // if (showsState.status.isLoading || showsState.status.isSuccess) {
+    //   Widget buildHeader() {
+    //     return SizedBox(
+    //         width: width,
+    //         height: height,
+    //         child: (showsState.status.isLoading)
+    //             ? customShimmer()
+    //             : PageView.builder(
+    //                 itemCount: showsState.shows.results!.length,
+    //                 itemBuilder: (context, index) => Stack(children: [
+    //                   CustomImage(
+    //                     imageUrl: ApiConstants.IMAGE_PATH +
+    //                         (showsState.shows.results?[index].posterPath ?? ""),
+    //                     placeholder: customShimmer(),
+    //                   ),
+    //                   Align(
+    //                       alignment: Alignment.topRight,
+    //                       child: CustomIconButton(
+    //                               onTap: () {
+    //                                 log("button clicked");
+    //                                 showsController.refresh();
+    //                               },
+    //                               icon: AppAssets.REMOVE_TO_FAVOURITE)
+    //                           .paddingFromLTRB(top: 40, right: 20))
+    //                 ]),
+    //               ));
+    //   }
 
-      return SingleChildScrollView(
-        child: Column(
-          children: [
-            buildHeader(),
-            ...List.generate(
-                _collections.length,
-                (index) => Column(children: [
-                      if (index != 0)
-                        Divider(
-                          color: black2,
-                        ).paddingSymmetric(horizontal: horizontalPadding),
-                      CustomCollection(
-                          collectionName: _collections[index],
-                          isLoading: showsState.status.isLoading,
-                          result: showsState.shows.results)
-                    ]))
-          ],
-        ),
-      );
-    }
+    //   return SingleChildScrollView(
+    //     child: Column(
+    //       children: [
+    //         buildHeader(),
+    //         ...List.generate(
+    //             _collections.length,
+    //             (index) => Column(children: [
+    //                   if (index != 0)
+    //                     Divider(
+    //                       color: black2,
+    //                     ).paddingSymmetric(horizontal: horizontalPadding),
+    //                   CustomCollection(
+    //                       collectionName: _collections[index],
+    //                       isLoading: showsState.status.isLoading,
+    //                       result: showsState.shows.results)
+    //                 ]))
+    //       ],
+    //     ),
+    //   );
+    // }
 
-    if (showsState.status.isEmpty) {
-      return Center(
-          child:
-              CustomText(text: showsState.status.errorMessage ?? "No Shows"));
-    }
+    // if (showsState.status.isEmpty) {
+    //   return Center(
+    //       child:
+    //           CustomText(text: showsState.status.errorMessage ?? "No Shows"));
+    // }
 
-    return Center(
-        child: CustomText(text: "Error -> ${showsState.status.errorMessage}"));
+    log("Error -> ${showsState.status.errorMessage}");
+    return const ErrorScreen();
   }
 }

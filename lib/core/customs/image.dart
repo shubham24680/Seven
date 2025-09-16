@@ -19,16 +19,14 @@ class CustomImage extends StatelessWidget {
     return ClipRRect(
         borderRadius: borderRadius,
         child: CachedNetworkImage(
-            imageUrl: ApiConstants.IMAGE_PATH + (imageUrl ?? ""),
+            imageUrl: imageUrl ?? "",
             placeholder:
                 (placeholder != null) ? (context, url) => placeholder! : null,
             errorWidget: (context, url, error) => errorWidget,
             fit: fit ?? BoxFit.cover));
   }
 
-  SizedBox errorWidget = SizedBox(
-    width: double.infinity,
-    height: double.infinity,
+  SizedBox errorWidget = SizedBox.expand(
     child: Image.asset(
       "assets/images/placeholder_image.png",
       fit: BoxFit.cover,

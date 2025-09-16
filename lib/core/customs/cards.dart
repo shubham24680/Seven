@@ -72,7 +72,8 @@ class CustomCollection extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       children: [
         CustomImage(
-          imageUrl: result![index].backdropPath,
+          imageUrl:
+              ApiConstants.IMAGE_PATH + (result?[index].backdropPath ?? ""),
           borderRadius: BorderRadius.circular(borderRadius),
           placeholder: shimmer,
         ),
