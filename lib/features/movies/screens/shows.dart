@@ -12,17 +12,21 @@ class Shows extends ConsumerWidget {
       return SvgPicture.asset(
         icon,
         colorFilter: ColorFilter.mode(
-            (index == showsState.currentIndex) ? vividNightfall4 : black1,
+            (index == showsState.currentIndex)
+                ? AppColors.vividNightfall4
+                : AppColors.black1,
             BlendMode.srcIn),
       );
     }
 
     return Scaffold(
-      body: AppAssets.BOTTOM_NAVIGATION_ICONS[showsState.currentIndex].screen,
+      body: (showsState.status.isError)
+          ? const ErrorScreen()
+          : AppAssets.BOTTOM_NAVIGATION_ICONS[showsState.currentIndex].screen,
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) => showsController.moveToPage(index),
         currentIndex: showsState.currentIndex,
-        backgroundColor: black4,
+        backgroundColor: AppColors.black4,
         showSelectedLabels: false,
         showUnselectedLabels: false,
         type: BottomNavigationBarType.fixed,

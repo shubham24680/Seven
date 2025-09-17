@@ -5,6 +5,8 @@ class ErrorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final errorData = AppConstants.ERRORDATA;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -13,24 +15,20 @@ class ErrorScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomText(
-              text: "oh no!",
-              family: AppAssets.STAATLICHES,
-              size: 0.04.sh,
-            ),
-            CustomText(
-              text:
-                  "No internet connection.\nCheck your network and try again.",
-              size: 0.015.sh,
-            ),
+                text: errorData.title,
+                family: AppAssets.STAATLICHES,
+                size: 0.04.sh),
+            CustomText(text: errorData.subtitle, size: 0.015.sh)
           ],
-        ).paddingSymmetric(horizontal: 20),
-        SvgPicture.asset(
-          AppAssets.NO_INTERNET,
-          width: 1.sw,
         ),
-        CustomElevatedButton(child: CustomText(text: "Try again"))
-            .paddingSymmetric(horizontal: 20)
+        SvgPicture.asset(errorData.image,
+            width: 1.sw), //TODO: Replace with CustomImage
+        CustomButton(
+            buttonType: ButtonType.ELEVATED,
+            height: 0.065.sh,
+            child:
+                CustomText(text: errorData.buttonText, weight: FontWeight.w900))
       ],
-    );
+    ).paddingSymmetric(horizontal: AppConstants.SIDE_PADDING);
   }
 }

@@ -36,13 +36,13 @@ class OnboadingScreen extends ConsumerWidget {
           CustomText(
             text: AppConstants.ONBOARDING_TEXT[index]['description']!,
             align: TextAlign.end,
-            color: lightSteel1.withAlpha(170),
+            color: AppColors.lightSteel1.withAlpha(170),
             size: 12.sp,
           ),
           const SizedBox(height: 20),
 
           // NEXT BUTTON
-          CustomElevatedButton(
+          CustomButton(
             onPressed: () {
               if (index + 1 < AppConstants.ONBOARDING_TEXT.length) {
                 pageController.jumpToPage(pageState.currentIndex + 1);
@@ -61,7 +61,7 @@ class OnboadingScreen extends ConsumerWidget {
                 Icon(
                   Icons.arrow_forward,
                   size: 14.sp,
-                  color: lightSteel1,
+                  color: AppColors.lightSteel1,
                 ),
               ],
             ),

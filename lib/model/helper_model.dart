@@ -13,3 +13,13 @@ class BottomNavigation {
 
   BottomNavigation({required this.icon, required this.screen});
 }
+
+class ErrorData {
+  final String title, subtitle, image, buttonText;
+
+  ErrorData(
+      {required this.title,
+      required this.subtitle,
+      required this.image,
+      required this.buttonText});
+}

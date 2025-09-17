@@ -85,7 +85,7 @@ class CustomCollection extends StatelessWidget {
                 width: width,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: black5.withAlpha(70),
+                  color: AppColors.black5.withAlpha(70),
                 ),
                 child: CustomText(
                   text: result![index].title!,
