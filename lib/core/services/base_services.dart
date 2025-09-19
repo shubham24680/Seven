@@ -26,7 +26,6 @@ class BaseService {
     String baseUrl = "$apiHost$endPoint?api_key=${ApiConstants.API_KEY}";
     switch (responseType) {
       case ResponseType.GET:
-        // log("GET");
         return _get(baseUrl, queryParams: queryParams);
       case ResponseType.POST:
         return _post(baseUrl, body: body);
@@ -83,10 +82,10 @@ class BaseService {
     final body = response.body.isNotEmpty ? jsonDecode(response.body) : null;
 
     if (statusCode >= 200 && statusCode < 300) {
-      log("body -> $body");
+      log("Successfull getting response from base services");
       return body;
     } else {
-      log("BASE SERVICE ERROR");
+      log("base services error");
       throw ApiException(
         statusCode: statusCode,
         message: body?["status_message"] ?? "Something went wrong",

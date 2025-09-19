@@ -32,7 +32,7 @@ class CustomText extends StatelessWidget {
       maxLines: maxLines,
       overflow: overflow ?? TextOverflow.clip,
       style: TextStyle(
-        fontFamily: family ?? AppAssets.POPPINS,
+        fontFamily: family ?? AppFonts.POPPINS,
         color: color,
         fontSize: size ?? 0.02.sh,
         fontWeight: weight,

@@ -1,7 +1,9 @@
 import 'package:seven/app/app.dart';
 
 class ErrorScreen extends StatelessWidget {
-  const ErrorScreen({super.key});
+  const ErrorScreen({super.key, this.onPressed});
+
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -16,16 +18,20 @@ class ErrorScreen extends StatelessWidget {
           children: [
             CustomText(
                 text: errorData.title,
-                family: AppAssets.STAATLICHES,
+                family: AppFonts.STAATLICHES,
                 size: 0.04.sh),
             CustomText(text: errorData.subtitle, size: 0.015.sh)
           ],
         ),
-        SvgPicture.asset(errorData.image,
-            width: 1.sw), //TODO: Replace with CustomImage
+        CustomImage(
+          imageType: ImageType.SVG_LOCAL,
+          imageUrl: errorData.image,
+        ),
         CustomButton(
             buttonType: ButtonType.ELEVATED,
+            backgroundColor: AppColors.vividNightfall4,
             height: 0.065.sh,
+            onPressed: onPressed,
             child:
                 CustomText(text: errorData.buttonText, weight: FontWeight.w900))
       ],

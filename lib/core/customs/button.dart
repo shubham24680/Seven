@@ -6,13 +6,14 @@ class CustomButton extends StatelessWidget {
   const CustomButton(
       {super.key,
       this.buttonType,
-      this.blurValue = 4.0,
+      this.blurValue = 3.0,
       this.onPressed,
       this.backgroundColor,
       this.height,
       this.width,
       this.borderRadius,
-      required this.child});
+      this.child,
+      this.icon});
 
   final ButtonType? buttonType;
   final double blurValue;
@@ -21,7 +22,8 @@ class CustomButton extends StatelessWidget {
   final double? height;
   final double? width;
   final double? borderRadius;
-  final Widget child;
+  final Widget? child;
+  final String? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +47,15 @@ class CustomButton extends StatelessWidget {
     switch (buttonType) {
       case ButtonType.ELEVATED:
         baseButton = ElevatedButton(
-            onPressed: onPressed ?? () {},
+            onPressed: onPressed,
             style: ElevatedButton.styleFrom(
                 backgroundColor: widgetBackgroundColor,
                 minimumSize: getSize(),
                 shape: RoundedRectangleBorder(
-                    side: BorderSide(color: widgetBackgroundColor),
+                    side: BorderSide(
+                        color: onPressed == null
+                            ? AppColors.lightSteel8
+                            : widgetBackgroundColor),
                     borderRadius: widgetBorderRadius)),
             child: child);
         break;
@@ -61,13 +66,19 @@ class CustomButton extends StatelessWidget {
                 backgroundColor: widgetBackgroundColor,
                 shape:
                     RoundedRectangleBorder(borderRadius: widgetBorderRadius)),
-            child: child);
+            child: const CustomText(text: "No Button"));
         break;
       case ButtonType.ICON:
         baseButton = IconButton(
-          onPressed: onPressed ?? () {},
-          icon: child,
-        );
+            onPressed: onPressed ?? () {},
+            style: IconButton.styleFrom(
+                backgroundColor: backgroundColor, shape: const CircleBorder()),
+            icon: SvgPicture.asset(
+              icon ?? AppIcons.HOME,
+              height: 0.04.sh,
+              colorFilter: ColorFilter.mode(
+                  AppColors.lightSteel1.withAlpha(200), BlendMode.srcIn),
+            ));
         break;
       default:
         baseButton = const SizedBox.shrink();
@@ -79,34 +90,5 @@ class CustomButton extends StatelessWidget {
       baseButton,
       borderRadius: widgetBorderRadius,
     );
-  }
-}
-
-class CustomIconButton extends StatelessWidget {
-  const CustomIconButton({super.key, required this.icon, this.onTap});
-
-  final String icon;
-  final void Function()? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return blurEffect(
-        3,
-        GestureDetector(
-          onTap: onTap,
-          child: Container(
-              padding: const EdgeInsets.all(3),
-              decoration: BoxDecoration(
-                color: AppColors.black5.withAlpha(70),
-                borderRadius: BorderRadius.circular(100),
-              ),
-              child: SvgPicture.asset(
-                icon,
-                height: 32,
-                colorFilter: ColorFilter.mode(
-                    AppColors.lightSteel1.withAlpha(200), BlendMode.srcIn),
-              )),
-        ),
-        borderRadius: BorderRadius.circular(100));
   }
 }

@@ -15,7 +15,7 @@ class OnboadingScreen extends ConsumerWidget {
       return CustomText(
         text: AppConstants.ONBOARDING_TEXT[index]['heading']!,
         align: TextAlign.end,
-        family: AppAssets.STAATLICHES,
+        family: AppFonts.STAATLICHES,
         size: size ?? 16.sp,
         weight: FontWeight.w900,
         height: 1.3,

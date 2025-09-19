@@ -64,12 +64,8 @@ class ShowsProvider extends StateNotifier<ShowsState> {
 
   // Refresh the page
   void refresh() {
-    log("Refresh");
-    state = state.copyWith(
-        status: Network(
-            apiStatus: ApiStatus.INITIAL,
-            errorMessage: null,
-            successMessage: null));
+    log("Refresh - reloading shows");
+    loadShows();
   }
 
   // Update index when use controller

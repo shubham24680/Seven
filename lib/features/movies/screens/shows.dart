@@ -21,7 +21,7 @@ class Shows extends ConsumerWidget {
 
     return Scaffold(
       body: (showsState.status.isError)
-          ? const ErrorScreen()
+          ? ErrorScreen(onPressed: () => showsController.refresh())
           : AppAssets.BOTTOM_NAVIGATION_ICONS[showsState.currentIndex].screen,
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) => showsController.moveToPage(index),

@@ -51,7 +51,7 @@ class CustomCollection extends StatelessWidget {
         ? customShimmer(height: 0.03.sh, width: 0.5.sw, borderRadius: 0.01.sh)
         : CustomText(
             text: collectionName,
-            family: AppAssets.STAATLICHES,
+            family: AppFonts.STAATLICHES,
             size: 0.03.sh,
           );
 
@@ -72,6 +72,7 @@ class CustomCollection extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       children: [
         CustomImage(
+          imageType: ImageType.REMOTE,
           imageUrl:
               ApiConstants.IMAGE_PATH + (result?[index].backdropPath ?? ""),
           borderRadius: BorderRadius.circular(borderRadius),
