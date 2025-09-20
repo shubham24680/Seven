@@ -13,3 +13,8 @@ export 'movies/screens/home_screen.dart';
 export 'movies/screens/profile_screen.dart';
 export 'movies/screens/save_screen.dart';
 export 'movies/screens/search_screen.dart';
+
+export 'movies/widgets/home_carousel.dart';
+
+// DETAIL
+export 'detail/screens/detail_screen.dart';

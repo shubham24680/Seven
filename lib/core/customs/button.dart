@@ -72,10 +72,12 @@ class CustomButton extends StatelessWidget {
         baseButton = IconButton(
             onPressed: onPressed ?? () {},
             style: IconButton.styleFrom(
-                backgroundColor: backgroundColor, shape: const CircleBorder()),
+                backgroundColor:
+                    backgroundColor ?? AppColors.black5.withAlpha(70),
+                shape: const CircleBorder()),
             icon: SvgPicture.asset(
               icon ?? AppIcons.HOME,
-              height: 0.04.sh,
+              height: 0.03.sh,
               colorFilter: ColorFilter.mode(
                   AppColors.lightSteel1.withAlpha(200), BlendMode.srcIn),
             ));

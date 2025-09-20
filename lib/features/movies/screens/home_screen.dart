@@ -7,11 +7,10 @@ class HomeScreen extends ConsumerWidget {
   HomeScreen({super.key});
 
   final List<String> _collections = [
-    "Top 20 Movies",
-    "Action",
-    "Adventures",
-    "TV Shows",
-    "Horror"
+    "Now Playing",
+    "Popular",
+    "Top Rated",
+    "Upcoming",
   ];
   final horizontalPadding = 15.0;
 
@@ -19,8 +18,6 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final showsState = ref.watch(showsProvider);
     final showsController = ref.read(showsProvider.notifier);
-    final width = 1.sw;
-    final height = 1.5 * width;
 
     if (showsState.status.isInitial) {
       Future.microtask(() {
@@ -29,38 +26,15 @@ class HomeScreen extends ConsumerWidget {
     }
 
     if (showsState.status.isLoading || showsState.status.isSuccess) {
-      Widget buildHeader() {
-        return SizedBox(
-            width: width,
-            height: height,
-            child: (showsState.status.isLoading)
-                ? customShimmer()
-                : PageView.builder(
-                    itemCount: showsState.shows.results!.length,
-                    itemBuilder: (context, index) => Stack(children: [
-                      CustomImage(
-                        imageType: ImageType.REMOTE,
-                        imageUrl: ApiConstants.IMAGE_PATH +
-                            (showsState.shows.results?[index].posterPath ?? ""),
-                        placeholder: customShimmer(),
-                        height: height,
-                      ),
-                      Align(
-                          alignment: Alignment.topRight,
-                          child: CustomButton(
-                            buttonType: ButtonType.ICON,
-                            icon: AppIcons.ADD_TO_FAVOURITE,
-                            backgroundColor: AppColors.black5.withAlpha(70),
-                            borderRadius: 50.0,
-                          ).paddingFromLTRB(top: 40, right: 20))
-                    ]),
-                  ));
-      }
-
       return SingleChildScrollView(
         child: Column(
           children: [
-            buildHeader(),
+            (showsState.shows.results != null &&
+                    showsState.genre.genres != null)
+                ? HomeCarousel(
+                    results: showsState.shows.results!,
+                    genres: showsState.genre.genres!)
+                : customShimmer(),
             SizedBox(height: 0.02.sh),
             ...List.generate(
                 _collections.length,

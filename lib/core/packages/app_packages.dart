@@ -15,3 +15,6 @@ export 'package:shimmer/shimmer.dart';
 
 // UTILITIES
 export 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+// EFFECT
+export 'package:carousel_slider/carousel_slider.dart';

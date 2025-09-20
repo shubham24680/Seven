@@ -40,6 +40,7 @@ class BaseService {
   Future<dynamic> _get(String baseUrl,
       {Map<String, String>? queryParams}) async {
     final uri = Uri.parse(baseUrl).replace(queryParameters: queryParams);
+    log("uri -> $uri");
     final response = await http.get(uri, headers: _headers());
 
     return _processResponse(response);

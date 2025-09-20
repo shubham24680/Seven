@@ -1,10 +1,12 @@
 class ShowsModel {
+  final Dates? dates;
   final int? page;
   final List<Result>? results;
   final int? totalPages;
   final int? totalResults;
 
   ShowsModel({
+    this.dates,
     this.page,
     this.results,
     this.totalPages,
@@ -12,6 +14,7 @@ class ShowsModel {
   });
 
   factory ShowsModel.fromJson(Map<String, dynamic> json) => ShowsModel(
+      dates: json["dates"] != null ? Dates.fromJson(json["dates"]) : null,
       page: json["page"],
       results: (json["results"] as List<dynamic>?)
           ?.map((x) => Result.fromJson(x as Map<String, dynamic>))
@@ -20,11 +23,31 @@ class ShowsModel {
       totalResults: json["total_results"]);
 
   Map<String, dynamic> toJson() => {
+        "dates": dates?.toJson(),
         "page": page,
         "results":
             results != null ? results!.map((x) => x.toJson()).toList() : [],
         "total_pages": totalPages,
         "total_results": totalResults
+      };
+}
+
+class Dates {
+  final DateTime? maximum;
+  final DateTime? minimum;
+
+  Dates({this.maximum, this.minimum});
+
+  factory Dates.fromJson(Map<String, dynamic> json) => Dates(
+        maximum:
+            json["maximum"] != null ? DateTime.parse(json["maximum"]) : null,
+        minimum:
+            json["minimum"] != null ? DateTime.parse(json["minimum"]) : null,
+      );
+
+  Map<String, dynamic> toJson() => {
+        "maximum": maximum != null ? dateFormat(maximum!) : null,
+        "minimum": minimum != null ? dateFormat(minimum!) : null,
       };
 }
 
@@ -70,7 +93,9 @@ class Result {
       overview: json["overview"],
       popularity: json["popularity"]?.toDouble(),
       posterPath: json["poster_path"],
-      releaseDate: DateTime.parse(json["release_date"]),
+      releaseDate: json["release_date"] != null
+          ? DateTime.parse(json["release_date"])
+          : null,
       title: json["title"],
       video: json["video"],
       voteAverage: json["vote_average"]?.toDouble(),
@@ -86,11 +111,14 @@ class Result {
         "overview": overview,
         "popularity": popularity,
         "poster_path": posterPath,
-        "release_date":
-            "${releaseDate!.year.toString().padLeft(4, '0')}-${releaseDate!.month.toString().padLeft(2, '0')}-${releaseDate!.day.toString().padLeft(2, '0')}", //TODO - Make the data nullable.
+        "release_date": releaseDate != null ? dateFormat(releaseDate!) : null,
         "title": title,
         "video": video,
         "vote_average": voteAverage,
         "vote_count": voteCount
       };
+}
+
+String dateFormat(DateTime time) {
+  return "${time.year.toString().padLeft(4, '0')}-${time.month.toString().padLeft(2, '0')}-${time.day.toString().padLeft(2, '0')}";
 }

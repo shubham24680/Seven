@@ -94,7 +94,8 @@ class CustomCollection extends StatelessWidget {
                   align: TextAlign.center,
                   weight: FontWeight.w900,
                   maxLines: 1,
-                ),
+                  overflow: TextOverflow.ellipsis,
+                ).paddingSymmetric(horizontal: horizontalPadding),
               ),
               borderRadius:
                   BorderRadius.vertical(bottom: Radius.circular(borderRadius))),

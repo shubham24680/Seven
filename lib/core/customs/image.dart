@@ -21,8 +21,6 @@ class CustomImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("CustomImage fit parameter: $fit");
-
     Image localImage() {
       return Image.asset(
         imageUrl ?? AppImages.PLACEHOLDER,

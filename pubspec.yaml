@@ -55,16 +55,19 @@ dependencies:
   flutter_svg: ^2.0.10
   shimmer: ^3.0.0
 
-  # Utility
-  flutter_screenutil: ^5.9.3
-  intl: ^0.18.1
-  smooth_page_indicator: ^1.2.1
-
   # Windows
   window_size:
     git:
       url: https://github.com/google/flutter-desktop-embedding
       path: plugins/window_size
+
+  #Effects
+  carousel_slider: ^5.1.1
+
+  # Utility
+  flutter_screenutil: ^5.9.3
+  intl: ^0.18.1
+  smooth_page_indicator: ^1.2.1
   
 dev_dependencies:
   flutter_test:
