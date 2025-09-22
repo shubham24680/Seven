@@ -18,3 +18,6 @@ export 'movies/widgets/home_carousel.dart';
 
 // DETAIL
 export 'detail/screens/detail_screen.dart';
+
+// NOTIFICATION
+export 'notification/screens/notification_screen.dart';

@@ -29,7 +29,8 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final widgetBackgroundColor =
         backgroundColor ?? AppColors.lightSteel1.withAlpha(20);
-    final widgetBorderRadius = BorderRadius.circular(borderRadius ?? 0.01.sh);
+    final widgetBorderRadius = BorderRadius.circular(
+        borderRadius ?? (buttonType == ButtonType.ICON ? 1.sh : 0.01.sh));
 
     Size? getSize() {
       if (height != null && width != null) {
@@ -75,12 +76,10 @@ class CustomButton extends StatelessWidget {
                 backgroundColor:
                     backgroundColor ?? AppColors.black5.withAlpha(70),
                 shape: const CircleBorder()),
-            icon: SvgPicture.asset(
-              icon ?? AppIcons.HOME,
-              height: 0.03.sh,
-              colorFilter: ColorFilter.mode(
-                  AppColors.lightSteel1.withAlpha(200), BlendMode.srcIn),
-            ));
+            icon: SvgPicture.asset(icon ?? AppIcons.HOME,
+                height: 0.03.sh,
+                colorFilter: ColorFilter.mode(
+                    AppColors.lightSteel1.withAlpha(200), BlendMode.srcIn)));
         break;
       default:
         baseButton = const SizedBox.shrink();

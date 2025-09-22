@@ -16,14 +16,42 @@ class HomeCarousel extends ConsumerWidget {
 
     Widget buildChild(int index) {
       return GestureDetector(
-        onTap: () {},
-        child: CustomImage(
-            imageType: ImageType.REMOTE,
-            imageUrl:
-                ApiConstants.IMAGE_PATH + (results[index].posterPath ?? ""),
-            placeholder: customShimmer(),
-            borderRadius: BorderRadius.circular(0.1 * carouselHeight)),
-      );
+          onTap: () {},
+          child: Stack(
+            alignment: Alignment.topRight,
+            children: [
+              CustomImage(
+                  imageType: ImageType.REMOTE,
+                  imageUrl: ApiConstants.IMAGE_PATH +
+                      (results[index].posterPath ?? ""),
+                  placeholder: customShimmer(),
+                  borderRadius: BorderRadius.circular(0.1 * carouselHeight)),
+              Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: 0.02.sw, vertical: 0.005.sh),
+                decoration: BoxDecoration(
+                  color: AppColors.vividNightfall4,
+                  borderRadius: BorderRadius.circular(0.02.sh),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CustomImage(
+                      imageType: ImageType.SVG_LOCAL,
+                      imageUrl: AppSvgs.STAR,
+                      height: 0.02.sh,
+                    ),
+                    SizedBox(width: 3),
+                    CustomText(
+                      text: (results[index].voteAverage ?? 0.0)
+                          .toStringAsFixed(1),
+                      size: 0.015.sh,
+                    )
+                  ],
+                ),
+              ).paddingAll(0.02.sh),
+            ],
+          ));
     }
 
     return SizedBox(
@@ -53,17 +81,19 @@ class HomeCarousel extends ConsumerWidget {
                       child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          CustomButton(
-                            buttonType: ButtonType.ICON,
-                            icon: AppIcons.PROFILE,
+                          CustomImage(
+                            imageType: ImageType.LOCAL,
+                            imageUrl: "assets/images/boy.png",
+                            height: 0.048.sh,
+                            borderRadius: BorderRadius.circular(100),
                           ),
-                          CustomButton(
+                          const CustomButton(
                             buttonType: ButtonType.ICON,
-                            icon: AppIcons.ADD_TO_FAVOURITE,
-                          )
+                            icon: AppIcons.NOTIFICATION,
+                          ),
                         ],
                       ).paddingFromLTRB(top: 0.02 * height),
                       const Spacer(),

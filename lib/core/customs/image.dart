@@ -10,7 +10,9 @@ class CustomImage extends StatelessWidget {
       this.borderRadius = BorderRadius.zero,
       this.placeholder,
       this.fit,
-      this.height});
+      this.height,
+      this.onTap,
+      this.color});
 
   final ImageType imageType;
   final String? imageUrl;
@@ -18,6 +20,8 @@ class CustomImage extends StatelessWidget {
   final Widget? placeholder;
   final BoxFit? fit;
   final double? height;
+  final void Function()? onTap;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -25,34 +29,39 @@ class CustomImage extends StatelessWidget {
       return Image.asset(
         imageUrl ?? AppImages.PLACEHOLDER,
         fit: fit ?? BoxFit.cover,
+        height: height,
       );
     }
 
     Widget image;
     switch (imageType) {
       case ImageType.REMOTE:
-        image = ClipRRect(
-            borderRadius: borderRadius,
-            child: CachedNetworkImage(
-                imageUrl: imageUrl ?? "",
-                placeholder: (placeholder != null)
-                    ? (context, url) => placeholder!
-                    : null,
-                errorWidget: (context, url, error) => localImage(),
-                fit: fit ?? BoxFit.cover,
-                height: height));
+        image = CachedNetworkImage(
+            imageUrl: imageUrl ?? "",
+            placeholder:
+                (placeholder != null) ? (context, url) => placeholder! : null,
+            errorWidget: (context, url, error) => localImage(),
+            fit: fit ?? BoxFit.cover,
+            height: height);
         break;
       case ImageType.SVG_LOCAL:
-        image = SvgPicture.asset(
-          imageUrl ?? AppSvgs.NO_CONNECTION,
-          fit: fit ?? BoxFit.contain,
-        );
+        image = SvgPicture.asset(imageUrl ?? AppSvgs.STAR,
+            height: height ?? 0.03.sh,
+            fit: fit ?? BoxFit.contain,
+            colorFilter: ColorFilter.mode(
+                AppColors.lightSteel1.withAlpha(200), BlendMode.srcIn));
         break;
       default:
         image = localImage();
         break;
     }
 
-    return image;
+    return GestureDetector(
+      onTap: onTap,
+      child: ClipRRect(
+        borderRadius: borderRadius,
+        child: image,
+      ),
+    );
   }
 }

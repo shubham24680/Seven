@@ -29,12 +29,11 @@ class HomeScreen extends ConsumerWidget {
       return SingleChildScrollView(
         child: Column(
           children: [
-            (showsState.shows.results != null &&
-                    showsState.genre.genres != null)
-                ? HomeCarousel(
-                    results: showsState.shows.results!,
-                    genres: showsState.genre.genres!)
-                : customShimmer(),
+            if (showsState.shows.results != null &&
+                showsState.genre.genres != null)
+              HomeCarousel(
+                  results: showsState.shows.results!,
+                  genres: showsState.genre.genres!),
             SizedBox(height: 0.02.sh),
             ...List.generate(
                 _collections.length,
