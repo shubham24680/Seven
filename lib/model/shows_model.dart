@@ -1,9 +1,12 @@
+import 'package:seven/app/app.dart';
+
 class ShowsModel {
   final Dates? dates;
   final int? page;
   final List<Result>? results;
   final int? totalPages;
   final int? totalResults;
+  final Network? status;
 
   ShowsModel({
     this.dates,
@@ -11,6 +14,7 @@ class ShowsModel {
     this.results,
     this.totalPages,
     this.totalResults,
+    this.status,
   });
 
   factory ShowsModel.fromJson(Map<String, dynamic> json) => ShowsModel(
@@ -20,7 +24,8 @@ class ShowsModel {
           ?.map((x) => Result.fromJson(x as Map<String, dynamic>))
           .toList(),
       totalPages: json["total_pages"],
-      totalResults: json["total_results"]);
+      totalResults: json["total_results"],
+      status: Network());
 
   Map<String, dynamic> toJson() => {
         "dates": dates?.toJson(),

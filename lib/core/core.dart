@@ -24,7 +24,7 @@ export 'theme/dark_theme.dart';
 export 'utils/colors.dart';
 
 // CUSTOM
-export 'customs/extensions/padding.dart';
+export 'customs/extensions/helper_extension.dart';
 export 'customs/button.dart';
 export 'customs/cards.dart';
 export 'customs/helper_custom.dart';

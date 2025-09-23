@@ -24,3 +24,29 @@ Widget customShimmer({double? height, double? width, double? borderRadius}) {
     ),
   );
 }
+
+Widget customTag(String icon, String value) {
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 0.02.sw, vertical: 0.005.sh),
+    decoration: BoxDecoration(
+      color: AppColors.vividNightfall4,
+      borderRadius: BorderRadius.circular(0.02.sh),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CustomImage(
+          imageType: ImageType.SVG_LOCAL,
+          imageUrl: icon,
+          height: 0.02.sh,
+          color: AppColors.lightSteel1,
+        ),
+        const SizedBox(width: 5),
+        CustomText(
+          text: value,
+          size: 0.015.sh,
+        )
+      ],
+    ),
+  );
+}

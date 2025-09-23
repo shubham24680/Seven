@@ -18,3 +18,12 @@ extension PaddingExtension on Widget {
       paddingFromLTRB(
           left: horizontal, right: horizontal, top: vertical, bottom: vertical);
 }
+
+extension ClickExtension on Widget {
+  Widget _gestureDetector({void Function()? onTap}) => GestureDetector(
+        onTap: onTap ?? () {},
+        child: this,
+      );
+
+  Widget onTap({void Function()? event}) => _gestureDetector(onTap: event);
+}

@@ -8,20 +8,22 @@ class CustomButton extends StatelessWidget {
       this.buttonType,
       this.blurValue = 3.0,
       this.onPressed,
+      this.borderRadius,
       this.backgroundColor,
+      this.forgroundColor,
       this.height,
       this.width,
-      this.borderRadius,
       this.child,
       this.icon});
 
   final ButtonType? buttonType;
   final double blurValue;
   final void Function()? onPressed;
+  final double? borderRadius;
   final Color? backgroundColor;
+  final Color? forgroundColor;
   final double? height;
   final double? width;
-  final double? borderRadius;
   final Widget? child;
   final String? icon;
 
@@ -71,15 +73,16 @@ class CustomButton extends StatelessWidget {
         break;
       case ButtonType.ICON:
         baseButton = IconButton(
-            onPressed: onPressed ?? () {},
+            onPressed: onPressed,
             style: IconButton.styleFrom(
                 backgroundColor:
                     backgroundColor ?? AppColors.black5.withAlpha(70),
                 shape: const CircleBorder()),
             icon: SvgPicture.asset(icon ?? AppIcons.HOME,
-                height: 0.03.sh,
+                height: height ?? 0.03.sh,
                 colorFilter: ColorFilter.mode(
-                    AppColors.lightSteel1.withAlpha(200), BlendMode.srcIn)));
+                    forgroundColor ?? AppColors.lightSteel1.withAlpha(200),
+                    BlendMode.srcIn)));
         break;
       default:
         baseButton = const SizedBox.shrink();

@@ -11,7 +11,8 @@ class CustomImage extends StatelessWidget {
       this.placeholder,
       this.fit,
       this.height,
-      this.onTap,
+      this.width,
+      this.event,
       this.color});
 
   final ImageType imageType;
@@ -20,48 +21,49 @@ class CustomImage extends StatelessWidget {
   final Widget? placeholder;
   final BoxFit? fit;
   final double? height;
-  final void Function()? onTap;
+  final double? width;
+  final void Function()? event;
   final Color? color;
 
   @override
   Widget build(BuildContext context) {
-    Image localImage() {
-      return Image.asset(
-        imageUrl ?? AppImages.PLACEHOLDER,
-        fit: fit ?? BoxFit.cover,
-        height: height,
-      );
-    }
+    Image localImage = Image.asset(
+      imageUrl ?? AppImages.PLACEHOLDER,
+      fit: fit ?? BoxFit.cover,
+      height: height,
+      width: width,
+    );
 
     Widget image;
     switch (imageType) {
       case ImageType.REMOTE:
         image = CachedNetworkImage(
             imageUrl: imageUrl ?? "",
-            placeholder:
-                (placeholder != null) ? (context, url) => placeholder! : null,
-            errorWidget: (context, url, error) => localImage(),
+            placeholder: (context, url) =>
+                (placeholder != null) ? placeholder! : customShimmer(),
+            errorWidget: (context, url, error) => localImage,
             fit: fit ?? BoxFit.cover,
-            height: height);
+            height: height,
+            width: width);
         break;
       case ImageType.SVG_LOCAL:
         image = SvgPicture.asset(imageUrl ?? AppSvgs.STAR,
-            height: height ?? 0.03.sh,
+            height: height,
+            width: width,
             fit: fit ?? BoxFit.contain,
-            colorFilter: ColorFilter.mode(
-                AppColors.lightSteel1.withAlpha(200), BlendMode.srcIn));
+            colorFilter: (color != null)
+                ? ColorFilter.mode(color!, BlendMode.srcIn)
+                : null);
         break;
+      case ImageType.LOCAL:
       default:
-        image = localImage();
+        image = localImage;
         break;
     }
 
-    return GestureDetector(
-      onTap: onTap,
-      child: ClipRRect(
-        borderRadius: borderRadius,
-        child: image,
-      ),
-    );
+    return ClipRRect(
+      borderRadius: borderRadius,
+      child: image,
+    ).onTap(event: event);
   }
 }
