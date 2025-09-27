@@ -41,7 +41,12 @@ class CustomImage extends StatelessWidget {
             imageUrl: imageUrl ?? "",
             placeholder: (context, url) =>
                 (placeholder != null) ? placeholder! : customShimmer(),
-            errorWidget: (context, url, error) => localImage,
+            errorWidget: (context, url, error) => Image.asset(
+                  AppImages.PLACEHOLDER,
+                  fit: fit ?? BoxFit.cover,
+                  height: height,
+                  width: width,
+                ),
             fit: fit ?? BoxFit.cover,
             height: height,
             width: width);

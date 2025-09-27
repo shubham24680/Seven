@@ -9,7 +9,7 @@ class NotificationScreen extends StatelessWidget {
         appBar: AppBar(
             leading: CustomButton(
               buttonType: ButtonType.ICON,
-              icon: AppIcons.REMOVE_TO_FAVOURITE,
+              icon: AppSvgs.REMOVE_TO_FAVOURITE,
               backgroundColor: AppColors.lightSteel9,
               onPressed: () => context.pop(),
             ),

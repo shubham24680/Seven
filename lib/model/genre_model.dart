@@ -1,4 +1,6 @@
-class GenreModel {
+import 'package:seven/app/app.dart';
+
+class GenreModel extends Network<GenreModel> {
   final List<Genre>? genres;
 
   GenreModel({

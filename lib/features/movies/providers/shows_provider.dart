@@ -1,285 +1,172 @@
 import 'dart:developer';
 import 'package:seven/app/app.dart';
 
+enum ShowType { SHOWS, GENRES }
+
+// STATE
 class ShowsState {
   final ShowsModel shows;
   final GenreModel genre;
   final Network status;
-  final int currentIndex;
+  final int navigationCurrentIndex;
+  final int carouselCurrentIndex;
 
-  ShowsState(
-      {required this.shows,
-      required this.genre,
-      // required this.nowPlaying,
-      // required this.popular,
-      // required this.topRated,
-      // required this.upcoming,
-      required this.status,
-      required this.currentIndex});
+  const ShowsState({
+    required this.shows,
+    required this.genre,
+    required this.status,
+    required this.navigationCurrentIndex,
+    required this.carouselCurrentIndex,
+  });
 
   factory ShowsState.initial() {
     return ShowsState(
-        shows: ShowsModel(),
-        genre: GenreModel(),
-        // nowPlaying: ShowsModel(),
-        // popular: ShowsModel(),
-        // topRated: ShowsModel(),
-        // upcoming: ShowsModel(),
-        status: Network(),
-        currentIndex: 0);
+      shows: ShowsModel(),
+      genre: GenreModel(),
+      status: Network(),
+      navigationCurrentIndex: 0,
+      carouselCurrentIndex: 0,
+    );
   }
 
-  // To Change Value
-  ShowsState copyWith(
-      {ShowsModel? shows,
-      GenreModel? genre,
-      // ShowsModel? nowPlaying,
-      // ShowsModel? popular,
-      // ShowsModel? topRated,
-      // ShowsModel? upcoming,
-      Network? status,
-      int? currentIndex}) {
+  ShowsState copyWith({
+    ShowsModel? shows,
+    GenreModel? genre,
+    Network? status,
+    int? navigationCurrentIndex,
+    int? carouselCurrentIndex,
+    bool? isRefreshing,
+  }) {
     return ShowsState(
-        shows: shows ?? this.shows,
-        genre: genre ?? this.genre,
-        // nowPlaying: nowPlaying ?? this.nowPlaying,
-        // popular: popular ?? this.popular,
-        // topRated: topRated ?? this.topRated,
-        // upcoming: upcoming ?? this.upcoming,
-        status: status ?? this.status,
-        currentIndex: currentIndex ?? this.currentIndex);
+      shows: shows ?? this.shows,
+      genre: genre ?? this.genre,
+      status: status ?? this.status,
+      navigationCurrentIndex:
+          navigationCurrentIndex ?? this.navigationCurrentIndex,
+      carouselCurrentIndex: carouselCurrentIndex ?? this.carouselCurrentIndex,
+    );
   }
 }
 
 class ShowsProvider extends StateNotifier<ShowsState> {
   ShowsProvider() : super(ShowsState.initial());
 
-  Future<void> loadShows() async {
-    if (state.status.isLoading) return;
+  final Map<ShowType, DateTime> _lastFetchTimes = {};
+  static const Duration _cacheTimeout = Duration(minutes: 5);
+
+  // SHOWS
+  Future<void> loadShows({bool forceRefresh = false}) async {
+    if (state.shows.isLoading) return;
+
+    if (!forceRefresh && _isDataCached(ShowType.SHOWS)) {
+      log("Using cached shows data");
+      return;
+    }
+
     state = state.copyWith(
-      status: Network(apiStatus: ApiStatus.LOADING),
+      shows: state.shows.setApiStatus(ApiStatus.LOADING),
     );
 
     try {
-      log("fetch Shows");
+      log("Fetching shows data");
       final shows = await ShowsServices.instance.fetchShows();
       final genre = await ShowsServices.instance.fetchGenres();
 
-      if (shows.results != null) {
+      if (shows.results != null && shows.results!.isNotEmpty) {
+        _updateCache(ShowType.SHOWS);
         state = state.copyWith(
-          shows: shows,
+          shows: shows.setApiStatus(ApiStatus.SUCCESS,
+              successMessage: "Shows loaded successfully)"),
           genre: genre,
-          status: Network(
-            apiStatus: ApiStatus.SUCCESS,
-            successMessage: "Shows loaded successfully",
-          ),
         );
+        log("Shows loaded successfully: ${shows.results!.length} items");
       } else {
         state = state.copyWith(
-            status:
-                Network(apiStatus: ApiStatus.EMPTY, errorMessage: "No Shows"));
+          shows: shows.setApiStatus(
+            ApiStatus.EMPTY,
+            errorMessage: "No shows available at the moment",
+          ),
+        );
+        log("No shows data received");
       }
     } on ApiException catch (e) {
       state = state.copyWith(
-          status:
-              Network(apiStatus: ApiStatus.ERROR, errorMessage: e.toString()));
+          shows: state.shows
+              .setApiStatus(ApiStatus.ERROR, errorMessage: e.toString()),
+          status: state.status.increaseCount());
+      log("${state.status.apiErrorCount}");
     } catch (e) {
       state = state.copyWith(
-        status: Network(
-          apiStatus: ApiStatus.ERROR,
-          errorMessage: e.toString(),
-        ),
-      );
+          shows: state.shows
+              .setApiStatus(ApiStatus.ERROR, errorMessage: e.toString()),
+          status: state.status.increaseCount());
+      log("${state.status.apiErrorCount}");
     }
   }
 
-  // // Load Now Playing movies
-  // Future<void> loadNowPlaying() async {
-  //   if (state.status.isLoading) return;
-  //   state = state.copyWith(
-  //     status: Network(apiStatus: ApiStatus.LOADING),
-  //   );
+  Future<void> loadAllData({bool forceRefresh = false}) async {
+    if (state.status.isLoading) return;
 
-  //   try {
-  //     log("fetch Now Playing");
-  //     final nowPlaying = await ShowsServices.instance.fetchNowPlaying();
+    log("Loading all data concurrently");
+    state = state.copyWith(status: state.status.defaultCount());
+    state =
+        state.copyWith(status: state.status.setApiStatus(ApiStatus.LOADING));
 
-  //     if (nowPlaying.results != null) {
-  //       state = state.copyWith(
-  //         nowPlaying: nowPlaying,
-  //         status: Network(
-  //           apiStatus: ApiStatus.SUCCESS,
-  //           successMessage: "Now Playing loaded successfully",
-  //         ),
-  //       );
-  //     } else {
-  //       state = state.copyWith(
-  //           status: Network(
-  //               apiStatus: ApiStatus.EMPTY,
-  //               errorMessage: "No Now Playing movies"));
-  //     }
-  //   } on ApiException catch (e) {
-  //     state = state.copyWith(
-  //         status:
-  //             Network(apiStatus: ApiStatus.ERROR, errorMessage: e.toString()));
-  //   } catch (e) {
-  //     state = state.copyWith(
-  //       status: Network(
-  //         apiStatus: ApiStatus.ERROR,
-  //         errorMessage: e.toString(),
-  //       ),
-  //     );
-  //   }
-  // }
-
-  // // Load Popular movies
-  // Future<void> loadPopular() async {
-  //   if (state.status.isLoading) return;
-  //   state = state.copyWith(
-  //     status: Network(apiStatus: ApiStatus.LOADING),
-  //   );
-
-  //   try {
-  //     log("fetch Popular");
-  //     final popular = await ShowsServices.instance.fetchPopular();
-
-  //     if (popular.results != null) {
-  //       state = state.copyWith(
-  //         popular: popular,
-  //         status: Network(
-  //           apiStatus: ApiStatus.SUCCESS,
-  //           successMessage: "Popular loaded successfully",
-  //         ),
-  //       );
-  //     } else {
-  //       state = state.copyWith(
-  //           status: Network(
-  //               apiStatus: ApiStatus.EMPTY, errorMessage: "No Popular movies"));
-  //     }
-  //   } on ApiException catch (e) {
-  //     state = state.copyWith(
-  //         status:
-  //             Network(apiStatus: ApiStatus.ERROR, errorMessage: e.toString()));
-  //   } catch (e) {
-  //     state = state.copyWith(
-  //       status: Network(
-  //         apiStatus: ApiStatus.ERROR,
-  //         errorMessage: e.toString(),
-  //       ),
-  //     );
-  //   }
-  // }
-
-  // // Load Top Rated movies
-  // Future<void> loadTopRated() async {
-  //   if (state.status.isLoading) return;
-  //   state = state.copyWith(
-  //     status: Network(apiStatus: ApiStatus.LOADING),
-  //   );
-
-  //   try {
-  //     log("fetch Top Rated");
-  //     final topRated = await ShowsServices.instance.fetchTopRated();
-
-  //     if (topRated.results != null) {
-  //       state = state.copyWith(
-  //         topRated: topRated,
-  //         status: Network(
-  //           apiStatus: ApiStatus.SUCCESS,
-  //           successMessage: "Top Rated loaded successfully",
-  //         ),
-  //       );
-  //     } else {
-  //       state = state.copyWith(
-  //           status: Network(
-  //               apiStatus: ApiStatus.EMPTY,
-  //               errorMessage: "No Top Rated movies"));
-  //     }
-  //   } on ApiException catch (e) {
-  //     state = state.copyWith(
-  //         status:
-  //             Network(apiStatus: ApiStatus.ERROR, errorMessage: e.toString()));
-  //   } catch (e) {
-  //     state = state.copyWith(
-  //       status: Network(
-  //         apiStatus: ApiStatus.ERROR,
-  //         errorMessage: e.toString(),
-  //       ),
-  //     );
-  //   }
-  // }
-
-  // // Load Upcoming movies
-  // Future<void> loadUpcoming() async {
-  //   if (state.status.isLoading) return;
-  //   state = state.copyWith(
-  //     status: Network(apiStatus: ApiStatus.LOADING),
-  //   );
-
-  //   try {
-  //     log("fetch Upcoming");
-  //     final upcoming = await ShowsServices.instance.fetchUpcoming();
-
-  //     if (upcoming.results != null) {
-  //       state = state.copyWith(
-  //         upcoming: upcoming,
-  //         status: Network(
-  //           apiStatus: ApiStatus.SUCCESS,
-  //           successMessage: "Upcoming loaded successfully",
-  //         ),
-  //       );
-  //     } else {
-  //       state = state.copyWith(
-  //           status: Network(
-  //               apiStatus: ApiStatus.EMPTY,
-  //               errorMessage: "No Upcoming movies"));
-  //     }
-  //   } on ApiException catch (e) {
-  //     state = state.copyWith(
-  //         status:
-  //             Network(apiStatus: ApiStatus.ERROR, errorMessage: e.toString()));
-  //   } catch (e) {
-  //     state = state.copyWith(
-  //       status: Network(
-  //         apiStatus: ApiStatus.ERROR,
-  //         errorMessage: e.toString(),
-  //       ),
-  //     );
-  //   }
-  // }
-
-  // // Load all categories at once
-  // Future<void> loadAllCategories() async {
-  //   await Future.wait([
-  //     loadShows(),
-  // loadNowPlaying(),
-  // loadPopular(),
-  // loadTopRated(),
-  // loadUpcoming(),
-  // ]);
-  // }
-
-  // Refresh the page
-  void refresh() {
-    log("Refresh - reloading shows");
-    loadShows();
+    try {
+      await Future.wait([
+        loadShows(forceRefresh: forceRefresh),
+      ]);
+    } finally {
+      state = state.copyWith(
+          status: state.status.setApiStatus(state.status.apiErrorCount == 1
+              ? ApiStatus.ERROR
+              : ApiStatus.SUCCESS));
+    }
   }
 
-  // Refresh all categories
-  // void refreshAll() {
-  //   log("Refresh - reloading all categories");
-  //   loadAllCategories();
-  // }
+  Future<void> refresh() async {
+    log("Refreshing all data");
+    await loadAllData(forceRefresh: true);
+  }
 
-  // Update index when use controller
+  // Update navigation index with validation
   void moveToPage(int index) {
-    state = state.copyWith(currentIndex: index);
-    log("INDEX -> ${state.currentIndex}");
+    if (index < 0) {
+      log("Invalid navigation index: $index");
+      return;
+    }
+    state = state.copyWith(navigationCurrentIndex: index);
+    log("Navigation index updated: $index");
+  }
+
+  // Update carousel index with validation
+  void nextTo(int index) {
+    if (index < 0) {
+      log("Invalid carousel index: $index");
+      return;
+    }
+    state = state.copyWith(carouselCurrentIndex: index);
+  }
+
+  bool _isDataCached(ShowType key) {
+    final lastFetch = _lastFetchTimes[key];
+    if (lastFetch == null) return false;
+    return DateTime.now().difference(lastFetch) < _cacheTimeout;
+  }
+
+  // Update cache timestamp
+  void _updateCache(ShowType key) {
+    _lastFetchTimes[key] = DateTime.now();
+  }
+
+  // Clear cache (useful for testing or manual cache invalidation)
+  void clearCache() {
+    _lastFetchTimes.clear();
+    log("Cache cleared");
   }
 }
 
+/// Optimized provider with auto-dispose and better memory management
 final showsProvider = StateNotifierProvider<ShowsProvider, ShowsState>(
   (ref) => ShowsProvider(),
 );
-
-final carouselCurrentIndex = StateProvider.autoDispose<int>((ref) => 0);

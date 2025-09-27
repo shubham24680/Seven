@@ -1,14 +1,35 @@
 enum ApiStatus { INITIAL, SUCCESS, LOADING, ERROR, EMPTY }
 
-class Network {
+class Network<T> {
   ApiStatus apiStatus;
   String? successMessage;
   String? errorMessage;
+  int apiErrorCount;
 
-  Network(
-      {this.apiStatus = ApiStatus.INITIAL,
-      this.successMessage,
-      this.errorMessage});
+  Network({
+    this.apiStatus = ApiStatus.INITIAL,
+    this.successMessage,
+    this.errorMessage,
+    this.apiErrorCount = 0,
+  });
+
+  T setApiStatus(ApiStatus apiStatus,
+      {String? successMessage, String? errorMessage}) {
+    this.apiStatus = apiStatus;
+    this.successMessage = successMessage;
+    this.errorMessage = errorMessage;
+    return this as T;
+  }
+
+  T increaseCount() {
+    apiErrorCount = apiErrorCount + 1;
+    return this as T;
+  }
+
+  T defaultCount() {
+    apiErrorCount = 0;
+    return this as T;
+  }
 
   bool get isInitial => apiStatus == ApiStatus.INITIAL;
   bool get isSuccess => apiStatus == ApiStatus.SUCCESS;

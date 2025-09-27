@@ -12,7 +12,7 @@ class Shows extends ConsumerWidget {
       return SvgPicture.asset(
         icon,
         colorFilter: ColorFilter.mode(
-            (index == showsState.currentIndex)
+            (index == showsState.navigationCurrentIndex)
                 ? AppColors.vividNightfall4
                 : AppColors.black1,
             BlendMode.srcIn),
@@ -20,12 +20,15 @@ class Shows extends ConsumerWidget {
     }
 
     return Scaffold(
-      body: (showsState.status.isError)
+      body: (showsState.navigationCurrentIndex !=
+                  AppAssets.BOTTOM_NAVIGATION_ICONS.length &&
+              showsState.status.isError)
           ? ErrorScreen(onPressed: () => showsController.refresh())
-          : AppAssets.BOTTOM_NAVIGATION_ICONS[showsState.currentIndex].screen,
+          : AppAssets.BOTTOM_NAVIGATION_ICONS[showsState.navigationCurrentIndex]
+              .screen,
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) => showsController.moveToPage(index),
-        currentIndex: showsState.currentIndex,
+        currentIndex: showsState.navigationCurrentIndex,
         backgroundColor: AppColors.black4,
         showSelectedLabels: false,
         showUnselectedLabels: false,
