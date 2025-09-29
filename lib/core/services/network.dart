@@ -1,4 +1,4 @@
-enum ApiStatus { INITIAL, SUCCESS, LOADING, ERROR, EMPTY }
+enum ApiStatus { INITIAL, SUCCESS, LOADING, ERROR }
 
 class Network<T> {
   ApiStatus apiStatus;
@@ -21,8 +21,8 @@ class Network<T> {
     return this as T;
   }
 
-  T increaseCount() {
-    apiErrorCount = apiErrorCount + 1;
+  T count({int count = 1}) {
+    apiErrorCount = apiErrorCount + count;
     return this as T;
   }
 
@@ -35,5 +35,4 @@ class Network<T> {
   bool get isSuccess => apiStatus == ApiStatus.SUCCESS;
   bool get isLoading => apiStatus == ApiStatus.LOADING;
   bool get isError => apiStatus == ApiStatus.ERROR;
-  bool get isEmpty => apiStatus == ApiStatus.EMPTY;
 }

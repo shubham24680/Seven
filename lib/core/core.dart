@@ -26,7 +26,8 @@ export 'utils/colors.dart';
 // CUSTOM
 export 'customs/extensions/helper_extension.dart';
 export 'customs/button.dart';
-export 'customs/cards.dart';
+export 'customs/card.dart';
+export 'customs/collection.dart';
 export 'customs/helper_custom.dart';
 export 'customs/image.dart';
 export 'customs/text.dart';

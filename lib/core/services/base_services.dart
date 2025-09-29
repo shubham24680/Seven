@@ -82,25 +82,7 @@ class BaseService {
     final statusCode = response.statusCode;
     final body = response.body.isNotEmpty ? jsonDecode(response.body) : null;
 
-    if (statusCode >= 200 && statusCode < 300) {
-      log("Successfull getting response from base services");
-      return body;
-    } else {
-      log("base services error");
-      throw ApiException(
-        statusCode: statusCode,
-        message: body?["status_message"] ?? "Something went wrong",
-      );
-    }
+    log("Status code [$statusCode] -> ${body?["status_message"]}");
+    return body;
   }
-}
-
-class ApiException implements Exception {
-  final int statusCode;
-  final String message;
-
-  ApiException({required this.statusCode, required this.message});
-
-  @override
-  String toString() => "ApiException($statusCode): $message";
 }

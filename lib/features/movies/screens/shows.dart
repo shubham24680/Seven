@@ -8,6 +8,12 @@ class Shows extends ConsumerWidget {
     final showsState = ref.watch(showsProvider);
     final showsController = ref.read(showsProvider.notifier);
 
+    if (showsState.status.isInitial) {
+      Future.microtask(() {
+        showsController.loadAllData();
+      });
+    }
+
     Widget buildIcon(String icon, int index) {
       return SvgPicture.asset(
         icon,
@@ -21,7 +27,7 @@ class Shows extends ConsumerWidget {
 
     return Scaffold(
       body: (showsState.navigationCurrentIndex !=
-                  AppAssets.BOTTOM_NAVIGATION_ICONS.length &&
+                  AppAssets.BOTTOM_NAVIGATION_ICONS.length - 1 &&
               showsState.status.isError)
           ? ErrorScreen(onPressed: () => showsController.refresh())
           : AppAssets.BOTTOM_NAVIGATION_ICONS[showsState.navigationCurrentIndex]

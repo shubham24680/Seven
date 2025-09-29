@@ -7,7 +7,7 @@ class ShowsServices {
   ShowsServices._();
   static ShowsServices get instance => _instance ??= ShowsServices._();
 
-  Future<ShowsModel> fetchShows() async {
+  Future<ShowsModel?> fetchShows() async {
     try {
       final response = await BaseService.instance.fetchData(
         apiHost: ApiConstants.API_HOST,
@@ -15,17 +15,14 @@ class ShowsServices {
         responseType: ResponseType.GET,
       );
 
-      return response != null ? ShowsModel.fromJson(response) : ShowsModel();
-    } on ApiException {
-      rethrow;
+      return response != null ? ShowsModel.fromJson(response) : null;
     } catch (e) {
-      log("Unexpected error while fetching shows: $e");
-      throw ApiException(
-          statusCode: 1, message: "Unexpected error while fetching shows: $e");
+      log("Internal Error -> $e");
+      return null;
     }
   }
 
-  Future<GenreModel> fetchGenres() async {
+  Future<GenreModel?> fetchGenres() async {
     try {
       final response = await BaseService.instance.fetchData(
         apiHost: ApiConstants.API_HOST,
@@ -33,89 +30,30 @@ class ShowsServices {
         responseType: ResponseType.GET,
       );
 
-      return response != null ? GenreModel.fromJson(response) : GenreModel();
-    } on ApiException {
-      rethrow;
+      return response != null ? GenreModel.fromJson(response) : null;
     } catch (e) {
-      log("Unexpected error while fetching shows: $e");
-      throw ApiException(
-          statusCode: 1, message: "Unexpected error while fetching shows: $e");
+      log("Internal Error -> $e");
+      return null;
     }
   }
 
-  // Future<ShowsModel> fetchNowPlaying() async {
-  //   try {
-  //     final response = await BaseService.instance.fetchData(
-  //       apiHost: ApiConstants.API_HOST,
-  //       endPoint: ApiConstants.NOW_PLAYING,
-  //       responseType: ResponseType.GET,
-  //     );
+  Future<List<ShowsModel?>?> fetchCollections() async {
+    try {
+      final response = await Future.wait(ApiConstants.COLLECTION
+          .map((endPoint) => BaseService.instance.fetchData(
+                apiHost: ApiConstants.API_HOST,
+                endPoint: endPoint,
+                responseType: ResponseType.GET,
+              ))
+          .toList());
 
-  //     return response != null ? ShowsModel.fromJson(response) : ShowsModel();
-  //   } on ApiException {
-  //     rethrow;
-  //   } catch (e) {
-  //     log("Unexpected error while fetching now playing: $e");
-  //     throw ApiException(
-  //         statusCode: 1,
-  //         message: "Unexpected error while fetching now playing: $e");
-  //   }
-  // }
-
-  // Future<ShowsModel> fetchPopular() async {
-  //   try {
-  //     final response = await BaseService.instance.fetchData(
-  //       apiHost: ApiConstants.API_HOST,
-  //       endPoint: ApiConstants.POPULAR,
-  //       responseType: ResponseType.GET,
-  //     );
-
-  //     return response != null ? ShowsModel.fromJson(response) : ShowsModel();
-  //   } on ApiException {
-  //     rethrow;
-  //   } catch (e) {
-  //     log("Unexpected error while fetching popular: $e");
-  //     throw ApiException(
-  //         statusCode: 1,
-  //         message: "Unexpected error while fetching popular: $e");
-  //   }
-  // }
-
-  // Future<ShowsModel> fetchTopRated() async {
-  //   try {
-  //     final response = await BaseService.instance.fetchData(
-  //       apiHost: ApiConstants.API_HOST,
-  //       endPoint: ApiConstants.TOP_RATED,
-  //       responseType: ResponseType.GET,
-  //     );
-
-  //     return response != null ? ShowsModel.fromJson(response) : ShowsModel();
-  //   } on ApiException {
-  //     rethrow;
-  //   } catch (e) {
-  //     log("Unexpected error while fetching top rated: $e");
-  //     throw ApiException(
-  //         statusCode: 1,
-  //         message: "Unexpected error while fetching top rated: $e");
-  //   }
-  // }
-
-  // Future<ShowsModel> fetchUpcoming() async {
-  //   try {
-  //     final response = await BaseService.instance.fetchData(
-  //       apiHost: ApiConstants.API_HOST,
-  //       endPoint: ApiConstants.UPCOMING,
-  //       responseType: ResponseType.GET,
-  //     );
-
-  //     return response != null ? ShowsModel.fromJson(response) : ShowsModel();
-  //   } on ApiException {
-  //     rethrow;
-  //   } catch (e) {
-  //     log("Unexpected error while fetching upcoming: $e");
-  //     throw ApiException(
-  //         statusCode: 1,
-  //         message: "Unexpected error while fetching upcoming: $e");
-  //   }
-  // }
+      return response.map((json) {
+        log("Collection -> ${json == null ? null : "Success"}");
+        return (json != null) ? ShowsModel.fromJson(json) : null;
+      }).toList();
+    } catch (e) {
+      log("Internal Error -> $e");
+      return null;
+    }
+  }
 }
