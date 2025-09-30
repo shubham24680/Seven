@@ -23,3 +23,9 @@ class ErrorData {
       required this.image,
       required this.buttonText});
 }
+
+class ProfileModel {
+  final String icon, title;
+
+  ProfileModel({required this.icon, required this.title});
+}

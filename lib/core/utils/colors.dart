@@ -9,6 +9,11 @@ Color red = Colors.red;
 
 class AppColors {
   static const Color transparent = Colors.transparent;
+  static const Color red1 = Color(0xFFAD2831);
+  static const Color red2 = Color(0xFF800E13);
+  static const Color red3 = Color(0xFF640D14);
+  static const Color red4 = Color(0xFF38040E);
+  static const Color red5 = Color(0xFF250902);
 
   static const Color lightSteel1 = Color(0xFFF8F9FA);
   static const Color lightSteel2 = Color(0xFFE9ECEF);

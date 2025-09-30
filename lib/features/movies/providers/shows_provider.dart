@@ -93,27 +93,26 @@ class ShowsProvider extends StateNotifier<ShowsState> {
   // COLLECTIONS
   Future<void> loadCollections({bool forceRefresh = false}) async {
     for (int index = 0; index < state.collection.length; index++) {
+      log("Collection $index Loading -> ${state.collection[index].apiStatus}");
       if (state.collection[index].isLoading) return;
-
-      state = state.copyWith(
-        shows: state.shows.setApiStatus(ApiStatus.LOADING),
-      );
     }
+
+    state = state.copyWith(
+        collection: state.collection
+            .map((c) => c.setApiStatus(ApiStatus.LOADING))
+            .toList(),
+        status: state.status.count(count: state.collection.length));
 
     log("Fetching collections data");
     List<ShowsModel?>? collection;
     for (int attempt = 1; attempt <= 5; attempt++) {
       collection = await ShowsServices.instance.fetchCollections();
       if (collection != null) {
-        if (attempt > 1) {
-          log("Collections fetched successfully on attempt $attempt");
-        }
+        log("Collections fetched successfully on attempt $attempt");
         break;
       }
-      if (attempt < 3) {
-        log("Collections fetch attempt $attempt failed (null). Retrying...");
-        await Future.delayed(Duration(seconds: attempt));
-      }
+      log("Collections fetch attempt $attempt failed (null). Retrying...");
+      await Future.delayed(Duration(seconds: attempt));
     }
 
     if (collection != null) {

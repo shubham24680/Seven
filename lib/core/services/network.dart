@@ -22,7 +22,7 @@ class Network<T> {
   }
 
   T count({int count = 1}) {
-    apiErrorCount = apiErrorCount + count;
+    apiErrorCount += count;
     return this as T;
   }
 

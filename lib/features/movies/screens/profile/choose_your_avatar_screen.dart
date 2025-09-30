@@ -11,6 +11,7 @@ class _ChooseYourAvatarScreenState extends State<ChooseYourAvatarScreen> {
   int initialIndex = 5;
   final List<List<String>> detail = [
     ["Username", "Shubham Patel"],
+    ["Email", "Subhampatel8092@gmail.com"],
     ["Phone number", "+91 7764074475"],
     ["Date of birth", "11 July 2001"],
   ];
@@ -37,8 +38,9 @@ class _ChooseYourAvatarScreenState extends State<ChooseYourAvatarScreen> {
                 children: [
                   CustomImage(
                     imageType: ImageType.SVG_LOCAL,
-                    imageUrl: AppSvgs.SEARCH,
+                    imageUrl: AppSvgs.ARROW_LEFT,
                     color: AppColors.lightSteel1,
+                    height: 36,
                     event: () => context.pop(),
                   ),
                   const CustomText(
