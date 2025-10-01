@@ -18,3 +18,6 @@ export 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 // EFFECT
 export 'package:carousel_slider/carousel_slider.dart';
+
+// STORAGE
+export 'package:shared_preferences/shared_preferences.dart';

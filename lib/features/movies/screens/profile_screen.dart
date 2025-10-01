@@ -49,23 +49,31 @@ class ProfileScreen extends StatelessWidget {
 
     return Column(
       children: [
-        CustomImage(
-            imageType: ImageType.LOCAL,
-            imageUrl: AppImages.AVATAR_1,
-            height: 0.15.sh,
-            borderRadius: BorderRadius.circular(1.sh)),
-        SizedBox(height: 0.01.sh),
-        if (true)
-          CustomText(
-              text: "Shubham Patel",
-              family: AppFonts.STAATLICHES,
-              size: 0.03.sh),
-        if (true)
-          CustomText(
-              text: "Subhampatel8092@gmail.com",
-              size: 0.015.sh,
-              color: AppColors.lightSteel1.withAlpha(150)),
-        SizedBox(height: 0.02.sh),
+        Consumer(builder: (_, ref, __) {
+          final profileState = ref.watch(profileProvider);
+
+          return Column(
+            children: [
+              CustomImage(
+                  imageType: ImageType.LOCAL,
+                  imageUrl: AppAssets.AVATARS[profileState.profilePicIndex],
+                  height: 0.15.sh,
+                  borderRadius: BorderRadius.circular(1.sh)),
+              SizedBox(height: 0.01.sh),
+              if (profileState.name != null)
+                CustomText(
+                    text: profileState.name ?? "",
+                    family: AppFonts.STAATLICHES,
+                    size: 0.03.sh),
+              if (profileState.email != null)
+                CustomText(
+                    text: profileState.email ?? "",
+                    size: 0.015.sh,
+                    color: AppColors.lightSteel1.withAlpha(150)),
+              SizedBox(height: 0.02.sh),
+            ],
+          );
+        }),
         buildButtons(false),
         SizedBox(height: 0.28.sh, child: contentList()),
         const Spacer(),
