@@ -5,6 +5,8 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final contentListHeight = (AppConstants.PROFILE.length * 0.07.sh) + 0.08.sh;
+
     Widget buildButtons(bool isUserActive) {
       final height = 0.065.sh;
       final editButton = CustomButton(
@@ -75,7 +77,7 @@ class ProfileScreen extends StatelessWidget {
           );
         }),
         buildButtons(false),
-        SizedBox(height: 0.28.sh, child: contentList()),
+        SizedBox(height: contentListHeight, child: contentList()),
         const Spacer(),
         CustomText(
             text: "Version 1.0.0",
@@ -110,7 +112,7 @@ class ProfileScreen extends StatelessWidget {
                         text: AppConstants.PROFILE[index].title,
                         weight: FontWeight.w600),
                     const Spacer(),
-                    if (index == 1)
+                    if (index == 2)
                       CustomText(
                           text: "Disabled",
                           size: 0.015.sh,

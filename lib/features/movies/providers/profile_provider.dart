@@ -3,20 +3,49 @@ import 'package:seven/app/app.dart';
 
 class ProfileState {
   final int profilePicIndex;
-  final String? name;
-  final String? email;
+  final String? name, email, phoneNumber, dateOfBirth;
+  final TextEditingController nameController,
+      emailController,
+      phoneNumberController,
+      dateOfBirthController;
 
-  ProfileState({required this.profilePicIndex, this.name, this.email});
+  ProfileState(
+      {required this.profilePicIndex,
+      this.name,
+      this.email,
+      this.phoneNumber,
+      this.dateOfBirth,
+      required this.nameController,
+      required this.emailController,
+      required this.phoneNumberController,
+      required this.dateOfBirthController});
 
   factory ProfileState.initial() {
-    return ProfileState(profilePicIndex: 0);
+    return ProfileState(
+        profilePicIndex: 0,
+        nameController: TextEditingController(),
+        emailController: TextEditingController(),
+        phoneNumberController: TextEditingController(),
+        dateOfBirthController: TextEditingController());
   }
 
-  ProfileState copyWith({int? profilePicIndex, String? name, String? email}) {
+  ProfileState copyWith(
+      {int? profilePicIndex,
+      String? name,
+      String? email,
+      String? phoneNumber,
+      String? dateOfBirth}) {
     return ProfileState(
-        profilePicIndex: profilePicIndex ?? this.profilePicIndex,
-        name: name ?? this.name,
-        email: email ?? this.email);
+      profilePicIndex: profilePicIndex ?? this.profilePicIndex,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      nameController: nameController,
+      emailController: emailController,
+      phoneNumberController: phoneNumberController,
+      dateOfBirthController: dateOfBirthController,
+    );
   }
 }
 
@@ -38,7 +67,7 @@ class ProfileProvider extends StateNotifier<ProfileState> {
     log("set index to ${state.profilePicIndex}");
   }
 
-  Future<void> save() async {
+  Future<void> saveData() async {
     final prefs = await SPD.getInstance();
     await prefs.setProfilePicIndex(state.profilePicIndex);
     if (state.name != null) {
@@ -48,12 +77,6 @@ class ProfileProvider extends StateNotifier<ProfileState> {
       await prefs.setEmail(state.email ?? "");
     }
     log("Saved succesfully at index ${state.profilePicIndex}");
-  }
-
-  @override
-  void dispose() {
-    loadData();
-    super.dispose();
   }
 }
 
