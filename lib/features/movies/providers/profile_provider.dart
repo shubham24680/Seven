@@ -49,6 +49,12 @@ class ProfileProvider extends StateNotifier<ProfileState> {
     }
     log("Saved succesfully at index ${state.profilePicIndex}");
   }
+
+  @override
+  void dispose() {
+    loadData();
+    super.dispose();
+  }
 }
 
 final profileProvider = StateNotifierProvider<ProfileProvider, ProfileState>(

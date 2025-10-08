@@ -129,6 +129,6 @@ class ChooseYourAvatarScreen extends ConsumerWidget {
         (index) => CustomImage(
             imageType: ImageType.LOCAL,
             imageUrl: AppAssets.AVATARS[index],
-            borderRadius: BorderRadius.circular(100)));
+            borderRadius: BorderRadius.circular(1.sh)));
   }
 }
