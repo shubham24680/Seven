@@ -12,25 +12,12 @@ class ChooseYourAvatarScreen extends ConsumerWidget {
       onPopInvokedWithResult: (didPop, result) =>
           ref.invalidate(profileProvider),
       child: Scaffold(
-        appBar: AppBar(
-            backgroundColor: AppColors.transparent,
-            leading: CustomButton(
-                buttonType: ButtonType.ICON,
-                onPressed: () {
-                  ref.invalidate(profileProvider);
-                  context.pop();
-                },
-                icon: AppSvgs.ARROW_LEFT,
-                forgroundColor: AppColors.lightSteel1,
-                backgroundColor: AppColors.transparent,
-                height: 0.04.sh),
-            centerTitle: true,
-            title: CustomText(
-                text: "Choose your avatar",
-                family: AppFonts.STAATLICHES,
-                size: 0.04.sh)),
+        appBar: customAppBar(() {
+          ref.invalidate(profileProvider);
+          context.pop();
+        }, "Choose your avatar"),
         body: Container(
-          padding: const EdgeInsets.only(bottom: AppConstants.SIDE_PADDING),
+          padding: const EdgeInsets.all(AppConstants.SIDE_PADDING),
           decoration: BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -54,39 +41,36 @@ class ChooseYourAvatarScreen extends ConsumerWidget {
                       enlargeFactor: 0.8,
                       enableInfiniteScroll: false)),
               const Spacer(),
-              buildData("Name", ""),
-              buildData("Phone number", " "),
-              buildData("Email", " "),
-              buildData("Data of Birth", " "),
+              if (profileState.name != null)
+                buildData("Name", profileState.name ?? ""),
+              if (profileState.phoneNumber != null)
+                buildData("Phone number", profileState.phoneNumber ?? ""),
+              if (profileState.email != null)
+                buildData("Email", profileState.email ?? ""),
+              if (profileState.dateOfBirth != null)
+                buildData("Data of Birth", profileState.dateOfBirth ?? ""),
               const Spacer(),
               CustomButton(
-                onPressed: () {},
                 buttonType: ButtonType.ELEVATED,
+                onPressed: () {},
                 backgroundColor: AppColors.lightSteel1.withAlpha(40),
                 height: 0.065.sh,
                 child: const CustomText(
                   text: "Edit",
-                  weight: FontWeight.w900,
-                ),
-              ).paddingSymmetric(horizontal: AppConstants.SIDE_PADDING),
+                  weight: FontWeight.w900)),
               SizedBox(height: 0.02.sh),
               CustomButton(
                 onPressed: () async {
                   await profileController.saveData();
-                  context.pop();
+                  context.pop(); //USE MOUNTED IN ASYNC GAPS.
                 },
                 buttonType: ButtonType.ELEVATED,
                 backgroundColor: AppColors.vividNightfall4,
                 height: 0.065.sh,
                 child: const CustomText(
                   text: "Save",
-                  weight: FontWeight.w900,
-                ),
-              ).paddingSymmetric(horizontal: AppConstants.SIDE_PADDING)
-            ],
-          ),
-        ),
-      ),
+                  weight: FontWeight.w900))
+            ])))
     );
   }
 
@@ -101,8 +85,7 @@ class ChooseYourAvatarScreen extends ConsumerWidget {
             color: AppColors.lightSteel1.withAlpha(150)),
         CustomText(text: value, size: 0.016.sh, weight: FontWeight.w900),
       ],
-    ).paddingSymmetric(
-        horizontal: AppConstants.SIDE_PADDING, vertical: 0.01.sh);
+    ).paddingSymmetric(vertical: 0.01.sh);
   }
 
   List<CustomImage> generateImage() {

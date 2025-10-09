@@ -55,14 +55,21 @@ Widget customTag(String icon, String value) {
 }
 
 // APPBAR
-PreferredSizeWidget customAppBar(void Function()? event) {
-  final leading = CustomImage(
-    imageType: ImageType.SVG_LOCAL,
-    event: event,
-    imageUrl: AppSvgs.ARROW_LEFT,
-    color: AppColors.lightSteel1,
-    height: 10,
-  );
+PreferredSizeWidget customAppBar(
+    void Function()? onPressed, String appBarTitle) {
+  final leading = CustomButton(
+      buttonType: ButtonType.ICON,
+      onPressed: onPressed,
+      icon: AppSvgs.ARROW_LEFT,
+      forgroundColor: AppColors.lightSteel1,
+      backgroundColor: AppColors.transparent,
+      height: 0.04.sh);
+  final title = CustomText(
+      text: appBarTitle, family: AppFonts.STAATLICHES, size: 0.04.sh);
 
-  return AppBar(leading: leading);
+  return AppBar(
+      backgroundColor: AppColors.transparent,
+      centerTitle: true,
+      leading: leading,
+      title: title);
 }
