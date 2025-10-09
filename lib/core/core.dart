@@ -25,10 +25,11 @@ export 'theme/dark_theme.dart';
 export 'utils/colors.dart';
 
 // CUSTOM
-export 'customs/extensions/helper_extension.dart';
+export 'customs/extension.dart';
 export 'customs/button.dart';
 export 'customs/card.dart';
 export 'customs/collection.dart';
 export 'customs/helper_custom.dart';
 export 'customs/image.dart';
+export 'customs/text_field.dart';
 export 'customs/text.dart';

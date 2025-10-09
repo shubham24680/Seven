@@ -62,13 +62,13 @@ PreferredSizeWidget customAppBar(
       onPressed: onPressed,
       icon: AppSvgs.ARROW_LEFT,
       forgroundColor: AppColors.lightSteel1,
-      backgroundColor: AppColors.transparent,
-      height: 0.04.sh);
+      backgroundColor: AppColors.transparent);
   final title = CustomText(
-      text: appBarTitle, family: AppFonts.STAATLICHES, size: 0.04.sh);
+      text: appBarTitle, family: AppFonts.STAATLICHES, size: 0.03.sh);
 
   return AppBar(
       backgroundColor: AppColors.transparent,
+      toolbarHeight: 50,
       centerTitle: true,
       leading: leading,
       title: title);
