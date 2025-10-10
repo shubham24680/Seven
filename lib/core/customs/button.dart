@@ -5,7 +5,7 @@ enum ButtonType { ELEVATED, ICON, TEXT }
 class CustomButton extends StatelessWidget {
   const CustomButton(
       {super.key,
-      this.buttonType,
+      this.buttonType = ButtonType.ELEVATED,
       this.blurValue = 3.0,
       this.onPressed,
       this.borderRadius,
@@ -16,14 +16,14 @@ class CustomButton extends StatelessWidget {
       this.child,
       this.icon});
 
-  final ButtonType? buttonType;
+  final ButtonType buttonType;
   final double blurValue;
-  final void Function()? onPressed;
-  final double? borderRadius;
-  final Color? backgroundColor;
-  final Color? forgroundColor;
   final double? height;
   final double? width;
+  final double? borderRadius;
+  final void Function()? onPressed;
+  final Color? backgroundColor;
+  final Color? forgroundColor;
   final Widget? child;
   final String? icon;
 
@@ -32,7 +32,7 @@ class CustomButton extends StatelessWidget {
     final widgetBackgroundColor =
         backgroundColor ?? AppColors.lightSteel1.withAlpha(20);
     final widgetBorderRadius = BorderRadius.circular(
-        borderRadius ?? (buttonType == ButtonType.ICON ? 1.sh : 0.01.sh));
+        borderRadius ?? (buttonType == ButtonType.ICON ? 1.sh : 0.015.sh));
 
     Size? getSize() {
       if (height != null && width != null) {
@@ -48,20 +48,6 @@ class CustomButton extends StatelessWidget {
 
     Widget baseButton;
     switch (buttonType) {
-      case ButtonType.ELEVATED:
-        baseButton = ElevatedButton(
-            onPressed: onPressed,
-            style: ElevatedButton.styleFrom(
-                backgroundColor: widgetBackgroundColor,
-                minimumSize: getSize(),
-                shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                        color: onPressed == null
-                            ? AppColors.lightSteel8
-                            : widgetBackgroundColor),
-                    borderRadius: widgetBorderRadius)),
-            child: child);
-        break;
       case ButtonType.TEXT:
         baseButton = TextButton(
             onPressed: onPressed ?? () {},
@@ -85,7 +71,18 @@ class CustomButton extends StatelessWidget {
                     BlendMode.srcIn)));
         break;
       default:
-        baseButton = const SizedBox.shrink();
+        baseButton = ElevatedButton(
+            onPressed: onPressed,
+            style: ElevatedButton.styleFrom(
+                backgroundColor: widgetBackgroundColor,
+                minimumSize: getSize(),
+                shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                        color: onPressed == null
+                            ? AppColors.lightSteel1.withAlpha(20)
+                            : widgetBackgroundColor),
+                    borderRadius: widgetBorderRadius)),
+            child: child);
         break;
     }
 

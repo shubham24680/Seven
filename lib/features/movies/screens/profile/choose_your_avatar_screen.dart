@@ -8,47 +8,85 @@ class ChooseYourAvatarScreen extends ConsumerWidget {
     final profileState = ref.watch(profileProvider);
     final profileController = ref.read(profileProvider.notifier);
 
-    void bottomSheet() {
+    Widget editData() {
+      return Column(children: [
+        CustomTextField(
+            controller: profileState.nameController,
+            hintText: "Name",
+            filled: true),
+        SizedBox(height: 0.02.sh),
+        Row(children: [
+          Expanded(
+              child: CustomTextField(
+                  textFieldType: TextFieldType.DROPDOWN,
+                  onChanged: (value) {},
+                  items: ["Male", "Female"],
+                  hintText: "Gender",
+                  suffixIcon: AppSvgs.PROFILE,
+                  filled: true)),
+          SizedBox(width: 0.02.sh),
+          Expanded(
+            child: CustomTextField(
+                controller: profileState.dateOfBirthController,
+                onTap: () {},
+                hintText: "Date of birth",
+                suffixIcon: AppSvgs.PROFILE,
+                filled: true,
+                readOnly: true),
+          )
+        ])
+      ]);
+    }
+
+    Widget showData() {
+      return (profileState.tryEditing)
+          ? editData()
+          : Column(children: [
+              if (profileState.name != null)
+                buildData("Name", profileState.name ?? "Shubham Patel"),
+              if (profileState.gender != null)
+                buildData("Gender", profileState.gender ?? "Male"),
+              if (profileState.dateOfBirth != null)
+                buildData("Data of Birth",
+                    profileState.dateOfBirth ?? "11 July, 2001")
+            ]);
+    }
+
+    void buildBottomSheet() {
       showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: AppColors.lightSteel1.withAlpha(20),
-        shape: RoundedRectangleBorder(
-            borderRadius:
-                BorderRadiusGeometry.vertical(top: Radius.circular(0.02.sh))),
-        builder: (context) {
-          return blurEffect(
-              3.0,
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CustomTextField(controller: profileState.nameController),
-                  SizedBox(height: 0.02.sh),
-                  CustomTextField(controller: profileState.nameController),
-                  SizedBox(height: 0.02.sh),
-                  CustomTextField(controller: profileState.nameController),
-                  SizedBox(height: 0.02.sh),
-                  CustomTextField(controller: profileState.nameController),
-                ],
-              ).paddingFromLTRB(
-                  left: AppConstants.SIDE_PADDING,
-                  top: AppConstants.SIDE_PADDING,
-                  right: AppConstants.SIDE_PADDING,
-                  bottom: AppConstants.SIDE_PADDING +
-                      MediaQuery.of(context).viewInsets.bottom),
-              borderRadius: BorderRadius.circular(0.02.sh));
-        },
-      );
+          context: context,
+          builder: (context) => GridView.builder(
+                itemCount: AppAssets.AVATARS.length,
+                padding: const EdgeInsets.all(AppConstants.SIDE_PADDING),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 0.03.sh,
+                  crossAxisSpacing: 0.05.sw,
+                ),
+                itemBuilder: (context, index) {
+                  return CustomImage(
+                      imageType: ImageType.LOCAL,
+                      event: () {
+                        profileController.setIndexTo(index);
+                        context.pop();
+                      },
+                      imageUrl: AppAssets.AVATARS[index],
+                      borderRadius: BorderRadius.circular(1.sh));
+                },
+              ));
     }
 
     return PopScope(
         onPopInvokedWithResult: (didPop, result) =>
             ref.invalidate(profileProvider),
-        child: Scaffold(
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Scaffold(
+            extendBody: true,
             appBar: customAppBar(() {
-              ref.invalidate(profileProvider);
               context.pop();
-            }, "Choose your avatar"),
+              ref.invalidate(profileProvider);
+            }, "Edit Profile"),
             body: Container(
                 padding: const EdgeInsets.all(AppConstants.SIDE_PADDING),
                 decoration: BoxDecoration(
@@ -60,49 +98,57 @@ class ChooseYourAvatarScreen extends ConsumerWidget {
                       AppColors.vividNightfall4.withAlpha(100)
                     ])),
                 child: Column(children: [
+                  // CustomImage(
+                  //     imageType: ImageType.LOCAL,
+                  //     imageUrl: AppAssets.AVATARS[profileState.profilePicIndex],
+                  //     height: 0.25.sh,
+                  //     width: 0.25.sh,
+                  //     borderRadius: BorderRadius.circular(1.sh)),
+                  CarouselSlider(
+                      items: generateImage(),
+                      options: CarouselOptions(
+                          onPageChanged: (index, reason) =>
+                              profileController.setIndexTo(index),
+                          initialPage: profileState.profilePicIndex,
+                          height: 0.25.sh,
+                          viewportFraction: 0.55,
+                          enlargeCenterPage: true,
+                          enlargeFactor: 0.8,
+                          enableInfiniteScroll: false)),
                   const Spacer(),
-                  // CarouselSlider(
-                  //     items: generateImage(),
-                  //     options: CarouselOptions(
-                  //         onPageChanged: (index, reason) =>
-                  //             profileController.setIndexTo(index),
-                  //         initialPage: profileState.profilePicIndex,
-                  //         height: 0.25.sh,
-                  //         viewportFraction: 0.55,
-                  //         enlargeCenterPage: true,
-                  //         enlargeFactor: 0.8,
-                  //         enableInfiniteScroll: false)),
-                  const Spacer(),
-                  if (profileState.name != null)
-                    buildData("Name", profileState.name ?? ""),
-                  if (profileState.phoneNumber != null)
-                    buildData("Phone number", profileState.phoneNumber ?? ""),
-                  if (profileState.email != null)
-                    buildData("Email", profileState.email ?? ""),
-                  if (profileState.dateOfBirth != null)
-                    buildData("Data of Birth", profileState.dateOfBirth ?? ""),
-                  const Spacer(),
-                  CustomTextField(controller: profileState.nameController),
-                  SizedBox(height: 0.02.sh),
-                  CustomButton(
-                      buttonType: ButtonType.ELEVATED,
-                      onPressed: bottomSheet,
-                      backgroundColor: AppColors.lightSteel1.withAlpha(40),
-                      height: 0.065.sh,
-                      child: const CustomText(
-                          text: "Edit", weight: FontWeight.w900)),
-                  SizedBox(height: 0.02.sh),
-                  CustomButton(
-                      onPressed: () async {
-                        await profileController.saveData();
-                        context.pop(); //USE MOUNTED IN ASYNC GAPS.
-                      },
-                      buttonType: ButtonType.ELEVATED,
-                      backgroundColor: AppColors.vividNightfall4,
-                      height: 0.065.sh,
-                      child: const CustomText(
-                          text: "Save", weight: FontWeight.w900))
-                ]))));
+                  showData(),
+                  const Spacer(flex: 3),
+                ])),
+            bottomNavigationBar: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CustomButton(
+                    onPressed: buildBottomSheet,
+                    buttonType: ButtonType.ELEVATED,
+                    backgroundColor: AppColors.lightSteel1.withAlpha(40),
+                    height: 0.065.sh,
+                    child: const CustomText(
+                        text: "Choose your avatar", weight: FontWeight.w900)),
+                SizedBox(height: 0.02.sh),
+                CustomButton(
+                    onPressed: () {
+                      if (profileState.tryEditing) {
+                        profileController.saveData();
+                      } else {
+                        profileController.loadIntoField();
+                      }
+                      profileController.toggle();
+                    },
+                    buttonType: ButtonType.ELEVATED,
+                    backgroundColor: AppColors.vividNightfall4,
+                    height: 0.065.sh,
+                    child: CustomText(
+                        text: profileState.tryEditing ? "Save" : "Edit",
+                        weight: FontWeight.w900))
+              ],
+            ).paddingAll(AppConstants.SIDE_PADDING),
+          ),
+        ));
   }
 
   List<CustomImage> generateImage() {

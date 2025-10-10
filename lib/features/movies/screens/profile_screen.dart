@@ -67,11 +67,6 @@ class ProfileScreen extends StatelessWidget {
                     text: profileState.name ?? "",
                     family: AppFonts.STAATLICHES,
                     size: 0.03.sh),
-              if (profileState.email != null)
-                CustomText(
-                    text: profileState.email ?? "",
-                    size: 0.015.sh,
-                    color: AppColors.lightSteel1.withAlpha(150)),
               SizedBox(height: 0.02.sh),
             ],
           );

@@ -3,47 +3,40 @@ import 'package:seven/app/app.dart';
 
 class ProfileState {
   final int profilePicIndex;
-  final String? name, email, phoneNumber, dateOfBirth;
-  final TextEditingController nameController,
-      emailController,
-      phoneNumberController,
-      dateOfBirthController;
+  final bool tryEditing;
+  final String? name, gender, dateOfBirth;
+  final TextEditingController nameController, dateOfBirthController;
 
   ProfileState(
       {required this.profilePicIndex,
+      required this.tryEditing,
       this.name,
-      this.email,
-      this.phoneNumber,
+      this.gender,
       this.dateOfBirth,
       required this.nameController,
-      required this.emailController,
-      required this.phoneNumberController,
       required this.dateOfBirthController});
 
   factory ProfileState.initial() {
     return ProfileState(
         profilePicIndex: 0,
+        tryEditing: false,
         nameController: TextEditingController(),
-        emailController: TextEditingController(),
-        phoneNumberController: TextEditingController(),
         dateOfBirthController: TextEditingController());
   }
 
   ProfileState copyWith(
       {int? profilePicIndex,
+      bool? tryEditing,
       String? name,
-      String? email,
-      String? phoneNumber,
+      String? gender,
       String? dateOfBirth}) {
     return ProfileState(
       profilePicIndex: profilePicIndex ?? this.profilePicIndex,
+      tryEditing: tryEditing ?? this.tryEditing,
       name: name ?? this.name,
-      email: email ?? this.email,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
+      gender: gender ?? this.gender,
       dateOfBirth: dateOfBirth ?? this.dateOfBirth,
       nameController: nameController,
-      emailController: emailController,
-      phoneNumberController: phoneNumberController,
       dateOfBirthController: dateOfBirthController,
     );
   }
@@ -57,9 +50,28 @@ class ProfileProvider extends StateNotifier<ProfileState> {
   Future<void> loadData() async {
     final prefs = await SPD.getInstance();
     state = state.copyWith(
-        profilePicIndex: prefs.profilePicIndex,
-        name: prefs.name,
-        email: prefs.email);
+        profilePicIndex: prefs.profilePicIndex, name: prefs.name);
+  }
+
+  Future<void> saveData() async {
+    state = state.copyWith(name: state.nameController.text);
+
+    final prefs = await SPD.getInstance();
+    await prefs.setProfilePicIndex(state.profilePicIndex);
+    if (state.name != null) {
+      await prefs.setName(state.name ?? "");
+    }
+
+    clearFromField();
+    log("Saved succesfully at index ${state.profilePicIndex}");
+  }
+
+  void loadIntoField() {
+    state.nameController.text = state.name ?? "";
+  }
+
+  void clearFromField() {
+    state.nameController.clear();
   }
 
   void setIndexTo(int index) {
@@ -67,16 +79,9 @@ class ProfileProvider extends StateNotifier<ProfileState> {
     log("set index to ${state.profilePicIndex}");
   }
 
-  Future<void> saveData() async {
-    final prefs = await SPD.getInstance();
-    await prefs.setProfilePicIndex(state.profilePicIndex);
-    if (state.name != null) {
-      await prefs.setName(state.name ?? "");
-    }
-    if (state.email != null) {
-      await prefs.setEmail(state.email ?? "");
-    }
-    log("Saved succesfully at index ${state.profilePicIndex}");
+  void toggle() {
+    state = state.copyWith(tryEditing: !state.tryEditing);
+    log("set editing to ${state.tryEditing}");
   }
 }
 
