@@ -19,18 +19,31 @@ class ChooseYourAvatarScreen extends ConsumerWidget {
           Expanded(
               child: CustomTextField(
                   textFieldType: TextFieldType.DROPDOWN,
-                  onChanged: (value) {},
-                  items: ["Male", "Female"],
+                  onChanged: (gender) {
+                    final genderIndex = AppConstants.GENDER
+                        .indexWhere((item) => item.string1 == gender);
+                    if (genderIndex != -1) {
+                      profileController.setGenderIndexTo(genderIndex);
+                    }
+                  },
+                  items: AppConstants.GENDER
+                      .map((item) => item.string1 ?? "")
+                      .toList(),
+                  initialValue: (profileState.genderIndex != -1)
+                      ? AppConstants.GENDER[profileState.genderIndex].string1
+                      : null,
                   hintText: "Gender",
-                  suffixIcon: AppSvgs.PROFILE,
+                  suffixIcon: (profileState.genderIndex != -1)
+                      ? AppConstants.GENDER[profileState.genderIndex].string2
+                      : null,
                   filled: true)),
           SizedBox(width: 0.02.sh),
           Expanded(
             child: CustomTextField(
                 controller: profileState.dateOfBirthController,
                 onTap: () {},
-                hintText: "Date of birth",
-                suffixIcon: AppSvgs.PROFILE,
+                hintText: "DOB",
+                suffixIcon: AppSvgs.CALENDAR,
                 filled: true,
                 readOnly: true),
           )
@@ -42,123 +55,141 @@ class ChooseYourAvatarScreen extends ConsumerWidget {
       return (profileState.tryEditing)
           ? editData()
           : Column(children: [
-              if (profileState.name != null)
-                buildData("Name", profileState.name ?? "Shubham Patel"),
-              if (profileState.gender != null)
-                buildData("Gender", profileState.gender ?? "Male"),
+              if (profileState.name != null && profileState.name!.isNotEmpty)
+                buildData("Name", profileState.name ?? "Loading..."),
+              if (profileState.genderIndex != -1)
+                buildData(
+                    "Gender",
+                    AppConstants.GENDER[profileState.genderIndex].string1 ??
+                        ""),
               if (profileState.dateOfBirth != null)
-                buildData("Data of Birth",
-                    profileState.dateOfBirth ?? "11 July, 2001")
+                buildData(
+                    "Data of Birth", profileState.dateOfBirth ?? "Loading...")
             ]);
     }
 
     void buildBottomSheet() {
+      final borderRadius = BorderRadius.vertical(top: Radius.circular(0.02.sh));
+      final sheetColor = AppColors.lightSteel1;
+
       showModalBottomSheet(
           context: context,
-          builder: (context) => GridView.builder(
-                itemCount: AppAssets.AVATARS.length,
-                padding: const EdgeInsets.all(AppConstants.SIDE_PADDING),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 0.03.sh,
-                  crossAxisSpacing: 0.05.sw,
-                ),
-                itemBuilder: (context, index) {
-                  return CustomImage(
-                      imageType: ImageType.LOCAL,
-                      event: () {
-                        profileController.setIndexTo(index);
-                        context.pop();
-                      },
-                      imageUrl: AppAssets.AVATARS[index],
-                      borderRadius: BorderRadius.circular(1.sh));
-                },
-              ));
+          backgroundColor: sheetColor.withAlpha(10),
+          barrierColor: AppColors.transparent,
+          shape: RoundedRectangleBorder(borderRadius: borderRadius),
+          isScrollControlled: true,
+          builder: (context) => blurEffect(
+              6.0,
+              SingleChildScrollView(
+                  padding: const EdgeInsets.all(AppConstants.SIDE_PADDING),
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                    CustomText(
+                      text: "Choose your avatar",
+                      family: AppFonts.STAATLICHES,
+                      color: sheetColor.withAlpha(150),
+                    ),
+                    Divider(color: sheetColor.withAlpha(20)),
+                    GridView.builder(
+                        itemCount: AppAssets.AVATARS.length,
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: AppConstants.SIDE_PADDING),
+                        physics: NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                            mainAxisSpacing: 0.03.sh,
+                            crossAxisSpacing: 0.05.sw),
+                        itemBuilder: (context, index) {
+                          return Stack(children: [
+                            CustomImage(
+                                imageType: ImageType.LOCAL,
+                                event: () {
+                                  profileController.setProfileIndexTo(index);
+                                  context.pop();
+                                },
+                                imageUrl: AppAssets.AVATARS[index],
+                                borderRadius: BorderRadius.circular(1.sh)),
+                            if (index == profileState.profilePicIndex)
+                              CustomImage(
+                                  imageType: ImageType.SVG_LOCAL,
+                                  imageUrl: AppSvgs.REMOVE_TO_FAVOURITE,
+                                  height: double.infinity,
+                                  color: AppColors.lightSteel1)
+                          ]);
+                        })
+                  ])),
+              borderRadius: borderRadius));
     }
+
+    Widget bottomButton() => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (profileState.tryEditing)
+              CustomButton(
+                  onPressed: buildBottomSheet,
+                  buttonType: ButtonType.ELEVATED,
+                  backgroundColor: AppColors.lightSteel1.withAlpha(40),
+                  height: 0.065.sh,
+                  child: const CustomText(
+                      text: "Choose your avatar", weight: FontWeight.w900)),
+            SizedBox(height: 0.02.sh),
+            CustomButton(
+                onPressed: () {
+                  if (profileState.tryEditing) {
+                    profileController.saveData();
+                  } else {
+                    profileController.loadIntoField();
+                  }
+                  profileController.toggle();
+                },
+                buttonType: ButtonType.ELEVATED,
+                backgroundColor: AppColors.vividNightfall4,
+                height: 0.065.sh,
+                child: CustomText(
+                    text: profileState.tryEditing ? "Save" : "Edit",
+                    weight: FontWeight.w900))
+          ],
+        ).paddingAll(AppConstants.SIDE_PADDING);
 
     return PopScope(
         onPopInvokedWithResult: (didPop, result) =>
-            ref.invalidate(profileProvider),
+            profileController.loadData(),
         child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Scaffold(
-            extendBody: true,
-            appBar: customAppBar(() {
-              context.pop();
-              ref.invalidate(profileProvider);
-            }, "Edit Profile"),
-            body: Container(
-                padding: const EdgeInsets.all(AppConstants.SIDE_PADDING),
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                      AppColors.transparent,
-                      AppColors.vividNightfall4.withAlpha(100)
-                    ])),
-                child: Column(children: [
-                  // CustomImage(
-                  //     imageType: ImageType.LOCAL,
-                  //     imageUrl: AppAssets.AVATARS[profileState.profilePicIndex],
-                  //     height: 0.25.sh,
-                  //     width: 0.25.sh,
-                  //     borderRadius: BorderRadius.circular(1.sh)),
-                  CarouselSlider(
-                      items: generateImage(),
-                      options: CarouselOptions(
-                          onPageChanged: (index, reason) =>
-                              profileController.setIndexTo(index),
-                          initialPage: profileState.profilePicIndex,
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Scaffold(
+                extendBody: true,
+                appBar: customAppBar(() {
+                  context.pop();
+                  profileController.loadData();
+                }, "Edit Profile"),
+                body: Container(
+                    width: 1.sw,
+                    padding: const EdgeInsets.all(AppConstants.SIDE_PADDING),
+                    decoration: getDecoration(),
+                    child: Column(children: [
+                      CustomImage(
+                          imageType: ImageType.LOCAL,
+                          imageUrl:
+                              AppAssets.AVATARS[profileState.profilePicIndex],
                           height: 0.25.sh,
-                          viewportFraction: 0.55,
-                          enlargeCenterPage: true,
-                          enlargeFactor: 0.8,
-                          enableInfiniteScroll: false)),
-                  const Spacer(),
-                  showData(),
-                  const Spacer(flex: 3),
-                ])),
-            bottomNavigationBar: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CustomButton(
-                    onPressed: buildBottomSheet,
-                    buttonType: ButtonType.ELEVATED,
-                    backgroundColor: AppColors.lightSteel1.withAlpha(40),
-                    height: 0.065.sh,
-                    child: const CustomText(
-                        text: "Choose your avatar", weight: FontWeight.w900)),
-                SizedBox(height: 0.02.sh),
-                CustomButton(
-                    onPressed: () {
-                      if (profileState.tryEditing) {
-                        profileController.saveData();
-                      } else {
-                        profileController.loadIntoField();
-                      }
-                      profileController.toggle();
-                    },
-                    buttonType: ButtonType.ELEVATED,
-                    backgroundColor: AppColors.vividNightfall4,
-                    height: 0.065.sh,
-                    child: CustomText(
-                        text: profileState.tryEditing ? "Save" : "Edit",
-                        weight: FontWeight.w900))
-              ],
-            ).paddingAll(AppConstants.SIDE_PADDING),
-          ),
-        ));
+                          width: 0.25.sh,
+                          borderRadius: BorderRadius.circular(1.sh)),
+                      const Spacer(),
+                      showData(),
+                      const Spacer(flex: 3),
+                    ])),
+                bottomNavigationBar: bottomButton())));
   }
 
-  List<CustomImage> generateImage() {
-    return List.generate(
-        AppAssets.AVATARS.length,
-        (index) => CustomImage(
-            imageType: ImageType.LOCAL,
-            imageUrl: AppAssets.AVATARS[index],
-            borderRadius: BorderRadius.circular(1.sh)));
-  }
+  // Decoration
+  BoxDecoration getDecoration() => BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+            AppColors.transparent,
+            AppColors.vividNightfall4.withAlpha(100)
+          ]));
 
   Widget buildData(String key, String value) {
     return Row(

@@ -30,7 +30,8 @@ class HomeCarousel extends ConsumerWidget {
         children: [
           CustomImage(
             imageType: ImageType.LOCAL,
-            imageUrl: AppAssets.AVATARS[profileState.profilePicIndex],
+            imageUrl: AppAssets.AVATARS[
+                profileState.profilePicIndex % AppAssets.AVATARS.length],
             height: 0.048.sh,
             borderRadius: BorderRadius.circular(1.sh),
             event: () => ref

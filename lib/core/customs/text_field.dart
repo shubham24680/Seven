@@ -21,7 +21,8 @@ class CustomTextField extends StatelessWidget {
       this.items = const [],
       this.onChanged,
       this.readOnly = false,
-      this.onTap});
+      this.onTap,
+      this.initialValue});
 
   final TextFieldType textFieldType;
   final TextEditingController? controller;
@@ -36,6 +37,7 @@ class CustomTextField extends StatelessWidget {
   final String? hintText;
   final String? errorText;
   final String? suffixIcon;
+  final String? initialValue;
   final List<String> items;
   final TextInputType? keyboardType;
   final void Function(String?)? onChanged;
@@ -70,13 +72,13 @@ class CustomTextField extends StatelessWidget {
       case TextFieldType.DROPDOWN:
         field = DropdownButtonFormField(
             items: dropDownMenu,
+            initialValue: initialValue,
             onChanged: onChanged,
             decoration: decoration,
             style: buildHint(AppColors.lightSteel1).getTextStyle(),
             hint: buildHint(hintColor, text: hintText),
             dropdownColor: AppColors.vividNightfall4,
-            borderRadius: BorderRadius.circular(0.01.sh),
-            icon: SizedBox.shrink());
+            borderRadius: BorderRadius.circular(0.01.sh));
         break;
       default:
         field = TextFormField(

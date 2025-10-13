@@ -58,11 +58,12 @@ class ProfileScreen extends StatelessWidget {
             children: [
               CustomImage(
                   imageType: ImageType.LOCAL,
-                  imageUrl: AppAssets.AVATARS[profileState.profilePicIndex],
+                  imageUrl: AppAssets.AVATARS[
+                      profileState.profilePicIndex % AppAssets.AVATARS.length],
                   height: 0.15.sh,
                   borderRadius: BorderRadius.circular(1.sh)),
               SizedBox(height: 0.01.sh),
-              if (profileState.name != null)
+              if (profileState.name != null && profileState.name!.isNotEmpty)
                 CustomText(
                     text: profileState.name ?? "",
                     family: AppFonts.STAATLICHES,

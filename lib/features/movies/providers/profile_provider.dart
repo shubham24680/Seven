@@ -2,16 +2,16 @@ import 'dart:developer';
 import 'package:seven/app/app.dart';
 
 class ProfileState {
-  final int profilePicIndex;
+  final int profilePicIndex, genderIndex;
   final bool tryEditing;
-  final String? name, gender, dateOfBirth;
+  final String? name, dateOfBirth;
   final TextEditingController nameController, dateOfBirthController;
 
   ProfileState(
       {required this.profilePicIndex,
       required this.tryEditing,
       this.name,
-      this.gender,
+      required this.genderIndex,
       this.dateOfBirth,
       required this.nameController,
       required this.dateOfBirthController});
@@ -20,6 +20,7 @@ class ProfileState {
     return ProfileState(
         profilePicIndex: 0,
         tryEditing: false,
+        genderIndex: -1,
         nameController: TextEditingController(),
         dateOfBirthController: TextEditingController());
   }
@@ -28,13 +29,13 @@ class ProfileState {
       {int? profilePicIndex,
       bool? tryEditing,
       String? name,
-      String? gender,
+      int? genderIndex,
       String? dateOfBirth}) {
     return ProfileState(
       profilePicIndex: profilePicIndex ?? this.profilePicIndex,
       tryEditing: tryEditing ?? this.tryEditing,
       name: name ?? this.name,
-      gender: gender ?? this.gender,
+      genderIndex: genderIndex ?? this.genderIndex,
       dateOfBirth: dateOfBirth ?? this.dateOfBirth,
       nameController: nameController,
       dateOfBirthController: dateOfBirthController,
@@ -50,7 +51,11 @@ class ProfileProvider extends StateNotifier<ProfileState> {
   Future<void> loadData() async {
     final prefs = await SPD.getInstance();
     state = state.copyWith(
-        profilePicIndex: prefs.profilePicIndex, name: prefs.name);
+      profilePicIndex: prefs.profilePicIndex,
+      name: prefs.name,
+      genderIndex: prefs.genderIndex,
+      tryEditing: false,
+    );
   }
 
   Future<void> saveData() async {
@@ -58,6 +63,7 @@ class ProfileProvider extends StateNotifier<ProfileState> {
 
     final prefs = await SPD.getInstance();
     await prefs.setProfilePicIndex(state.profilePicIndex);
+    await prefs.setGenderIndex(state.genderIndex);
     if (state.name != null) {
       await prefs.setName(state.name ?? "");
     }
@@ -74,14 +80,19 @@ class ProfileProvider extends StateNotifier<ProfileState> {
     state.nameController.clear();
   }
 
-  void setIndexTo(int index) {
+  void toggle() {
+    state = state.copyWith(tryEditing: !state.tryEditing);
+    log("set editing to ${state.tryEditing}");
+  }
+
+  void setProfileIndexTo(int index) {
     state = state.copyWith(profilePicIndex: index);
     log("set index to ${state.profilePicIndex}");
   }
 
-  void toggle() {
-    state = state.copyWith(tryEditing: !state.tryEditing);
-    log("set editing to ${state.tryEditing}");
+  void setGenderIndexTo(int index) {
+    state = state.copyWith(genderIndex: index);
+    log("set index to ${state.genderIndex}");
   }
 }
 
