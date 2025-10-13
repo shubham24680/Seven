@@ -59,13 +59,18 @@ class ProfileProvider extends StateNotifier<ProfileState> {
   }
 
   Future<void> saveData() async {
-    state = state.copyWith(name: state.nameController.text);
+    state = state.copyWith(
+        name: state.nameController.text,
+        dateOfBirth: state.dateOfBirthController.text);
 
     final prefs = await SPD.getInstance();
     await prefs.setProfilePicIndex(state.profilePicIndex);
     await prefs.setGenderIndex(state.genderIndex);
     if (state.name != null) {
       await prefs.setName(state.name ?? "");
+    }
+    if (state.dateOfBirth != null) {
+      await prefs.setDateOfBirth(state.dateOfBirth ?? "");
     }
 
     clearFromField();
@@ -74,10 +79,12 @@ class ProfileProvider extends StateNotifier<ProfileState> {
 
   void loadIntoField() {
     state.nameController.text = state.name ?? "";
+    state.dateOfBirthController.text = state.dateOfBirth ?? "";
   }
 
   void clearFromField() {
     state.nameController.clear();
+    state.dateOfBirthController.clear();
   }
 
   void toggle() {

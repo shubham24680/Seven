@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:seven/app/app.dart';
 
 class ChooseYourAvatarScreen extends ConsumerWidget {
@@ -7,6 +8,43 @@ class ChooseYourAvatarScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profileState = ref.watch(profileProvider);
     final profileController = ref.read(profileProvider.notifier);
+
+    void chooseDate() async {
+      final dateFormat = DateFormat.yMMMd();
+      final initialDate =
+          dateFormat.parse(profileState.dateOfBirthController.text);
+      final firstDate = DateTime(1950);
+      final lastDate = DateTime(2020);
+      final date = await showDatePicker(
+        context: context,
+        initialDate: initialDate,
+        firstDate: firstDate,
+        lastDate: lastDate,
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.dark(
+                primary: AppColors.vividNightfall4, // header background color
+                onPrimary: AppColors.lightSteel1, // header text color
+                onSurface:
+                    AppColors.lightSteel1.withAlpha(70), // body text color
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  foregroundColor:
+                      AppColors.vividNightfall4, // button text color
+                ),
+              ),
+            ),
+            child: child!,
+          );
+        },
+      );
+
+      if (date != null) {
+        profileState.dateOfBirthController.text = dateFormat.format(date);
+      }
+    }
 
     Widget editData() {
       return Column(children: [
@@ -41,7 +79,7 @@ class ChooseYourAvatarScreen extends ConsumerWidget {
           Expanded(
             child: CustomTextField(
                 controller: profileState.dateOfBirthController,
-                onTap: () {},
+                onTap: () => chooseDate(),
                 hintText: "DOB",
                 suffixIcon: AppSvgs.CALENDAR,
                 filled: true,
