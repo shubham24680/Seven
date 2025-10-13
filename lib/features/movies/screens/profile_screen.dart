@@ -11,7 +11,7 @@ class ProfileScreen extends StatelessWidget {
       final height = 0.065.sh;
       final editButton = CustomButton(
           buttonType: ButtonType.ELEVATED,
-          onPressed: () => context.push("/chooseYourAvatar"),
+          onPressed: () => context.push("/editProfile"),
           height: height,
           backgroundColor: AppColors.vividNightfall4,
           child: Row(mainAxisSize: MainAxisSize.min, children: [

@@ -1,49 +1,113 @@
 import 'package:intl/intl.dart';
 import 'package:seven/app/app.dart';
 
-class ChooseYourAvatarScreen extends ConsumerWidget {
-  const ChooseYourAvatarScreen({super.key});
+class EditProfileScreen extends ConsumerWidget {
+  const EditProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profileState = ref.watch(profileProvider);
     final profileController = ref.read(profileProvider.notifier);
 
-    void chooseDate() async {
+    void buildBottomSheet(String title, Widget child) {
+      final borderRadius = BorderRadius.vertical(top: Radius.circular(0.02.sh));
+      final sheetColor = AppColors.lightSteel1;
+
+      showModalBottomSheet(
+          context: context,
+          backgroundColor: sheetColor.withAlpha(10),
+          barrierColor: AppColors.transparent,
+          shape: RoundedRectangleBorder(borderRadius: borderRadius),
+          isScrollControlled: true,
+          builder: (context) => blurEffect(
+              10.0,
+              Column(mainAxisSize: MainAxisSize.min, children: [
+                CustomText(
+                  text: title,
+                  family: AppFonts.STAATLICHES,
+                  color: sheetColor.withAlpha(150),
+                ),
+                Divider(color: sheetColor.withAlpha(40)),
+                child
+              ]).paddingAll(AppConstants.SIDE_PADDING),
+              borderRadius: borderRadius));
+    }
+
+    void chooseAvatar() {
+      final child = GridView.builder(
+          itemCount: AppAssets.AVATARS.length,
+          shrinkWrap: true,
+          padding:
+              const EdgeInsets.symmetric(vertical: AppConstants.SIDE_PADDING),
+          physics: NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              mainAxisSpacing: 0.03.sh,
+              crossAxisSpacing: 0.05.sw),
+          itemBuilder: (context, index) {
+            return Stack(children: [
+              CustomImage(
+                  imageType: ImageType.LOCAL,
+                  event: () {
+                    profileController.setProfileIndexTo(index);
+                    context.pop();
+                  },
+                  imageUrl: AppAssets.AVATARS[index],
+                  borderRadius: BorderRadius.circular(1.sh)),
+              if (index == profileState.profilePicIndex)
+                CustomImage(
+                    imageType: ImageType.SVG_LOCAL,
+                    imageUrl: AppSvgs.REMOVE_TO_FAVOURITE,
+                    height: double.infinity,
+                    color: AppColors.lightSteel1)
+            ]);
+          });
+
+      buildBottomSheet("Choose your avatar", child);
+    }
+
+    void chooseDate() {
+      final textStyle =
+          CustomText(text: "", weight: FontWeight.w900).getTextStyle();
+
       final dateFormat = DateFormat.yMMMd();
-      final initialDate =
-          dateFormat.parse(profileState.dateOfBirthController.text);
       final firstDate = DateTime(1950);
       final lastDate = DateTime(2020);
-      final date = await showDatePicker(
-        context: context,
-        initialDate: initialDate,
-        firstDate: firstDate,
-        lastDate: lastDate,
-        builder: (context, child) {
-          return Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: ColorScheme.dark(
-                primary: AppColors.vividNightfall4, // header background color
-                onPrimary: AppColors.lightSteel1, // header text color
-                onSurface:
-                    AppColors.lightSteel1.withAlpha(70), // body text color
-              ),
-              textButtonTheme: TextButtonThemeData(
-                style: TextButton.styleFrom(
-                  foregroundColor:
-                      AppColors.vividNightfall4, // button text color
-                ),
-              ),
-            ),
-            child: child!,
-          );
-        },
+      final initialDate = profileState.dateOfBirthController.text.isEmpty
+          ? lastDate
+          : dateFormat.parse(profileState.dateOfBirthController.text);
+
+      final child = Theme(
+        data: Theme.of(context).copyWith(
+          dividerColor: AppColors.transparent,
+          dividerTheme: DividerThemeData(
+            color: AppColors.transparent,
+          ),
+          colorScheme: ColorScheme.dark(
+            primary: AppColors.vividNightfall4,
+            onPrimary: AppColors.lightSteel1,
+            onSurface: AppColors.lightSteel1.withAlpha(70),
+          ),
+          datePickerTheme: DatePickerThemeData(
+            toggleButtonTextStyle:
+                CustomText(text: "", size: 0.015.sh, weight: FontWeight.w900)
+                    .getTextStyle(),
+            dayStyle: textStyle,
+            weekdayStyle: textStyle,
+            yearStyle: textStyle,
+          ),
+        ),
+        child: CalendarDatePicker(
+          initialDate: initialDate,
+          firstDate: firstDate,
+          lastDate: lastDate,
+          onDateChanged: (DateTime date) {
+            profileState.dateOfBirthController.text = dateFormat.format(date);
+          },
+        ),
       );
 
-      if (date != null) {
-        profileState.dateOfBirthController.text = dateFormat.format(date);
-      }
+      buildBottomSheet("Select date", child);
     }
 
     Widget editData() {
@@ -99,64 +163,12 @@ class ChooseYourAvatarScreen extends ConsumerWidget {
                 buildData(
                     "Gender",
                     AppConstants.GENDER[profileState.genderIndex].string1 ??
-                        ""),
-              if (profileState.dateOfBirth != null)
+                        "Loading..."),
+              if (profileState.dateOfBirth != null &&
+                  profileState.dateOfBirth!.isNotEmpty)
                 buildData(
                     "Data of Birth", profileState.dateOfBirth ?? "Loading...")
             ]);
-    }
-
-    void buildBottomSheet() {
-      final borderRadius = BorderRadius.vertical(top: Radius.circular(0.02.sh));
-      final sheetColor = AppColors.lightSteel1;
-
-      showModalBottomSheet(
-          context: context,
-          backgroundColor: sheetColor.withAlpha(10),
-          barrierColor: AppColors.transparent,
-          shape: RoundedRectangleBorder(borderRadius: borderRadius),
-          isScrollControlled: true,
-          builder: (context) => blurEffect(
-              6.0,
-              SingleChildScrollView(
-                  padding: const EdgeInsets.all(AppConstants.SIDE_PADDING),
-                  child: Column(mainAxisSize: MainAxisSize.min, children: [
-                    CustomText(
-                      text: "Choose your avatar",
-                      family: AppFonts.STAATLICHES,
-                      color: sheetColor.withAlpha(150),
-                    ),
-                    Divider(color: sheetColor.withAlpha(20)),
-                    GridView.builder(
-                        itemCount: AppAssets.AVATARS.length,
-                        shrinkWrap: true,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: AppConstants.SIDE_PADDING),
-                        physics: NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 4,
-                            mainAxisSpacing: 0.03.sh,
-                            crossAxisSpacing: 0.05.sw),
-                        itemBuilder: (context, index) {
-                          return Stack(children: [
-                            CustomImage(
-                                imageType: ImageType.LOCAL,
-                                event: () {
-                                  profileController.setProfileIndexTo(index);
-                                  context.pop();
-                                },
-                                imageUrl: AppAssets.AVATARS[index],
-                                borderRadius: BorderRadius.circular(1.sh)),
-                            if (index == profileState.profilePicIndex)
-                              CustomImage(
-                                  imageType: ImageType.SVG_LOCAL,
-                                  imageUrl: AppSvgs.REMOVE_TO_FAVOURITE,
-                                  height: double.infinity,
-                                  color: AppColors.lightSteel1)
-                          ]);
-                        })
-                  ])),
-              borderRadius: borderRadius));
     }
 
     Widget bottomButton() => Column(
@@ -164,7 +176,7 @@ class ChooseYourAvatarScreen extends ConsumerWidget {
           children: [
             if (profileState.tryEditing)
               CustomButton(
-                  onPressed: buildBottomSheet,
+                  onPressed: chooseAvatar,
                   buttonType: ButtonType.ELEVATED,
                   backgroundColor: AppColors.lightSteel1.withAlpha(40),
                   height: 0.065.sh,
