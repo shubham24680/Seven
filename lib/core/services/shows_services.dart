@@ -11,7 +11,7 @@ class ShowsServices {
     try {
       final response = await BaseService.instance.fetchData(
         apiHost: ApiConstants.API_HOST,
-        endPoint: ApiConstants.MOVIES,
+        endPoint: ApiConstants.TRENDING_MOVIES,
         responseType: ResponseType.GET,
       );
 

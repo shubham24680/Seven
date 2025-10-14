@@ -68,6 +68,7 @@ class Result {
   final bool? video;
   final double? voteAverage;
   final int? voteCount;
+  final String? mediaType;
 
   Result(
       {this.adult,
@@ -83,7 +84,8 @@ class Result {
       this.title,
       this.video,
       this.voteAverage,
-      this.voteCount});
+      this.voteCount,
+      this.mediaType});
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
       adult: json["adult"],
@@ -101,7 +103,8 @@ class Result {
       title: json["title"],
       video: json["video"],
       voteAverage: json["vote_average"]?.toDouble(),
-      voteCount: json["vote_count"]);
+      voteCount: json["vote_count"],
+      mediaType: json["media_type"]);
 
   Map<String, dynamic> toJson() => {
         "adult": adult,
@@ -117,7 +120,28 @@ class Result {
         "title": title,
         "video": video,
         "vote_average": voteAverage,
-        "vote_count": voteCount
+        "vote_count": voteCount,
+        "media_type": mediaType
+      };
+}
+
+class Genre {
+  final int? id;
+  final String? name;
+
+  Genre({
+    this.id,
+    this.name,
+  });
+
+  factory Genre.fromJson(Map<String, dynamic> json) => Genre(
+        id: json["id"],
+        name: json["name"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
       };
 }
 

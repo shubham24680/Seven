@@ -39,13 +39,14 @@ class CustomImage extends StatelessWidget {
       case ImageType.REMOTE:
         image = CachedNetworkImage(
             imageUrl: imageUrl ?? "",
-            placeholder: (context, url) =>
-                (placeholder != null) ? placeholder! : customShimmer(),
+            placeholder: (context, url) => (placeholder != null)
+                ? placeholder!
+                : customShimmer(height: height, width: width),
             errorWidget: (context, url, error) => Image.asset(
                   AppImages.PLACEHOLDER,
                   fit: fit ?? BoxFit.cover,
                   height: height,
-                  width: width,
+                  width: height,
                 ),
             fit: fit ?? BoxFit.cover,
             height: height,
@@ -53,14 +54,13 @@ class CustomImage extends StatelessWidget {
         break;
       case ImageType.SVG_LOCAL:
         image = SvgPicture.asset(imageUrl ?? AppSvgs.STAR,
-            height: height,
-            width: width,
-            fit: fit ?? BoxFit.contain,
             colorFilter: (color != null)
                 ? ColorFilter.mode(color!, BlendMode.srcIn)
-                : null);
+                : null,
+            fit: fit ?? BoxFit.contain,
+            height: height,
+            width: width);
         break;
-      case ImageType.LOCAL:
       default:
         image = localImage;
         break;

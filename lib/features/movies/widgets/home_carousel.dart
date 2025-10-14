@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:seven/app/app.dart';
 
 class HomeCarousel extends ConsumerWidget {
@@ -31,7 +30,7 @@ class HomeCarousel extends ConsumerWidget {
         children: [
           CustomImage(
             imageType: ImageType.LOCAL,
-            imageUrl: AppAssets.AVATARS[0],
+            imageUrl: AppImages.AVATAR_1,
             height: 0.048.sh,
             borderRadius: BorderRadius.circular(1.sh),
             event: () => showsController
@@ -65,12 +64,28 @@ class HomeCarousel extends ConsumerWidget {
                   child: Column(children: [
                 buildAppBar(),
                 const Spacer(),
-                if (genres?.firstOrNull != null)
-                  CustomText(
-                    text: showGenre,
-                    size: 0.025 * height,
-                    weight: FontWeight.w900,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (genres?.firstOrNull != null)
+                      Wrap(children: [
+                        CustomText(
+                          text: showGenre,
+                          size: 0.025 * height,
+                          weight: FontWeight.w900,
+                        ),
+                        CustomText(text: " • ")
+                      ]),
+                    CustomText(
+                      text:
+                          results?[showsState.carouselCurrentIndex].mediaType ??
+                              "",
+                      size: 0.025 * height,
+                      weight: FontWeight.w900,
+                      capitalFirstWord: true,
+                    ),
+                  ],
+                ),
                 SizedBox(height: 0.01 * height),
                 CustomText(
                     text: results?[showsState.carouselCurrentIndex].overview ??
@@ -118,7 +133,8 @@ class HomeCarousel extends ConsumerWidget {
         CustomImage(
             imageType: ImageType.REMOTE,
             imageUrl: ApiConstants.IMAGE_PATH +
-                (results?[showsState.carouselCurrentIndex].posterPath ?? "")),
+                (results?[showsState.carouselCurrentIndex].posterPath ?? ""),
+            height: height),
         buildMainWidget(),
         buildCarousel()
       ]);
