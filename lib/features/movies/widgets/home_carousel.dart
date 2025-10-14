@@ -1,26 +1,28 @@
 import 'dart:math';
-
 import 'package:seven/app/app.dart';
 
 class HomeCarousel extends ConsumerWidget {
-  const HomeCarousel({super.key, this.viewportFraction = 0.7});
-  final double viewportFraction;
+  const HomeCarousel({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final showsState = ref.watch(showsProvider);
     final showsController = ref.read(showsProvider.notifier);
+    final results = showsState.shows.results;
+    final genres = showsState.genre.genres;
+
+    final viewportFraction = 0.7;
     final width = 1.sw;
     final height = 1.5 * width;
     final carouselHeight = viewportFraction * height;
 
-    String? getGenre(int genreId) {
-      final value = showsState.genre.genres?.firstWhere(
+    String getGenre(int genreId) {
+      final value = genres?.firstWhere(
         (gen) => gen.id == genreId,
         orElse: () => Genre(id: -1, name: null),
       );
 
-      return value?.name;
+      return value?.name ?? "";
     }
 
     Widget buildAppBar() {
@@ -32,8 +34,7 @@ class HomeCarousel extends ConsumerWidget {
             imageUrl: AppAssets.AVATARS[0],
             height: 0.048.sh,
             borderRadius: BorderRadius.circular(1.sh),
-            event: () => ref
-                .read(showsProvider.notifier)
+            event: () => showsController
                 .moveToPage(AppAssets.BOTTOM_NAVIGATION_ICONS.length - 1),
           ),
           CustomButton(
@@ -46,9 +47,13 @@ class HomeCarousel extends ConsumerWidget {
     }
 
     Widget buildMainWidget() {
+      final showGenre = getGenre(
+          results?[showsState.carouselCurrentIndex].genreIds?[0] ?? -1);
+
       return blurEffect(
           6.0,
           Container(
+              height: height,
               padding: EdgeInsets.fromLTRB(
                   0.05 * width, 0.02 * height, 0.05 * width, 0.0),
               decoration: const BoxDecoration(
@@ -57,75 +62,40 @@ class HomeCarousel extends ConsumerWidget {
                       end: Alignment.bottomCenter,
                       colors: [AppColors.transparent, AppColors.black3])),
               child: SafeArea(
-                  child: Column(
-                children: [
-                  buildAppBar(),
-                  const Spacer(),
-                  if (showsState.genre.genres != null &&
-                      showsState.genre.genres!.isNotEmpty)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(
-                          min(
-                              showsState
-                                      .shows
-                                      .results?[showsState.carouselCurrentIndex]
-                                      .genreIds
-                                      ?.length ??
-                                  0,
-                              4), (index) {
-                        final genre = getGenre(showsState
-                                .shows
-                                .results?[showsState.carouselCurrentIndex]
-                                .genreIds?[index] ??
-                            -1);
-                        if (genre == null) {
-                          return const SizedBox.shrink();
-                        }
-
-                        return Wrap(
-                          children: [
-                            if (index != 0) const CustomText(text: " • "),
-                            CustomText(
-                              text: genre,
-                              size: 0.025 * height,
-                              weight: FontWeight.w900,
-                            )
-                          ],
-                        );
-                      }),
-                    ),
-                  SizedBox(height: 0.01 * height),
+                  child: Column(children: [
+                buildAppBar(),
+                const Spacer(),
+                if (genres?.firstOrNull != null)
                   CustomText(
-                      text: showsState
-                              .shows
-                              .results?[showsState.carouselCurrentIndex]
-                              .overview ??
-                          "",
-                      size: 0.02 * height,
-                      align: TextAlign.center,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis)
-                ],
-              ))));
+                    text: showGenre,
+                    size: 0.025 * height,
+                    weight: FontWeight.w900,
+                  ),
+                SizedBox(height: 0.01 * height),
+                CustomText(
+                    text: results?[showsState.carouselCurrentIndex].overview ??
+                        "",
+                    size: 0.02 * height,
+                    align: TextAlign.center,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis)
+              ]))));
     }
 
     Widget buildCarouselChild(int index) {
       return Stack(
         alignment: Alignment.topRight,
         children: [
-          IgnorePointer(
-            child: CustomImage(
-                imageType: ImageType.REMOTE,
-                imageUrl: ApiConstants.IMAGE_PATH +
-                    (showsState.shows.results?[index].posterPath ?? ""),
-                borderRadius: BorderRadius.circular(0.1 * carouselHeight)),
-          ),
-          customTag(
-                  AppSvgs.STAR,
-                  (showsState.shows.results?[index].voteAverage ?? -1.0)
-                      .toStringAsFixed(1))
-              .paddingAll(0.02.sh)
+          CustomImage(
+              imageType: ImageType.REMOTE,
+              event: () => context.push("/detail"),
+              imageUrl:
+                  ApiConstants.IMAGE_PATH + (results?[index].posterPath ?? ""),
+              borderRadius: BorderRadius.circular(0.1 * carouselHeight)),
+          if (results?[index].voteAverage != null)
+            customTag(AppSvgs.STAR,
+                    (results?[index].voteAverage ?? 0.0).toStringAsFixed(1))
+                .paddingAll(0.05 * carouselHeight),
         ],
       );
     }
@@ -133,7 +103,7 @@ class HomeCarousel extends ConsumerWidget {
     Widget buildCarousel() {
       return CarouselSlider.builder(
           itemBuilder: (context, index, realIndex) => buildCarouselChild(index),
-          itemCount: showsState.shows.results?.length ?? 0,
+          itemCount: results?.length ?? 0,
           options: CarouselOptions(
               onPageChanged: (index, _) => showsController.nextTo(index),
               initialPage: showsState.carouselCurrentIndex,
@@ -144,26 +114,23 @@ class HomeCarousel extends ConsumerWidget {
     }
 
     if (showsState.shows.isSuccess) {
-      return SizedBox(
-          height: height,
-          width: width,
-          child: Stack(alignment: Alignment.center, children: [
-            CustomImage(
-                imageType: ImageType.REMOTE,
-                imageUrl: ApiConstants.IMAGE_PATH +
-                    (showsState.shows.results?[showsState.carouselCurrentIndex]
-                            .posterPath ??
-                        "")),
-            buildMainWidget(),
-            buildCarousel().onTap(event: () {
-              debugPrint("onTap");
-              context.push("/detail");
-            }),
-          ]));
+      return Stack(alignment: Alignment.center, children: [
+        CustomImage(
+            imageType: ImageType.REMOTE,
+            imageUrl: ApiConstants.IMAGE_PATH +
+                (results?[showsState.carouselCurrentIndex].posterPath ?? "")),
+        buildMainWidget(),
+        buildCarousel()
+      ]);
     }
 
     debugPrint(
         "${showsState.shows.apiStatus} -> ${showsState.shows.errorMessage}");
-    return SafeArea(child: buildAppBar().paddingAll(AppConstants.SIDE_PADDING));
+    return Stack(
+      children: [
+        if (showsState.shows.isLoading) customShimmer(height: height),
+        SafeArea(child: buildAppBar().paddingAll(AppConstants.SIDE_PADDING))
+      ],
+    );
   }
 }

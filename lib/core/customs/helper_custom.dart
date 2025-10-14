@@ -15,8 +15,8 @@ Widget customShimmer({double? height, double? width, double? borderRadius}) {
     baseColor: AppColors.black2,
     highlightColor: AppColors.black1,
     child: Container(
-      height: height ?? double.infinity,
-      width: width ?? double.infinity,
+      height: height ?? 1.sh,
+      width: width ?? 1.sw,
       decoration: BoxDecoration(
         color: AppColors.lightSteel1,
         borderRadius: BorderRadius.circular(borderRadius ?? 0),

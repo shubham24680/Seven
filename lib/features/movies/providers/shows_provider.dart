@@ -54,7 +54,9 @@ class ShowsState {
 }
 
 class ShowsProvider extends StateNotifier<ShowsState> {
-  ShowsProvider() : super(ShowsState.initial());
+  ShowsProvider() : super(ShowsState.initial()) {
+    loadAllData();
+  }
 
   // final Map<ShowType, DateTime> _lastFetchTimes = {};
   // static const Duration _cacheTimeout = Duration(minutes: 5);

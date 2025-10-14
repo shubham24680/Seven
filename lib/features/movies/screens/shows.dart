@@ -8,12 +8,6 @@ class Shows extends ConsumerWidget {
     final showsState = ref.watch(showsProvider);
     final showsController = ref.read(showsProvider.notifier);
 
-    if (showsState.status.isInitial) {
-      Future.microtask(() {
-        showsController.loadAllData();
-      });
-    }
-
     Widget buildIcon(String icon, int index) {
       return SvgPicture.asset(
         icon,
