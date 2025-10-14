@@ -17,9 +17,6 @@ export 'movies/screens/search_screen.dart';
 export 'movies/widgets/home_carousel.dart';
 
 // PROFILE
-export 'movies/providers/profile_provider.dart';
-
-export 'movies/screens/profile/choose_your_avatar_screen.dart';
 
 // DETAIL
 export 'detail/screens/detail_screen.dart';

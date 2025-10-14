@@ -7,7 +7,7 @@ extension PaddingExtension on Widget {
           double right = 0,
           double bottom = 0}) =>
       Padding(
-        padding: EdgeInsetsGeometry.fromLTRB(left, top, right, bottom),
+        padding: EdgeInsets.fromLTRB(left, top, right, bottom),
         child: this,
       );
 
