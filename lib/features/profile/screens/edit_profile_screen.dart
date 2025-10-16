@@ -89,9 +89,9 @@ class EditProfileScreen extends ConsumerWidget {
             onSurface: AppColors.lightSteel1.withAlpha(70),
           ),
           datePickerTheme: DatePickerThemeData(
-            toggleButtonTextStyle:
-                CustomText(text: "", size: 0.015.sh, weight: FontWeight.w900)
-                    .getTextStyle(),
+            // toggleButtonTextStyle:
+            //     CustomText(text: "", size: 0.015.sh, weight: FontWeight.w900)
+            //         .getTextStyle(),
             dayStyle: textStyle,
             weekdayStyle: textStyle,
             yearStyle: textStyle,
