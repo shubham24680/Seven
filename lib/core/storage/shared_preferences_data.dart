@@ -11,12 +11,14 @@ class SPD {
     return _instance ??= SPD._();
   }
 
+  // GET
   int get profilePicIndex =>
       _prefs?.getInt(StorageConstants.PROFILE_PIC_INDEX) ?? 0;
   String? get name => _prefs?.getString(StorageConstants.NAME);
   int get genderIndex => _prefs?.getInt(StorageConstants.GENDER_INDEX) ?? -1;
   String? get dateOfBirth => _prefs?.getString(StorageConstants.DATE_OF_BIRTH);
 
+  // SET
   Future<bool> setProfilePicIndex(int index) async =>
       await _prefs?.setInt(StorageConstants.PROFILE_PIC_INDEX, index) ?? false;
   Future<bool> setName(String name) async =>
@@ -27,6 +29,7 @@ class SPD {
       await _prefs?.setString(StorageConstants.DATE_OF_BIRTH, dateOfBirth) ??
       false;
 
+  // CLEAR
   Future<bool> clearProfileData() async {
     await _prefs?.remove(StorageConstants.NAME);
     await _prefs?.remove(StorageConstants.GENDER_INDEX);

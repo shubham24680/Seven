@@ -5,75 +5,28 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final contentListHeight = (AppConstants.PROFILE.length * 0.07.sh) + 0.08.sh;
-
-    Widget buildButtons(bool isUserActive) {
-      final height = 0.065.sh;
-      final editButton = CustomButton(
-          buttonType: ButtonType.ELEVATED,
-          onPressed: () => context.push("/editProfile"),
-          height: height,
-          backgroundColor: AppColors.vividNightfall4,
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
-            const CustomText(
-              text: "Edit profile",
-              weight: FontWeight.w900,
-            ),
-            SizedBox(width: 0.02.sw),
-            CustomImage(
-                imageType: ImageType.SVG_LOCAL,
-                imageUrl: AppSvgs.ARROW_RIGHT,
-                height: 0.02.sh,
-                color: AppColors.lightSteel1)
-          ]));
-      final logOutButton = CustomButton(
-          buttonType: ButtonType.ELEVATED,
-          onPressed: () {},
-          height: height,
-          backgroundColor: AppColors.red1.withAlpha(70),
-          child: const CustomText(
-            text: "Log out",
-            color: AppColors.red1,
-            weight: FontWeight.w900,
-          ));
-
-      return isUserActive
-          ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(child: editButton),
-                SizedBox(width: 0.02.sw),
-                Expanded(child: logOutButton)
-              ],
-            )
-          : editButton;
-    }
-
     return Column(
       children: [
         Consumer(builder: (_, ref, __) {
           final profileState = ref.watch(profileProvider);
 
-          return Column(
-            children: [
-              CustomImage(
-                  imageType: ImageType.LOCAL,
-                  imageUrl: AppAssets.AVATARS[
-                      profileState.profilePicIndex % AppAssets.AVATARS.length],
-                  height: 0.15.sh,
-                  borderRadius: BorderRadius.circular(1.sh)),
-              SizedBox(height: 0.01.sh),
-              if (profileState.name != null && profileState.name!.isNotEmpty)
-                CustomText(
-                    text: profileState.name ?? "",
-                    family: AppFonts.STAATLICHES,
-                    size: 0.03.sh),
-              SizedBox(height: 0.02.sh),
-            ],
-          );
+          return Column(children: [
+            CustomImage(
+                imageType: ImageType.LOCAL,
+                imageUrl: AppAssets.AVATARS[profileState.profilePicIndex],
+                height: 0.15.sh,
+                borderRadius: BorderRadius.circular(1.sh)),
+            SizedBox(height: 0.01.sh),
+            if (profileState.name != null && profileState.name!.isNotEmpty)
+              CustomText(
+                  text: profileState.name ?? "",
+                  family: AppFonts.STAATLICHES,
+                  size: 0.03.sh)
+          ]);
         }),
-        buildButtons(false),
-        SizedBox(height: contentListHeight, child: contentList()),
+        SizedBox(height: 0.02.sh),
+        buildButtons(context, false),
+        contentList(context),
         const Spacer(),
         CustomText(
             text: "Version 1.0.0",
@@ -87,40 +40,84 @@ class ProfileScreen extends StatelessWidget {
         bottom: AppConstants.SIDE_PADDING);
   }
 
-  Widget contentList() {
+  Widget buildButtons(BuildContext context, bool isUserActive) {
+    final height = 0.065.sh;
+    final editButton = CustomButton(
+        buttonType: ButtonType.ELEVATED,
+        onPressed: () => context.push("/editProfile"),
+        height: height,
+        backgroundColor: AppColors.vividNightfall4,
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          const CustomText(
+            text: "Edit profile",
+            weight: FontWeight.w900,
+          ),
+          SizedBox(width: 0.02.sw),
+          CustomImage(
+              imageType: ImageType.SVG_LOCAL,
+              imageUrl: AppSvgs.ARROW_RIGHT,
+              height: 0.02.sh,
+              color: AppColors.lightSteel1)
+        ]));
+    final logOutButton = CustomButton(
+        buttonType: ButtonType.ELEVATED,
+        onPressed: () {},
+        height: height,
+        backgroundColor: AppColors.red1.withAlpha(70),
+        child: const CustomText(
+          text: "Log out",
+          color: AppColors.red1,
+          weight: FontWeight.w900,
+        ));
+
+    return isUserActive
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(child: editButton),
+              SizedBox(width: 0.02.sw),
+              Expanded(child: logOutButton)
+            ],
+          )
+        : editButton;
+  }
+
+  Widget contentList(BuildContext context) {
     return ListView.separated(
         itemCount: AppConstants.PROFILE.length,
+        shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         padding: EdgeInsets.only(top: 0.08.sh),
         itemBuilder: (_, index) => InkWell(
-            onTap: () {},
+            onTap: () {
+              final route = AppConstants.PROFILE[index].string3;
+              if (route != null) context.push(route);
+            },
             child: SizedBox(
                 height: 0.07.sh,
-                child: Row(
-                  children: [
-                    CustomImage(
-                        imageType: ImageType.SVG_LOCAL,
-                        imageUrl: AppConstants.PROFILE[index].icon,
-                        height: 0.03.sh,
-                        color: AppColors.vividNightfall4),
-                    SizedBox(width: 0.04.sw),
+                child: Row(children: [
+                  CustomImage(
+                      imageType: ImageType.SVG_LOCAL,
+                      imageUrl: AppConstants.PROFILE[index].string1,
+                      height: 0.03.sh,
+                      color: AppColors.vividNightfall4),
+                  SizedBox(width: 0.04.sw),
+                  CustomText(
+                      text: AppConstants.PROFILE[index].string2 ?? "",
+                      weight: FontWeight.w600),
+                  const Spacer(),
+                  if (index == 0)
                     CustomText(
-                        text: AppConstants.PROFILE[index].title,
-                        weight: FontWeight.w600),
-                    const Spacer(),
-                    if (index == 2)
-                      CustomText(
-                          text: "Disabled",
-                          size: 0.015.sh,
-                          color: AppColors.lightSteel1.withAlpha(150)),
-                    SizedBox(width: 0.02.sw),
-                    CustomImage(
-                        imageType: ImageType.SVG_LOCAL,
-                        imageUrl: AppSvgs.ARROW_RIGHT,
-                        height: 0.02.sh,
-                        color: AppColors.lightSteel1.withAlpha(150))
-                  ],
-                ))),
+                        text: "Disabled",
+                        size: 0.015.sh,
+                        color: AppColors.lightSteel1.withAlpha(150)),
+                  SizedBox(width: 0.02.sw),
+                  CustomImage(
+                      imageType: ImageType.SVG_LOCAL,
+                      imageUrl: AppSvgs.ARROW_RIGHT,
+                      height: 0.02.sh,
+                      color: AppColors.lightSteel1.withAlpha(150))
+                ]))),
         separatorBuilder: (_, index) =>
             Divider(color: AppColors.black2, height: 0));
   }

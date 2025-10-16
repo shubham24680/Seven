@@ -54,6 +54,7 @@ class ProfileProvider extends StateNotifier<ProfileState> {
       profilePicIndex: prefs.profilePicIndex,
       name: prefs.name,
       genderIndex: prefs.genderIndex,
+      dateOfBirth: prefs.dateOfBirth,
       tryEditing: false,
     );
   }

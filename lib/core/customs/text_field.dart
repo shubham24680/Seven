@@ -75,7 +75,6 @@ class CustomTextField extends StatelessWidget {
             value: initialValue,
             onChanged: onChanged,
             decoration: decoration,
-            // icon: SizedBox.shrink(),
             style: buildHint(AppColors.lightSteel1).getTextStyle(),
             hint: buildHint(hintColor, text: hintText),
             dropdownColor: AppColors.vividNightfall4,
