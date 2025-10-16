@@ -2,7 +2,6 @@
 export 'constants/api_constants.dart';
 export 'constants/app_constants.dart';
 export 'constants/app_assets.dart';
-export 'constants/storage_constants.dart';
 
 // PACKAGES
 export 'packages/app_packages.dart';
@@ -16,7 +15,6 @@ export 'services/shows_services.dart';
 export 'services/network.dart';
 
 // STORAGE
-export 'storage/shared_preferences_data.dart';
 
 // THEME
 export 'theme/dark_theme.dart';

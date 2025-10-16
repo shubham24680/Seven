@@ -8,7 +8,6 @@ class HomeCarousel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profileState = ref.watch(profileProvider);
     final showsState = ref.watch(showsProvider);
     final showsController = ref.read(showsProvider.notifier);
     final width = 1.sw;
@@ -30,8 +29,7 @@ class HomeCarousel extends ConsumerWidget {
         children: [
           CustomImage(
             imageType: ImageType.LOCAL,
-            imageUrl: AppAssets.AVATARS[
-                profileState.profilePicIndex % AppAssets.AVATARS.length],
+            imageUrl: AppAssets.AVATARS[0],
             height: 0.048.sh,
             borderRadius: BorderRadius.circular(1.sh),
             event: () => ref
