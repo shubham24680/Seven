@@ -204,9 +204,7 @@ class EditProfileScreen extends ConsumerWidget {
     return PopScope(
         onPopInvokedWithResult: (didPop, result) =>
             profileController.loadData(),
-        child: GestureDetector(
-            onTap: () => FocusScope.of(context).unfocus(),
-            child: Scaffold(
+        child: Scaffold(
                 extendBody: true,
                 appBar: customAppBar(() {
                   context.pop();
@@ -228,7 +226,8 @@ class EditProfileScreen extends ConsumerWidget {
                       showData(),
                       const Spacer(flex: 3),
                     ])),
-                bottomNavigationBar: bottomButton())));
+                bottomNavigationBar: bottomButton())
+            .onTap(event: () => FocusScope.of(context).unfocus()));
   }
 
   // Decoration

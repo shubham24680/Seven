@@ -4,7 +4,6 @@ class AppAssets {
   static final List<BottomNavigation> BOTTOM_NAVIGATION_ICONS = [
     BottomNavigation(icon: AppSvgs.HOME, screen: HomeScreen()),
     BottomNavigation(icon: AppSvgs.SEARCH, screen: const SearchScreen()),
-    BottomNavigation(icon: AppSvgs.SAVE, screen: const SaveScreen()),
     BottomNavigation(icon: AppSvgs.PROFILE, screen: const ProfileScreen()),
   ];
 

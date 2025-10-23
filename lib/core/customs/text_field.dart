@@ -78,12 +78,13 @@ class CustomTextField extends StatelessWidget {
             style: buildHint(AppColors.lightSteel1).getTextStyle(),
             hint: buildHint(hintColor, text: hintText),
             dropdownColor: AppColors.vividNightfall4,
-            borderRadius: BorderRadius.circular(0.01.sh));
+            borderRadius: BorderRadius.circular(0.015.sh));
         break;
       default:
         field = TextFormField(
           controller: controller,
           onTap: onTap,
+          onChanged: onChanged,
           decoration: decoration,
           readOnly: readOnly,
           keyboardType: keyboardType ?? TextInputType.text,
@@ -117,7 +118,7 @@ class CustomTextField extends StatelessWidget {
   InputBorder buildBorder(Color color) {
     return OutlineInputBorder(
       borderSide: BorderSide(color: color),
-      borderRadius: BorderRadius.circular(0.01.sh),
+      borderRadius: BorderRadius.circular(0.015.sh),
     );
   }
 }
