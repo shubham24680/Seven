@@ -100,8 +100,7 @@ class ShowsProvider extends StateNotifier<ShowsState> {
     state = state.copyWith(
         collection: state.collection
             .map((c) => c.setApiStatus(ApiStatus.LOADING))
-            .toList(),
-        status: state.status.count(count: state.collection.length));
+            .toList());
 
     log("Fetching collections data");
     List<ShowsModel?>? collection;
@@ -156,7 +155,7 @@ class ShowsProvider extends StateNotifier<ShowsState> {
     } finally {
       state = state.copyWith(
           status: state.status.setApiStatus(
-              state.status.apiErrorCount == state.collection.length + 1
+              state.status.apiErrorCount >= state.collection.length + 1
                   ? ApiStatus.ERROR
                   : ApiStatus.SUCCESS));
     }
@@ -164,6 +163,7 @@ class ShowsProvider extends StateNotifier<ShowsState> {
 
   Future<void> refresh() async {
     log("Refreshing all data");
+    state.status.defaultCount();
     await loadAllData(forceRefresh: true);
   }
 
