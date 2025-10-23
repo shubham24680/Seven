@@ -1,4 +1,6 @@
 class StorageConstants {
+  static const FIRST_VISIT = 'first_visit';
+
   // Profile
   static const PROFILE_PIC_INDEX = 'profile_pic_index';
   static const NAME = 'name';
