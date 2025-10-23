@@ -16,18 +16,17 @@ class ShowsState {
   final bool searchValueExist;
   final int showsIndex;
 
-  const ShowsState({
-    required this.shows,
-    required this.genre,
-    required this.collection,
-    required this.search,
-    required this.status,
-    required this.navigationCurrentIndex,
-    required this.carouselCurrentIndex,
-    required this.showsIndex,
-    required this.searchController,
-    required this.searchValueExist
-  });
+  const ShowsState(
+      {required this.shows,
+      required this.genre,
+      required this.collection,
+      required this.search,
+      required this.status,
+      required this.navigationCurrentIndex,
+      required this.carouselCurrentIndex,
+      required this.showsIndex,
+      required this.searchController,
+      required this.searchValueExist});
 
   factory ShowsState.initial() {
     return ShowsState(
@@ -39,7 +38,7 @@ class ShowsState {
         status: Network(),
         navigationCurrentIndex: 0,
         carouselCurrentIndex: 0,
-        showsIndex: 0
+        showsIndex: 0,
         searchController: TextEditingController(),
         searchValueExist: false);
   }
@@ -52,7 +51,7 @@ class ShowsState {
       Network? status,
       int? navigationCurrentIndex,
       int? carouselCurrentIndex,
-      int? showsIndex
+      int? showsIndex,
       bool? isRefreshing,
       bool? searchValueExist}) {
     return ShowsState(
@@ -64,7 +63,7 @@ class ShowsState {
         navigationCurrentIndex:
             navigationCurrentIndex ?? this.navigationCurrentIndex,
         carouselCurrentIndex: carouselCurrentIndex ?? this.carouselCurrentIndex,
-        showsIndex: showsIndex ?? this.showsIndex
+        showsIndex: showsIndex ?? this.showsIndex,
         searchController: searchController,
         searchValueExist: searchValueExist ?? this.searchValueExist);
   }
@@ -85,7 +84,7 @@ class ShowsProvider extends StateNotifier<ShowsState> {
     // if (!forceRefresh && _isDataCached(ShowType.SHOWS)) return;
 
     state = state.copyWith(
-      shows: state.search.setApiStatus(ApiStatus.LOADING),
+      search: state.search.setApiStatus(ApiStatus.LOADING),
     );
 
     log("Fetching shows data");

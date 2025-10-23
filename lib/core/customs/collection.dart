@@ -35,7 +35,6 @@ class CustomCollection extends StatelessWidget {
     final collectionItems = GridView.builder(
         itemCount: results?.length ?? 5,
         scrollDirection: scrollDirection,
-        // shrinkWrap: true,
         padding: EdgeInsets.symmetric(
             horizontal: AppConstants.SIDE_PADDING,
             vertical: isVertical ? AppConstants.SIDE_PADDING : 0),
