@@ -26,6 +26,14 @@ class PageState {
 class PageProvider extends StateNotifier<PageState> {
   PageProvider() : super(PageState.initial());
 
+  Future<void> changeFirstTimeVisitStatus() async {
+    final prefs = await SPD.getInstance();
+    final isFirstTimeVisit = prefs.isFirstTimeVisit;
+    if (isFirstTimeVisit) {
+      await prefs.setFirstTimeVisit(false);
+    }
+  }
+
   // Update index when use controller
   void moveToPage(int index) {
     state = state.copyWith(currentIndex: index);

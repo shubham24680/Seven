@@ -12,6 +12,8 @@ class SPD {
   }
 
   // GET
+  bool get isFirstTimeVisit =>
+      _prefs?.getBool(StorageConstants.FIRST_VISIT) ?? true;
   int get profilePicIndex =>
       _prefs?.getInt(StorageConstants.PROFILE_PIC_INDEX) ?? 0;
   String? get name => _prefs?.getString(StorageConstants.NAME);
@@ -19,6 +21,8 @@ class SPD {
   String? get dateOfBirth => _prefs?.getString(StorageConstants.DATE_OF_BIRTH);
 
   // SET
+  Future<bool> setFirstTimeVisit(bool value) async =>
+      await _prefs?.setBool(StorageConstants.FIRST_VISIT, value) ?? false;
   Future<bool> setProfilePicIndex(int index) async =>
       await _prefs?.setInt(StorageConstants.PROFILE_PIC_INDEX, index) ?? false;
   Future<bool> setName(String name) async =>
@@ -31,6 +35,7 @@ class SPD {
 
   // CLEAR
   Future<bool> clearProfileData() async {
+    await _prefs?.remove(StorageConstants.FIRST_VISIT);
     await _prefs?.remove(StorageConstants.NAME);
     await _prefs?.remove(StorageConstants.GENDER_INDEX);
     await _prefs?.remove(StorageConstants.DATE_OF_BIRTH);

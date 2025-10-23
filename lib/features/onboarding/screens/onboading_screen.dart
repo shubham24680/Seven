@@ -10,18 +10,6 @@ class OnboadingScreen extends ConsumerWidget {
     bool isLastIndex =
         pageState.currentIndex != AppConstants.ONBOARDING_TEXT.length - 1;
 
-    // MARK: Heading
-    buildHeading(int index, {double? size}) {
-      return CustomText(
-        text: AppConstants.ONBOARDING_TEXT[index]['heading']!,
-        align: TextAlign.end,
-        family: AppFonts.STAATLICHES,
-        size: size ?? 16.sp,
-        weight: FontWeight.w900,
-        height: 1.3,
-      );
-    }
-
     // MARK: Child
     buildChild(int index) {
       return Column(
@@ -29,67 +17,69 @@ class OnboadingScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           // HEADING
-          buildHeading(index, size: 32.sp),
-          const SizedBox(height: 20),
+          CustomText(
+              text: AppConstants.ONBOARDING_TEXT[index]['heading']!,
+              align: TextAlign.end,
+              family: AppFonts.STAATLICHES,
+              size: 32.sp,
+              weight: FontWeight.w900,
+              height: 1.3),
+          SizedBox(height: 0.02.sh),
 
           // DESCRIPTION
           CustomText(
-            text: AppConstants.ONBOARDING_TEXT[index]['description']!,
-            align: TextAlign.end,
-            color: AppColors.lightSteel1.withAlpha(170),
-            size: 12.sp,
-          ),
-          const SizedBox(height: 20),
+              text: AppConstants.ONBOARDING_TEXT[index]['description']!,
+              align: TextAlign.end,
+              color: AppColors.lightSteel1.withAlpha(150),
+              size: 12.sp),
+          SizedBox(height: 0.02.sh),
 
           // NEXT BUTTON
           CustomButton(
-            onPressed: () {
-              if (index + 1 < AppConstants.ONBOARDING_TEXT.length) {
-                pageController.jumpToPage(pageState.currentIndex + 1);
-              } else {
-                context.go('/movies');
-              }
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
+              buttonType: ButtonType.ELEVATED,
+              onPressed: () {
+                if (index + 1 < AppConstants.ONBOARDING_TEXT.length) {
+                  pageController.jumpToPage(pageState.currentIndex + 1);
+                } else {
+                  pageController.changeFirstTimeVisitStatus();
+                  context.go('/');
+                }
+              },
+              height: 0.065.sh,
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
                 CustomText(
-                  text: isLastIndex ? "Next     " : "Get the vibe     ",
-                  size: 14.sp,
+                  text: isLastIndex ? "Next" : "Get the vibe",
+                  weight: FontWeight.w900,
                 ),
-                Icon(
-                  Icons.arrow_forward,
-                  size: 14.sp,
-                  color: AppColors.lightSteel1,
-                ),
-              ],
-            ),
-          ),
+                SizedBox(width: 0.02.sw),
+                CustomImage(
+                    imageType: ImageType.SVG_LOCAL,
+                    imageUrl: AppSvgs.ARROW_RIGHT,
+                    height: 0.02.sh,
+                    color: AppColors.lightSteel1)
+              ]))
         ],
       );
     }
 
     // MARK: Scaffold
     return Scaffold(
-      body: PageView.builder(
-        controller: pageState.pageController,
-        itemCount: AppConstants.ONBOARDING_TEXT.length,
-        onPageChanged: (index) => pageController.moveToPage(index),
-        itemBuilder: (context, index) => Container(
-          width: 1.sw,
-          padding: EdgeInsets.only(bottom: 60.h, right: 20.w, left: 20.w),
-          decoration: BoxDecoration(
-            // BACKGROUND IMAGE
-            image: DecorationImage(
-              image: AssetImage(AppAssets.ONBOARDING_IMAGES[index]),
-              fit: BoxFit.cover,
-              alignment: const Alignment(-0.4, 0.0),
-            ),
-          ),
-          child: buildChild(index),
-        ),
-      ),
-    );
+        body: PageView.builder(
+            controller: pageState.pageController,
+            itemCount: AppConstants.ONBOARDING_TEXT.length,
+            onPageChanged: (index) => pageController.moveToPage(index),
+            itemBuilder: (context, index) => Container(
+                width: 1.sw,
+                padding: EdgeInsets.only(
+                    bottom: 60.h,
+                    right: AppConstants.SIDE_PADDING,
+                    left: AppConstants.SIDE_PADDING),
+                decoration: BoxDecoration(
+                    // BACKGROUND IMAGE
+                    image: DecorationImage(
+                        image: AssetImage(AppAssets.ONBOARDING_IMAGES[index]),
+                        fit: BoxFit.cover,
+                        alignment: const Alignment(-0.4, 0.0))),
+                child: buildChild(index))));
   }
 }
