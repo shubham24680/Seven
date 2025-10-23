@@ -39,7 +39,7 @@ class ShowsServices {
 
   Future<List<ShowsModel?>?> fetchCollections() async {
     try {
-      final response = await Future.wait(ApiConstants.COLLECTION
+      final response = await Future.wait(ApiConstants.COLLECTIONS
           .map((endPoint) => BaseService.instance.fetchData(
                 apiHost: ApiConstants.API_HOST,
                 endPoint: endPoint,

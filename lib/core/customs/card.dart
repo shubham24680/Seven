@@ -3,15 +3,15 @@ import 'package:seven/app/app.dart';
 enum CardOrientation { POTRAIT, LANDSCAPE }
 
 class CustomCard extends StatelessWidget {
-  const CustomCard({
-    super.key,
-    this.orientation = CardOrientation.LANDSCAPE,
-    this.isGenreCard = false,
-    this.imageUrl,
-    this.title,
-    this.height,
-    this.result,
-  });
+  const CustomCard(
+      {super.key,
+      this.orientation = CardOrientation.LANDSCAPE,
+      this.isGenreCard = false,
+      this.imageUrl,
+      this.title,
+      this.height,
+      this.result,
+      this.event});
 
   final CardOrientation orientation;
   final bool isGenreCard;
@@ -19,37 +19,43 @@ class CustomCard extends StatelessWidget {
   final String? title;
   final double? height;
   final Result? result;
+  final void Function()? event;
 
   @override
   Widget build(BuildContext context) {
-    double aspectRatio = AppConstants.CARD_RATIO_LANDSCAPE;
-    double widgetHeight = height ?? 0.17.sh;
-    double textSize = 0.11;
-    double borderRadius = 0.1;
-    int maxLines = 1;
-    String imagePath = result?.backdropPath ?? "";
+    final bool isPortrait = orientation == CardOrientation.POTRAIT;
+    final int maxLines = isPortrait ? 2 : 1;
+    final String imagePath =
+        isPortrait ? (result?.posterPath ?? "") : (result?.backdropPath ?? "");
+    final double widgetHeight = height ?? (isPortrait ? 0.32.sh : 0.17.sh);
+    final double aspectRatio = isPortrait
+        ? AppConstants.CARD_RATIO_PORTRAIT
+        : AppConstants.CARD_RATIO_LANDSCAPE;
+    final double textSize = (isPortrait ? 0.05 : 0.11) * widgetHeight;
+    final double borderRadius = (isPortrait ? 0.06 : 0.1) * widgetHeight;
+    final double width = widgetHeight * aspectRatio;
 
-    if (orientation == CardOrientation.POTRAIT) {
-      aspectRatio = AppConstants.CARD_RATIO_PORTRAIT;
-      widgetHeight = height ?? 0.32.sh;
-      textSize = 0.05;
-      borderRadius = 0.06;
-      maxLines = 2;
-      imagePath = result?.posterPath ?? "";
-    }
-    textSize *= widgetHeight;
-    borderRadius *= widgetHeight;
-    final width = widgetHeight * aspectRatio;
+    final ImageType imageType =
+        isGenreCard ? ImageType.LOCAL : ImageType.REMOTE;
+    final String resolvedImageUrl =
+        isGenreCard ? (imageUrl ?? "") : (ApiConstants.IMAGE_PATH + imagePath);
+    final String? effectiveTitle =
+        isGenreCard ? title : (result?.title ?? result?.originalTitle);
 
-    Widget buildTextCard(String? title) {
-      if (title == null) return SizedBox.shrink();
+    Widget buildTextCard(String? cardTitle) {
+      if (cardTitle == null) return const SizedBox.shrink();
+
+      final double containerHeight = widgetHeight * (isGenreCard ? 1.0 : 0.2);
+      final Alignment alignment =
+          isGenreCard ? Alignment.bottomLeft : Alignment.center;
+      final double computedTextSize = textSize * (isGenreCard ? 2.0 : 1.0);
 
       return blurEffect(
-          isGenreCard ? 6.0 : 6.0,
+          6.0,
           Container(
-            height: widgetHeight * (isGenreCard ? 1.0 : 0.2),
+            height: containerHeight,
             width: width,
-            alignment: isGenreCard ? Alignment.bottomLeft : Alignment.center,
+            alignment: alignment,
             padding: EdgeInsets.symmetric(
                 vertical: isGenreCard ? AppConstants.SIDE_PADDING : 0,
                 horizontal: AppConstants.SIDE_PADDING),
@@ -57,9 +63,9 @@ class CustomCard extends StatelessWidget {
               color: AppColors.black5.withAlpha(70),
             ),
             child: CustomText(
-              text: title,
+              text: cardTitle,
               family: isGenreCard ? AppFonts.STAATLICHES : null,
-              size: textSize * (isGenreCard ? 2.0 : 1.0),
+              size: computedTextSize,
               weight: FontWeight.w900,
               maxLines: maxLines,
               align: isGenreCard ? null : TextAlign.center,
@@ -75,14 +81,14 @@ class CustomCard extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       children: [
         CustomImage(
-          imageType: isGenreCard ? ImageType.LOCAL : ImageType.REMOTE,
-          imageUrl:
-              isGenreCard ? imageUrl : ApiConstants.IMAGE_PATH + imagePath,
+          imageType: imageType,
+          imageUrl: resolvedImageUrl,
+          event: event,
           borderRadius: BorderRadius.circular(borderRadius),
           height: widgetHeight,
           width: width,
         ),
-        isGenreCard ? buildTextCard(title) : buildTextCard(result?.title)
+        buildTextCard(effectiveTitle)
       ],
     );
   }

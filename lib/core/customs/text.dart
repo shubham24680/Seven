@@ -12,7 +12,8 @@ class CustomText extends StatelessWidget {
       this.size,
       this.weight,
       this.height,
-      this.capitalFirstWord = false});
+      this.capitalFirstWord = false,
+      this.decoration});
 
   final String text;
   final TextAlign? align;
@@ -24,6 +25,7 @@ class CustomText extends StatelessWidget {
   final FontWeight? weight;
   final double? height;
   final bool capitalFirstWord;
+  final TextDecoration? decoration;
 
   @override
   Widget build(BuildContext context) {
@@ -31,18 +33,21 @@ class CustomText extends StatelessWidget {
         ? "${text[0].toUpperCase()}${text.substring(1)}"
         : text;
 
-    return Text(
-      words,
-      textAlign: align,
-      maxLines: maxLines,
-      overflow: overflow ?? TextOverflow.clip,
-      style: TextStyle(
+    return Text(words,
+        textAlign: align,
+        maxLines: maxLines,
+        overflow: overflow ?? TextOverflow.clip,
+        style: getTextStyle());
+  }
+
+  TextStyle getTextStyle() {
+    return TextStyle(
         fontFamily: family ?? AppFonts.POPPINS,
         color: color,
         fontSize: size ?? 0.02.sh,
         fontWeight: weight,
         height: height,
-      ),
-    );
+        decoration: decoration,
+        decorationColor: color);
   }
 }

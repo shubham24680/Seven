@@ -5,7 +5,7 @@ export 'error/error_screen.dart';
 export 'onboarding/providers/onboarding_providers.dart';
 export 'onboarding/screens/onboading_screen.dart';
 
-// MOVIES
+// SHOWS
 export 'movies/providers/shows_provider.dart';
 
 export 'movies/screens/shows.dart';
@@ -19,6 +19,7 @@ export 'movies/widgets/home_carousel.dart';
 // PROFILE
 
 // DETAIL
+export 'collections/screens/collection_screen.dart';
 export 'detail/screens/detail_screen.dart';
 
 // NOTIFICATION

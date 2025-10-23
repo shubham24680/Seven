@@ -11,6 +11,7 @@ class ShowsState {
   final Network status;
   final int navigationCurrentIndex;
   final int carouselCurrentIndex;
+  final int showsIndex;
 
   const ShowsState({
     required this.shows,
@@ -19,37 +20,38 @@ class ShowsState {
     required this.status,
     required this.navigationCurrentIndex,
     required this.carouselCurrentIndex,
+    required this.showsIndex,
   });
 
   factory ShowsState.initial() {
     return ShowsState(
-      shows: ShowsModel(),
-      genre: GenreModel(),
-      collection: AppConstants.COLLECTIONS.map((item) => ShowsModel()).toList(),
-      status: Network(),
-      navigationCurrentIndex: 0,
-      carouselCurrentIndex: 0,
-    );
+        shows: ShowsModel(),
+        genre: GenreModel(),
+        collection:
+            ApiConstants.COLLECTIONS.map((item) => ShowsModel()).toList(),
+        status: Network(),
+        navigationCurrentIndex: 0,
+        carouselCurrentIndex: 0,
+        showsIndex: 0);
   }
 
-  ShowsState copyWith({
-    ShowsModel? shows,
-    GenreModel? genre,
-    List<ShowsModel>? collection,
-    Network? status,
-    int? navigationCurrentIndex,
-    int? carouselCurrentIndex,
-    bool? isRefreshing,
-  }) {
+  ShowsState copyWith(
+      {ShowsModel? shows,
+      GenreModel? genre,
+      List<ShowsModel>? collection,
+      Network? status,
+      int? navigationCurrentIndex,
+      int? carouselCurrentIndex,
+      int? showsIndex}) {
     return ShowsState(
-      shows: shows ?? this.shows,
-      genre: genre ?? this.genre,
-      collection: collection ?? this.collection,
-      status: status ?? this.status,
-      navigationCurrentIndex:
-          navigationCurrentIndex ?? this.navigationCurrentIndex,
-      carouselCurrentIndex: carouselCurrentIndex ?? this.carouselCurrentIndex,
-    );
+        shows: shows ?? this.shows,
+        genre: genre ?? this.genre,
+        collection: collection ?? this.collection,
+        status: status ?? this.status,
+        navigationCurrentIndex:
+            navigationCurrentIndex ?? this.navigationCurrentIndex,
+        carouselCurrentIndex: carouselCurrentIndex ?? this.carouselCurrentIndex,
+        showsIndex: showsIndex ?? this.showsIndex);
   }
 }
 
@@ -106,14 +108,14 @@ class ShowsProvider extends StateNotifier<ShowsState> {
 
     log("Fetching collections data");
     List<ShowsModel?>? collection;
-    for (int attempt = 1; attempt <= 5; attempt++) {
+    for (int attempt = 1; attempt <= 3; attempt++) {
       collection = await ShowsServices.instance.fetchCollections();
       if (collection != null) {
         log("Collections fetched successfully on attempt $attempt");
         break;
       }
       log("Collections fetch attempt $attempt failed (null). Retrying...");
-      await Future.delayed(Duration(seconds: attempt));
+      await Future.delayed(Duration(seconds: 2 * attempt));
     }
 
     if (collection != null) {
@@ -185,6 +187,15 @@ class ShowsProvider extends StateNotifier<ShowsState> {
       return;
     }
     state = state.copyWith(carouselCurrentIndex: index);
+  }
+
+  // Update collection index to new screen
+  void chooseTo(int index) {
+    if (index < 0) {
+      log("Invalid shows index: $index");
+      return;
+    }
+    state = state.copyWith(showsIndex: index);
   }
 
   // bool _isDataCached(ShowType key) {

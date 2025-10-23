@@ -50,3 +50,23 @@ Widget customTag(String icon, String value) {
     ),
   );
 }
+
+// APPBAR
+PreferredSizeWidget customAppBar(
+    void Function()? onPressed, String appBarTitle) {
+  final leading = CustomButton(
+      buttonType: ButtonType.ICON,
+      onPressed: onPressed,
+      icon: AppSvgs.ARROW_LEFT,
+      forgroundColor: AppColors.lightSteel1,
+      backgroundColor: AppColors.transparent);
+  final title = CustomText(
+      text: appBarTitle, family: AppFonts.STAATLICHES, size: 0.03.sh);
+
+  return AppBar(
+      backgroundColor: AppColors.transparent,
+      toolbarHeight: 50,
+      centerTitle: true,
+      leading: leading,
+      title: title);
+}

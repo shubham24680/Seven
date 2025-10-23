@@ -108,9 +108,10 @@ class HomeCarousel extends ConsumerWidget {
                   ApiConstants.IMAGE_PATH + (results?[index].posterPath ?? ""),
               borderRadius: BorderRadius.circular(0.1 * carouselHeight)),
           if (results?[index].voteAverage != null)
-            customTag(AppSvgs.STAR,
-                    (results?[index].voteAverage ?? 0.0).toStringAsFixed(1))
-                .paddingAll(0.05 * carouselHeight),
+            IgnorePointer(
+                child: customTag(AppSvgs.STAR,
+                        (results?[index].voteAverage ?? 0.0).toStringAsFixed(1))
+                    .paddingAll(0.05 * carouselHeight)),
         ],
       );
     }
