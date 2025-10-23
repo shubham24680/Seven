@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:seven/app/app.dart';
 
+// BLUR
 Widget blurEffect(double blurValue, Widget child,
     {BorderRadius borderRadius = BorderRadius.zero}) {
   return ClipRRect(
@@ -10,6 +11,7 @@ Widget blurEffect(double blurValue, Widget child,
           child: child));
 }
 
+// SHIMMER
 Widget customShimmer({double? height, double? width, double? borderRadius}) {
   return Shimmer.fromColors(
     baseColor: AppColors.black2,
@@ -25,6 +27,7 @@ Widget customShimmer({double? height, double? width, double? borderRadius}) {
   );
 }
 
+// TAG
 Widget customTag(String icon, String value) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 0.02.sw, vertical: 0.005.sh),

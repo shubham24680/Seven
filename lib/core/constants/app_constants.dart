@@ -7,11 +7,15 @@ class AppConstants {
 
   // ROUTES
   static final List<ScreenRoutes> APP_ROUTES = [
-    // ScreenRoutes(path: "/", child: const OnboadingScreen()),
     ScreenRoutes(path: "/", child: const Shows()),
-    ScreenRoutes(path: "/movies", child: const Shows()),
+    ScreenRoutes(path: "/onboarding", child: const OnboadingScreen()),
     ScreenRoutes(path: "/detail", child: const DetailScreen()),
     ScreenRoutes(path: "/notification", child: const NotificationScreen()),
+    ScreenRoutes(path: "/editProfile", child: const EditProfileScreen()),
+    ScreenRoutes(
+        path: "/notificationSettings",
+        child: const NotificationSettingsScreen()),
+    ScreenRoutes(path: "/help", child: const HelpScreen()),
     ScreenRoutes(path: "/collection", child: const CollectionScreen()),
   ];
 
@@ -45,11 +49,12 @@ class AppConstants {
   ];
 
   // PROFILE
-  static List<ProfileModel> PROFILE = [
-    ProfileModel(icon: AppSvgs.PLAY, title: "Continue watching"),
-    ProfileModel(icon: AppSvgs.ADD_TO_FAVOURITE, title: "Favorites"),
-    ProfileModel(icon: AppSvgs.NOTIFICATION, title: "Notifications"),
-    ProfileModel(icon: AppSvgs.HELP, title: "Help"),
+  static List<HelperModel> PROFILE = [
+    HelperModel(
+        string1: AppSvgs.NOTIFICATION,
+        string2: "Notifications",
+        string3: "/notificationSettings"),
+    HelperModel(string1: AppSvgs.HELP, string2: "Help", string3: "/help"),
   ];
 
   static List<HelperModel> GENDER = [

@@ -4,7 +4,6 @@ class AppAssets {
   static final List<BottomNavigation> BOTTOM_NAVIGATION_ICONS = [
     BottomNavigation(icon: AppSvgs.HOME, screen: HomeScreen()),
     BottomNavigation(icon: AppSvgs.SEARCH, screen: const SearchScreen()),
-    BottomNavigation(icon: AppSvgs.SAVE, screen: const SaveScreen()),
     BottomNavigation(icon: AppSvgs.PROFILE, screen: const ProfileScreen()),
   ];
 
@@ -16,11 +15,13 @@ class AppAssets {
 
   static const List<String> AVATARS = [
     AppImages.AVATAR_1,
+    AppImages.AVATAR_2,
   ];
 }
 
 class AppImages {
-  static const AVATAR_1 = "assets/avatars/avatar (1).png";
+  static const AVATAR_1 = "assets/avatars/avatar (1).jpg";
+  static const AVATAR_2 = "assets/avatars/avatar (2).jpg";
   static const ONBOARDING_1 = "assets/images/onboarding (1).png";
   static const ONBOARDING_2 = "assets/images/onboarding (2).png";
   static const ONBOARDING_3 = "assets/images/onboarding (3).png";

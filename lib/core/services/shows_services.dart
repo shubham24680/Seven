@@ -7,6 +7,21 @@ class ShowsServices {
   ShowsServices._();
   static ShowsServices get instance => _instance ??= ShowsServices._();
 
+  Future<ShowsModel?> search(String query) async {
+    try {
+      final response = await BaseService.instance.fetchData(
+          apiHost: ApiConstants.API_HOST,
+          endPoint: ApiConstants.SEARCH,
+          responseType: ResponseType.GET,
+          queryParams: {"query": query});
+
+      return response != null ? ShowsModel.fromJson(response) : null;
+    } catch (e) {
+      log("Internal Error -> $e");
+      return null;
+    }
+  }
+
   Future<ShowsModel?> fetchShows() async {
     try {
       final response = await BaseService.instance.fetchData(

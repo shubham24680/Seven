@@ -12,6 +12,7 @@ class BaseService {
 
   Map<String, String> _headers() {
     return {
+      'Authorization': ApiConstants.BEARER_TOKEN,
       "Content-Type": "application/json",
       "Accept": "application/json",
     };

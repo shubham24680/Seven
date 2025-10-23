@@ -8,19 +8,25 @@ class ShowsState {
   final ShowsModel shows;
   final GenreModel genre;
   final List<ShowsModel> collection;
+  final ShowsModel search;
   final Network status;
   final int navigationCurrentIndex;
   final int carouselCurrentIndex;
+  final TextEditingController searchController;
+  final bool searchValueExist;
   final int showsIndex;
 
   const ShowsState({
     required this.shows,
     required this.genre,
     required this.collection,
+    required this.search,
     required this.status,
     required this.navigationCurrentIndex,
     required this.carouselCurrentIndex,
     required this.showsIndex,
+    required this.searchController,
+    required this.searchValueExist
   });
 
   factory ShowsState.initial() {
@@ -29,29 +35,38 @@ class ShowsState {
         genre: GenreModel(),
         collection:
             ApiConstants.COLLECTIONS.map((item) => ShowsModel()).toList(),
+        search: ShowsModel(),
         status: Network(),
         navigationCurrentIndex: 0,
         carouselCurrentIndex: 0,
-        showsIndex: 0);
+        showsIndex: 0
+        searchController: TextEditingController(),
+        searchValueExist: false);
   }
 
   ShowsState copyWith(
       {ShowsModel? shows,
       GenreModel? genre,
       List<ShowsModel>? collection,
+      ShowsModel? search,
       Network? status,
       int? navigationCurrentIndex,
       int? carouselCurrentIndex,
-      int? showsIndex}) {
+      int? showsIndex
+      bool? isRefreshing,
+      bool? searchValueExist}) {
     return ShowsState(
         shows: shows ?? this.shows,
         genre: genre ?? this.genre,
         collection: collection ?? this.collection,
+        search: search ?? this.search,
         status: status ?? this.status,
         navigationCurrentIndex:
             navigationCurrentIndex ?? this.navigationCurrentIndex,
         carouselCurrentIndex: carouselCurrentIndex ?? this.carouselCurrentIndex,
-        showsIndex: showsIndex ?? this.showsIndex);
+        showsIndex: showsIndex ?? this.showsIndex
+        searchController: searchController,
+        searchValueExist: searchValueExist ?? this.searchValueExist);
   }
 }
 
@@ -62,6 +77,35 @@ class ShowsProvider extends StateNotifier<ShowsState> {
 
   // final Map<ShowType, DateTime> _lastFetchTimes = {};
   // static const Duration _cacheTimeout = Duration(minutes: 5);
+
+  // SEARCH
+  Future<void> searchResult() async {
+    if (state.search.isLoading) return;
+
+    // if (!forceRefresh && _isDataCached(ShowType.SHOWS)) return;
+
+    state = state.copyWith(
+      shows: state.search.setApiStatus(ApiStatus.LOADING),
+    );
+
+    log("Fetching shows data");
+    final searchResult =
+        await ShowsServices.instance.search(state.searchController.text);
+
+    if (searchResult != null && searchResult.results != null) {
+      // _updateCache(ShowType.SHOWS);
+      state = state.copyWith(
+        search: searchResult.setApiStatus(ApiStatus.SUCCESS,
+            successMessage: "Search loaded successfully)"),
+      );
+      log("Search loaded successfully: ${searchResult.results?.length}");
+    } else {
+      state = state.copyWith(
+          search: state.search.setApiStatus(ApiStatus.ERROR,
+              errorMessage: "No Shows to search"));
+      log("No searched shows data to received");
+    }
+  }
 
   // SHOWS
   Future<void> loadShows({bool forceRefresh = false}) async {
@@ -159,7 +203,7 @@ class ShowsProvider extends StateNotifier<ShowsState> {
     } finally {
       state = state.copyWith(
           status: state.status.setApiStatus(
-              state.status.apiErrorCount == state.collection.length + 1
+              state.status.apiErrorCount >= state.collection.length + 1
                   ? ApiStatus.ERROR
                   : ApiStatus.SUCCESS));
     }
@@ -167,6 +211,7 @@ class ShowsProvider extends StateNotifier<ShowsState> {
 
   Future<void> refresh() async {
     log("Refreshing all data");
+    state.status.defaultCount();
     await loadAllData(forceRefresh: true);
   }
 
@@ -196,6 +241,12 @@ class ShowsProvider extends StateNotifier<ShowsState> {
       return;
     }
     state = state.copyWith(showsIndex: index);
+  }
+
+  void readyToSearch(bool? value) {
+    if (value == null) return;
+    state = state.copyWith(searchValueExist: value);
+    log("search -> ${state.searchValueExist}");
   }
 
   // bool _isDataCached(ShowType key) {
