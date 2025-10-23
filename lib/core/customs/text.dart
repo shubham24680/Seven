@@ -1,18 +1,18 @@
 import 'package:seven/app/app.dart';
 
 class CustomText extends StatelessWidget {
-  const CustomText(
-      {super.key,
-      required this.text,
-      this.align,
-      this.maxLines,
-      this.overflow,
-      this.family,
-      this.color,
-      this.size,
-      this.weight,
-      this.height,
-      this.capitalFirstWord = false});
+  const CustomText({
+    super.key,
+    required this.text,
+    this.align,
+    this.maxLines,
+    this.overflow,
+    this.family,
+    this.color,
+    this.size,
+    this.weight,
+    this.height,
+    this.capitalFirstWord = false});
 
   final String text;
   final TextAlign? align;
@@ -36,13 +36,17 @@ class CustomText extends StatelessWidget {
       textAlign: align,
       maxLines: maxLines,
       overflow: overflow ?? TextOverflow.clip,
-      style: TextStyle(
-        fontFamily: family ?? AppFonts.POPPINS,
-        color: color,
-        fontSize: size ?? 0.02.sh,
-        fontWeight: weight,
-        height: height,
-      ),
+      style: getTextStyle(),
+    );
+  }
+
+  TextStyle getTextStyle() {
+    return TextStyle(
+      fontFamily: family ?? AppFonts.POPPINS,
+      color: color,
+      fontSize: size ?? 0.02.sh,
+      fontWeight: weight,
+      height: height,
     );
   }
 }

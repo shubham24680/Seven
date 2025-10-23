@@ -1,6 +1,14 @@
 import 'package:seven/app/app.dart';
 
 final GoRouter routes = GoRouter(
+  initialLocation: '/',
+  redirect: (context, state) async {
+    final prefs = await SPD.getInstance();
+    final isFirstTimeVisit = prefs.isFirstTimeVisit;
+
+    if (isFirstTimeVisit) return "/onboarding";
+    return null;
+  },
   routes: List.generate(
     AppConstants.APP_ROUTES.length,
     (index) => GoRoute(

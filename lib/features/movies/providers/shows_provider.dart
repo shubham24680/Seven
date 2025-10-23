@@ -157,7 +157,7 @@ class ShowsProvider extends StateNotifier<ShowsState> {
     } finally {
       state = state.copyWith(
           status: state.status.setApiStatus(
-              state.status.apiErrorCount == state.collection.length + 1
+              state.status.apiErrorCount >= state.collection.length + 1
                   ? ApiStatus.ERROR
                   : ApiStatus.SUCCESS));
     }
@@ -165,6 +165,7 @@ class ShowsProvider extends StateNotifier<ShowsState> {
 
   Future<void> refresh() async {
     log("Refreshing all data");
+    state.status.defaultCount();
     await loadAllData(forceRefresh: true);
   }
 
