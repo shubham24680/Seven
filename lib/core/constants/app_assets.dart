@@ -22,6 +22,8 @@ class AppAssets {
 class AppImages {
   static const AVATAR_1 = "assets/avatars/avatar (1).jpg";
   static const AVATAR_2 = "assets/avatars/avatar (2).jpg";
+  static const GENRE_CARD_1 = "assets/images/genre_card (1).jpg";
+  static const GENRE_CARD_2 = "assets/images/genre_card (2).jpg";
   static const ONBOARDING_1 = "assets/images/onboarding (1).png";
   static const ONBOARDING_2 = "assets/images/onboarding (2).png";
   static const ONBOARDING_3 = "assets/images/onboarding (3).png";

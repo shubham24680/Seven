@@ -104,7 +104,7 @@ class HomeCarousel extends ConsumerWidget {
         children: [
           CustomImage(
               imageType: ImageType.REMOTE,
-              event: () => context.push("/detail"),
+              event: () => context.push("/detail/${results?[index].id}"),
               imageUrl:
                   ApiConstants.IMAGE_PATH + (results?[index].posterPath ?? ""),
               borderRadius: BorderRadius.circular(0.1 * carouselHeight)),

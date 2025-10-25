@@ -22,6 +22,20 @@ class ShowsServices {
     }
   }
 
+  Future<Result?> fetchShowDetail(String id) async {
+    try {
+      final response = await BaseService.instance.fetchData(
+          apiHost: ApiConstants.API_HOST,
+          endPoint: ApiConstants.MOVIE_DETAIL + id,
+          responseType: ResponseType.GET);
+
+      return response != null ? Result.fromJson(response) : null;
+    } catch (e) {
+      log("Internal Error -> $e");
+      return null;
+    }
+  }
+
   Future<ShowsModel?> fetchShows() async {
     try {
       final response = await BaseService.instance.fetchData(

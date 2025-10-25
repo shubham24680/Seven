@@ -53,7 +53,7 @@ class Dates {
       };
 }
 
-class Result {
+class Result extends Network<Result> {
   final bool? adult;
   final String? backdropPath;
   final List<dynamic>? genreIds;

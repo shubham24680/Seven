@@ -24,7 +24,7 @@ class BaseService {
       required ResponseType responseType,
       Map<String, String>? body,
       Map<String, String>? queryParams}) {
-    String baseUrl = "$apiHost$endPoint"; //?api_key=${ApiConstants.API_KEY}
+    String baseUrl = "$apiHost$endPoint";
     switch (responseType) {
       case ResponseType.GET:
         return _get(baseUrl, queryParams: queryParams);

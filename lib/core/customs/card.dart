@@ -2,94 +2,116 @@ import 'package:seven/app/app.dart';
 
 enum CardOrientation { POTRAIT, LANDSCAPE }
 
+enum CardType { SHOWS, GENRE }
+
 class CustomCard extends StatelessWidget {
   const CustomCard(
       {super.key,
+      this.cardType = CardType.SHOWS,
       this.orientation = CardOrientation.LANDSCAPE,
-      this.isGenreCard = false,
-      this.imageUrl,
-      this.title,
       this.height,
+      this.width,
       this.result,
+      this.blurValue = 6.0,
       this.event});
 
+  final CardType cardType;
   final CardOrientation orientation;
-  final bool isGenreCard;
-  final String? imageUrl;
-  final String? title;
   final double? height;
+  final double? width;
   final Result? result;
+  final double blurValue;
   final void Function()? event;
 
   @override
   Widget build(BuildContext context) {
     final bool isPortrait = orientation == CardOrientation.POTRAIT;
+    final Size size = getSize(isPortrait, height, width);
+    final double borderRadius = (isPortrait ? 0.06 : 0.1) * size.height;
+    final imagePath = isPortrait
+        ? (result?.posterPath ?? result?.backdropPath ?? "")
+        : (result?.backdropPath ?? result?.posterPath ?? "");
+    final double textSize = (isPortrait ? 0.05 : 0.11) * size.height;
     final int maxLines = isPortrait ? 2 : 1;
-    final String imagePath =
-        isPortrait ? (result?.posterPath ?? "") : (result?.backdropPath ?? "");
-    final double widgetHeight = height ?? (isPortrait ? 0.32.sh : 0.17.sh);
+    final decoration = BoxDecoration(color: AppColors.black5.withAlpha(70));
+
+    ImageType imageType;
+    String? imageUrl;
+    Widget textCard;
+    switch (cardType) {
+      case CardType.GENRE:
+        imageType = ImageType.LOCAL;
+        imageUrl = imagePath;
+        textCard = blurEffect(
+            blurValue,
+            Container(
+                height: size.height,
+                width: size.width,
+                alignment: Alignment.bottomLeft,
+                padding: EdgeInsets.symmetric(
+                    horizontal: AppConstants.SIDE_PADDING,
+                    vertical: 0.5 * AppConstants.SIDE_PADDING),
+                decoration: decoration,
+                child: CustomText(
+                    text: result?.title ?? result?.originalTitle ?? "",
+                    family: AppFonts.STAATLICHES,
+                    size: 2.0 * textSize,
+                    weight: FontWeight.w900,
+                    maxLines: maxLines,
+                    overflow: TextOverflow.ellipsis)),
+            borderRadius: BorderRadius.circular(borderRadius));
+        break;
+      default:
+        imageType = ImageType.REMOTE;
+        imageUrl = ApiConstants.IMAGE_PATH + imagePath;
+        textCard = blurEffect(
+            blurValue,
+            Container(
+              height: 0.2 * size.height,
+              width: width,
+              alignment: Alignment.center,
+              padding:
+                  EdgeInsets.symmetric(horizontal: AppConstants.SIDE_PADDING),
+              decoration: decoration,
+              child: CustomText(
+                text: result?.title ?? result?.originalTitle ?? "",
+                size: textSize,
+                weight: FontWeight.w900,
+                maxLines: maxLines,
+                align: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            borderRadius:
+                BorderRadius.vertical(bottom: Radius.circular(borderRadius)));
+        break;
+    }
+
+    return Stack(alignment: Alignment.bottomCenter, children: [
+      CustomImage(
+          imageType: imageType,
+          imageUrl: imageUrl,
+          event: event,
+          borderRadius: BorderRadius.circular(borderRadius),
+          height: size.height,
+          width: size.width),
+      IgnorePointer(child: textCard)
+    ]);
+  }
+
+  Size getSize(bool isPortrait, double? height, double? width) {
     final double aspectRatio = isPortrait
         ? AppConstants.CARD_RATIO_PORTRAIT
         : AppConstants.CARD_RATIO_LANDSCAPE;
-    final double textSize = (isPortrait ? 0.05 : 0.11) * widgetHeight;
-    final double borderRadius = (isPortrait ? 0.06 : 0.1) * widgetHeight;
-    final double width = widgetHeight * aspectRatio;
 
-    final ImageType imageType =
-        isGenreCard ? ImageType.LOCAL : ImageType.REMOTE;
-    final String resolvedImageUrl =
-        isGenreCard ? (imageUrl ?? "") : (ApiConstants.IMAGE_PATH + imagePath);
-    final String? effectiveTitle =
-        isGenreCard ? title : (result?.title ?? result?.originalTitle);
-
-    Widget buildTextCard(String? cardTitle) {
-      if (cardTitle == null) return const SizedBox.shrink();
-
-      final double containerHeight = widgetHeight * (isGenreCard ? 1.0 : 0.2);
-      final Alignment alignment =
-          isGenreCard ? Alignment.bottomLeft : Alignment.center;
-      final double computedTextSize = textSize * (isGenreCard ? 2.0 : 1.0);
-
-      return blurEffect(
-          6.0,
-          Container(
-            height: containerHeight,
-            width: width,
-            alignment: alignment,
-            padding: EdgeInsets.symmetric(
-                vertical: isGenreCard ? AppConstants.SIDE_PADDING : 0,
-                horizontal: AppConstants.SIDE_PADDING),
-            decoration: BoxDecoration(
-              color: AppColors.black5.withAlpha(70),
-            ),
-            child: CustomText(
-              text: cardTitle,
-              family: isGenreCard ? AppFonts.STAATLICHES : null,
-              size: computedTextSize,
-              weight: FontWeight.w900,
-              maxLines: maxLines,
-              align: isGenreCard ? null : TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          borderRadius: BorderRadius.vertical(
-              top: Radius.circular(isGenreCard ? borderRadius : 0),
-              bottom: Radius.circular(borderRadius)));
+    double h, w;
+    if (width != null) {
+      h = width * aspectRatio;
+      return Size(width, h);
     }
 
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        CustomImage(
-          imageType: imageType,
-          imageUrl: resolvedImageUrl,
-          event: event,
-          borderRadius: BorderRadius.circular(borderRadius),
-          height: widgetHeight,
-          width: width,
-        ),
-        buildTextCard(effectiveTitle)
-      ],
-    );
+    h = height ?? (isPortrait ? 0.32.sh : 0.17.sh);
+    w = h * aspectRatio;
+    return Size(w, h);
   }
 }
