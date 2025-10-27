@@ -216,6 +216,7 @@ class ShowsProvider extends StateNotifier<ShowsState> {
 
   // Update navigation index with validation
   void moveToPage(int index) {
+    log("Moving to page: $index");
     if (index < 0) {
       log("Invalid navigation index: $index");
       return;
