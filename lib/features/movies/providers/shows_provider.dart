@@ -6,8 +6,7 @@ import 'package:seven/app/app.dart';
 // STATE
 class ShowsState {
   final ShowsModel shows;
-  final Result showDetail;
-  final GenreModel genre;
+  final Result genre;
   final List<ShowsModel> collection;
   final ShowsModel search;
   final Network status;
@@ -19,7 +18,6 @@ class ShowsState {
 
   const ShowsState(
       {required this.shows,
-      required this.showDetail,
       required this.genre,
       required this.collection,
       required this.search,
@@ -33,8 +31,7 @@ class ShowsState {
   factory ShowsState.initial() {
     return ShowsState(
         shows: ShowsModel(),
-        showDetail: Result(),
-        genre: GenreModel(),
+        genre: Result(),
         collection:
             ApiConstants.COLLECTIONS.map((item) => ShowsModel()).toList(),
         search: ShowsModel(),
@@ -48,8 +45,7 @@ class ShowsState {
 
   ShowsState copyWith(
       {ShowsModel? shows,
-      Result? showDetail,
-      GenreModel? genre,
+      Result? genre,
       List<ShowsModel>? collection,
       ShowsModel? search,
       Network? status,
@@ -60,7 +56,6 @@ class ShowsState {
       bool? searchValueExist}) {
     return ShowsState(
         shows: shows ?? this.shows,
-        showDetail: showDetail ?? this.showDetail,
         genre: genre ?? this.genre,
         collection: collection ?? this.collection,
         search: search ?? this.search,
@@ -108,32 +103,6 @@ class ShowsProvider extends StateNotifier<ShowsState> {
           search: state.search.setApiStatus(ApiStatus.ERROR,
               errorMessage: "No Shows to search"));
       log("No searched shows data to received");
-    }
-  }
-
-  // SHOWS DETAIL
-  Future<void> loadShowDetail(String id) async {
-    if (state.showDetail.isLoading) return;
-
-    // if (!forceRefresh && _isDataCached(ShowType.SHOWS)) return;
-
-    state = state.copyWith(
-        showDetail: state.showDetail.setApiStatus(ApiStatus.LOADING));
-
-    log("Fetching shows detail data for id: $id");
-    final showDetail = await ShowsServices.instance.fetchShowDetail(id);
-
-    if (showDetail != null) {
-      // _updateCache(ShowType.SHOWS);
-      state = state.copyWith(
-          showDetail: showDetail.setApiStatus(ApiStatus.SUCCESS,
-              successMessage: "Shows Detail loaded successfully"));
-      log("Shows Detail loaded successfully for id: $id");
-    } else {
-      state = state.copyWith(
-          showDetail: state.showDetail.setApiStatus(ApiStatus.ERROR,
-              errorMessage: "No Shows to fetch"));
-      log("No showDetail data received for id: $id");
     }
   }
 
@@ -298,6 +267,5 @@ class ShowsProvider extends StateNotifier<ShowsState> {
 }
 
 /// Optimized provider with auto-dispose and better memory management
-final showsProvider = StateNotifierProvider<ShowsProvider, ShowsState>(
-  (ref) => ShowsProvider(),
-);
+final showsProvider =
+    StateNotifierProvider<ShowsProvider, ShowsState>((ref) => ShowsProvider());

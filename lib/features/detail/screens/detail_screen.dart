@@ -1,54 +1,57 @@
-import 'dart:developer';
-
 import 'package:seven/app/app.dart';
 
-class DetailScreen extends ConsumerStatefulWidget {
+class DetailScreen extends ConsumerWidget {
   const DetailScreen(this.id, {super.key});
 
   final String id;
 
   @override
-  ConsumerState<DetailScreen> createState() => _DetailScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final showDetailState = ref.watch(showDetailProvider);
+    final showDetailController = ref.read(showDetailProvider.notifier);
+    final show = showDetailState.showDetail;
 
-class _DetailScreenState extends ConsumerState<DetailScreen> {
-  bool hasOnce = true;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      log("Calling...");
-      if (hasOnce) {
-        hasOnce = false;
-        ref.read(showsProvider.notifier).loadShowDetail(widget.id);
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final showDetailState = ref.watch(showsProvider);
-
-    log("Build id -> ${widget.id}");
+    if (show.isInitial) {
+      Future.microtask(() {
+        showDetailController.loadShowDetail(id);
+      });
+    }
 
     Widget buildBody() {
-      if (showDetailState.showDetail.isLoading) {
+      if (show.isLoading) {
         return CircularProgressIndicator(color: AppColors.vividNightfall4);
       }
 
-      if (showDetailState.showDetail.isSuccess) {
-        return CustomText(text: showDetailState.showDetail.title ?? "No title");
+      if (show.isSuccess) {
+        return SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CustomImage(
+                imageType: ImageType.REMOTE,
+                imageUrl: ApiConstants.IMAGE_PATH + (show.posterPath ?? ""),
+              ),
+              CustomText(text: show.title ?? ""),
+              if (show.genres?.firstOrNull != null)
+                ...show.genres!.map((gen) => CustomText(text: gen.name ?? "")),
+              CustomText(text: show.overview ?? ""),
+              CustomText(text: show.releaseDate?.toString() ?? ""),
+              CustomText(text: show.runtime?.toString() ?? ""),
+              CustomText(text: show.voteAverage?.toString() ?? ""),
+              CustomText(text: show.status ?? ""),
+            ],
+          ),
+        );
       }
 
-      return CustomText(
-          text: showDetailState.showDetail.errorMessage ?? "ERROR Details");
+      return CustomText(text: show.errorMessage ?? "ERROR Details");
     }
 
     return Scaffold(
+        extendBodyBehindAppBar: true,
         appBar: customAppBar(() {
           context.pop();
-        }, "Details"),
-        body: Center(child: buildBody()));
+        }, show.title ?? ""),
+        body: buildBody());
   }
 }

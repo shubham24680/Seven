@@ -51,7 +51,7 @@ class ShowsServices {
     }
   }
 
-  Future<GenreModel?> fetchGenres() async {
+  Future<Result?> fetchGenres() async {
     try {
       final response = await BaseService.instance.fetchData(
         apiHost: ApiConstants.API_HOST,
@@ -59,7 +59,7 @@ class ShowsServices {
         responseType: ResponseType.GET,
       );
 
-      return response != null ? GenreModel.fromJson(response) : null;
+      return response != null ? Result.fromJson(response) : null;
     } catch (e) {
       log("Internal Error -> $e");
       return null;
