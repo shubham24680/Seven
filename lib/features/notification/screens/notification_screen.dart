@@ -6,16 +6,7 @@ class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            leading: CustomButton(
-              buttonType: ButtonType.ICON,
-              icon: AppSvgs.ARROW_LEFT,
-              backgroundColor: AppColors.lightSteel9,
-              onPressed: () => context.pop(),
-            ),
-            centerTitle: true,
-            title: const CustomText(
-                text: "Notifications", weight: FontWeight.w900)),
+        appBar: customAppBar(() => context.pop(), "Notifications"),
         body: const Center(
           child: CustomText(text: "No Notification"),
         ));

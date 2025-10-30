@@ -1,73 +1,119 @@
 import 'package:seven/app/app.dart';
 
 class CustomCollection extends StatelessWidget {
-  const CustomCollection({
-    super.key,
-    required this.collectionName,
-    required this.isLoading,
-    required this.result,
-    this.orientation = CardOrientation.LANDSCAPE,
-    this.scrollDirection = Axis.horizontal,
-  });
+  const CustomCollection(
+      {super.key,
+      this.scrollController,
+      this.scrollDirection = Axis.horizontal,
+      this.crossAxisCount = 1,
+      this.isLoading = true,
+      this.collectionName,
+      this.cardType = CardType.SHOWS,
+      this.orientation = CardOrientation.LANDSCAPE,
+      this.cardHeight,
+      this.cardWidth,
+      this.onPressed,
+      this.results,
+      this.blurValue = 6.0,
+      this.event,
+      this.isSafeHeight = false});
 
-  final String collectionName;
-  final bool isLoading;
-  final List<Result>? result;
-  final CardOrientation orientation;
+  final ScrollController? scrollController;
   final Axis scrollDirection;
+  final int crossAxisCount;
+  final bool isSafeHeight;
+  final bool isLoading;
+  final String? collectionName;
+  final void Function()? onPressed;
+  final CardType cardType;
+  final CardOrientation orientation;
+  final double? cardHeight;
+  final double? cardWidth;
+  final List<Result>? results;
+  final double blurValue;
+  final void Function()? event;
 
   @override
   Widget build(BuildContext context) {
-    final aspectRatio = orientation == CardOrientation.POTRAIT
+    final bool isPortrait = orientation == CardOrientation.POTRAIT;
+    final bool isVertical = scrollDirection == Axis.vertical;
+
+    final double aspectRatio = isPortrait
         ? AppConstants.CARD_RATIO_PORTRAIT
         : AppConstants.CARD_RATIO_LANDSCAPE;
-    final height = orientation == CardOrientation.POTRAIT ? 0.32.sh : 0.17.sh;
-    final width = height * aspectRatio;
-    final borderRadius = height * 0.1;
-    final margin = 0.03.sw;
+    final double height = isPortrait ? 0.32.sh : 0.17.sh;
+    final double borderRadius = (isPortrait ? 0.06 : 0.1) * height;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildText(),
-        SizedBox(
-          height: height,
-          child: ListView.builder(
-            itemCount: result?.length ?? 5,
-            scrollDirection: scrollDirection,
-            padding: const EdgeInsets.only(left: AppConstants.SIDE_PADDING),
-            itemBuilder: (context, index) => SizedBox(
-              width: width,
-              child: _buildCard(index, height, width, borderRadius),
-            ).paddingFromLTRB(right: margin),
-          ),
-        ),
-        SizedBox(height: 0.05.sh),
-      ],
-    );
-  }
+    Widget buildText() {
+      if (collectionName == null) return SizedBox.shrink();
 
-  Widget _buildText() {
-    final textWidget = (isLoading)
-        ? customShimmer(height: 0.03.sh, width: 0.5.sw, borderRadius: 0.01.sh)
-        : CustomText(
-            text: collectionName,
-            family: AppFonts.STAATLICHES,
-            size: 0.03.sh,
-          );
+      final textWidget = (isLoading)
+          ? customShimmer(height: 0.03.sh, width: 0.5.sw, borderRadius: 0.01.sh)
+          : Expanded(
+              child: CustomText(
+                text: collectionName ?? "",
+                family: AppFonts.STAATLICHES,
+                size: 0.03.sh,
+                maxLines: 1,
+              ),
+            );
 
-    return textWidget.paddingSymmetric(
-        horizontal: AppConstants.SIDE_PADDING,
-        vertical: AppConstants.SIDE_PADDING * 0.25);
-  }
+      final seeAll = (isLoading)
+          ? customShimmer(height: 0.03.sh, width: 0.1.sw, borderRadius: 0.01.sh)
+          : CustomButton(
+              buttonType: ButtonType.TEXT,
+              onPressed: onPressed,
+              icon: "See all",
+            );
 
-  Widget _buildCard(
-      int index, double height, double width, double borderRadius) {
-    if (isLoading) {
-      return customShimmer(
-          height: height, width: width, borderRadius: borderRadius);
+      return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [textWidget, seeAll])
+          .paddingSymmetric(
+              horizontal: AppConstants.SIDE_PADDING,
+              vertical: AppConstants.SIDE_PADDING * 0.25);
     }
 
-    return CustomCard(orientation: orientation, result: result?[index]);
+    Widget buildCard(int index) {
+      if (isLoading) {
+        return customShimmer(borderRadius: borderRadius);
+      }
+
+      return CustomCard(
+          cardType: cardType,
+          orientation: orientation,
+          height: cardHeight,
+          width: cardWidth,
+          result: results?[index],
+          blurValue: blurValue,
+          event: () => context.push("/detail/${results?[index].id}"));
+    }
+
+    final collectionItems = GridView.builder(
+        controller: scrollController,
+        itemCount: results?.length ?? 3,
+        scrollDirection: scrollDirection,
+        physics: ClampingScrollPhysics(),
+        shrinkWrap: true,
+        padding: EdgeInsets.symmetric(
+            horizontal: AppConstants.SIDE_PADDING,
+            vertical: isVertical ? AppConstants.SIDE_PADDING : 0),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            crossAxisSpacing: AppConstants.SIDE_PADDING,
+            mainAxisSpacing: 0.5 * AppConstants.SIDE_PADDING,
+            childAspectRatio: isVertical ? aspectRatio : 1 / aspectRatio),
+        itemBuilder: (context, index) => buildCard(index));
+
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      buildText(),
+      SizedBox(
+          height: isSafeHeight
+              ? 1.sh
+              : crossAxisCount * height +
+                  (crossAxisCount - 1) * AppConstants.SIDE_PADDING,
+          child: collectionItems),
+      SizedBox(height: isSafeHeight ? 0 : 0.05.sh)
+    ]);
   }
 }

@@ -31,5 +31,6 @@ export 'customs/card.dart';
 export 'customs/collection.dart';
 export 'customs/helper_custom.dart';
 export 'customs/image.dart';
+export 'customs/tag.dart';
 export 'customs/text_field.dart';
 export 'customs/text.dart';

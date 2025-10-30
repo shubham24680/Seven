@@ -9,13 +9,13 @@ class AppConstants {
   static final List<ScreenRoutes> APP_ROUTES = [
     ScreenRoutes(path: "/", child: const Shows()),
     ScreenRoutes(path: "/onboarding", child: const OnboadingScreen()),
-    ScreenRoutes(path: "/detail", child: const DetailScreen()),
     ScreenRoutes(path: "/notification", child: const NotificationScreen()),
     ScreenRoutes(path: "/editProfile", child: const EditProfileScreen()),
     ScreenRoutes(
         path: "/notificationSettings",
         child: const NotificationSettingsScreen()),
     ScreenRoutes(path: "/help", child: const HelpScreen()),
+    ScreenRoutes(path: "/collection", child: const CollectionScreen()),
   ];
 
   // ONBOARDING
@@ -42,9 +42,8 @@ class AppConstants {
 
   // COLLECTION
   static final List<String> COLLECTIONS = [
-    "Now Playing",
-    "Popular",
-    "Top Rated",
+    "Top 20 Movies",
+    "New Release",
     "Upcoming",
   ];
 
@@ -63,9 +62,10 @@ class AppConstants {
   ];
 
   // ERROR
-  static ErrorData ERRORDATA = ErrorData(
-      title: "OH NO!",
-      subtitle: "No internet connection.\nCheck your network and try again.",
-      image: AppSvgs.NO_CONNECTION,
-      buttonText: "Try again");
+  static HelperModel ERRORDATA = HelperModel(
+      string1: "OH NO!",
+      string2: "No internet connection.\nCheck your network and try again.",
+      string3: AppSvgs.NO_CONNECTION,
+      string4: "Try again",
+      string5: "Back");
 }

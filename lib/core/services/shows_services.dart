@@ -7,11 +7,26 @@ class ShowsServices {
   ShowsServices._();
   static ShowsServices get instance => _instance ??= ShowsServices._();
 
+  Future<ShowsModel?> search(String query) async {
+    try {
+      final response = await BaseService.instance.fetchData(
+          apiHost: ApiConstants.API_HOST,
+          endPoint: ApiConstants.SEARCH,
+          responseType: ResponseType.GET,
+          queryParams: {"query": query});
+
+      return response != null ? ShowsModel.fromJson(response) : null;
+    } catch (e) {
+      log("Internal Error -> $e");
+      return null;
+    }
+  }
+
   Future<ShowsModel?> fetchShows() async {
     try {
       final response = await BaseService.instance.fetchData(
         apiHost: ApiConstants.API_HOST,
-        endPoint: ApiConstants.MOVIES,
+        endPoint: ApiConstants.TRENDING_MOVIES,
         responseType: ResponseType.GET,
       );
 
@@ -22,7 +37,7 @@ class ShowsServices {
     }
   }
 
-  Future<GenreModel?> fetchGenres() async {
+  Future<Result?> fetchGenres() async {
     try {
       final response = await BaseService.instance.fetchData(
         apiHost: ApiConstants.API_HOST,
@@ -30,7 +45,7 @@ class ShowsServices {
         responseType: ResponseType.GET,
       );
 
-      return response != null ? GenreModel.fromJson(response) : null;
+      return response != null ? Result.fromJson(response) : null;
     } catch (e) {
       log("Internal Error -> $e");
       return null;
@@ -39,7 +54,7 @@ class ShowsServices {
 
   Future<List<ShowsModel?>?> fetchCollections() async {
     try {
-      final response = await Future.wait(ApiConstants.COLLECTION
+      final response = await Future.wait(ApiConstants.COLLECTIONS
           .map((endPoint) => BaseService.instance.fetchData(
                 apiHost: ApiConstants.API_HOST,
                 endPoint: endPoint,
@@ -51,6 +66,34 @@ class ShowsServices {
         log("Collection -> ${json == null ? null : "Success"}");
         return (json != null) ? ShowsModel.fromJson(json) : null;
       }).toList();
+    } catch (e) {
+      log("Internal Error -> $e");
+      return null;
+    }
+  }
+
+  Future<Result?> fetchShowDetail(String id) async {
+    try {
+      final response = await BaseService.instance.fetchData(
+          apiHost: ApiConstants.API_HOST,
+          endPoint: ApiConstants.MOVIE_DETAIL + id,
+          responseType: ResponseType.GET);
+
+      return response != null ? Result.fromJson(response) : null;
+    } catch (e) {
+      log("Internal Error -> $e");
+      return null;
+    }
+  }
+
+  Future<Result?> fetchCollectionDetail(String id) async {
+    try {
+      final response = await BaseService.instance.fetchData(
+          apiHost: ApiConstants.API_HOST,
+          endPoint: ApiConstants.COLLECTION_DETAIL + id,
+          responseType: ResponseType.GET);
+
+      return response != null ? Result.fromJson(response) : null;
     } catch (e) {
       log("Internal Error -> $e");
       return null;

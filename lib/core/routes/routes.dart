@@ -1,23 +1,31 @@
 import 'package:seven/app/app.dart';
 
 final GoRouter routes = GoRouter(
-  initialLocation: '/',
-  redirect: (context, state) async {
-    final prefs = await SPD.getInstance();
-    final isFirstTimeVisit = prefs.isFirstTimeVisit;
+    initialLocation: "/",
+    redirect: (context, state) async {
+      final prefs = await SPD.getInstance();
+      final isFirstTimeVisit = prefs.isFirstTimeVisit;
 
-    if (isFirstTimeVisit) return "/onboarding";
-    return null;
-  },
-  routes: List.generate(
-    AppConstants.APP_ROUTES.length,
-    (index) => GoRoute(
-      path: AppConstants.APP_ROUTES[index].path,
-      pageBuilder: (context, state) =>
-          FadeTransistionPage(child: AppConstants.APP_ROUTES[index].child),
-    ),
-  ),
-);
+      if (isFirstTimeVisit) return "/onboarding";
+      return null;
+    },
+    routes: [
+      GoRoute(
+        path: "/detail/:id",
+        builder: (context, state) {
+          final id = state.pathParameters['id'] ?? "";
+          return DetailScreen(id);
+        },
+      ),
+      ...List.generate(
+        AppConstants.APP_ROUTES.length,
+        (index) => GoRoute(
+          path: AppConstants.APP_ROUTES[index].path,
+          pageBuilder: (context, state) =>
+              FadeTransistionPage(child: AppConstants.APP_ROUTES[index].child),
+        ),
+      )
+    ]);
 
 class FadeTransistionPage<T> extends CustomTransitionPage<T> {
   FadeTransistionPage({required super.child})

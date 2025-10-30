@@ -1,11 +1,16 @@
 import 'package:seven/app/app.dart';
 
 class HelperModel {
-  final String? string1, string2, string3, string4;
+  final String? string1, string2, string3, string4, string5;
   final Widget? widget1;
 
   HelperModel(
-      {this.string1, this.string2, this.string3, this.string4, this.widget1});
+      {this.string1,
+      this.string2,
+      this.string3,
+      this.string4,
+      this.string5,
+      this.widget1});
 }
 
 class ScreenRoutes {

@@ -5,13 +5,12 @@ export 'error/error_screen.dart';
 export 'onboarding/providers/onboarding_providers.dart';
 export 'onboarding/screens/onboading_screen.dart';
 
-// MOVIES
+// SHOWS
 export 'movies/providers/shows_provider.dart';
 
 export 'movies/screens/shows.dart';
 export 'movies/screens/home_screen.dart';
 export 'movies/screens/profile_screen.dart';
-export 'movies/screens/save_screen.dart';
 export 'movies/screens/search_screen.dart';
 
 export 'movies/widgets/home_carousel.dart';
@@ -24,6 +23,9 @@ export 'profile/screens/help_screen.dart';
 export 'profile/screens/notification_settings_screen.dart';
 
 // DETAIL
+export 'detail/providers/show_detail_provider.dart';
+
+export 'collections/screens/collection_screen.dart';
 export 'detail/screens/detail_screen.dart';
 
 // NOTIFICATION

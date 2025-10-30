@@ -6,58 +6,105 @@ import 'package:seven/app/app.dart';
 // STATE
 class ShowsState {
   final ShowsModel shows;
-  final GenreModel genre;
+  final Result genre;
   final List<ShowsModel> collection;
+  final ShowsModel search;
   final Network status;
   final int navigationCurrentIndex;
   final int carouselCurrentIndex;
+  final TextEditingController searchController;
+  final bool searchValueExist;
+  final int showsIndex;
 
-  const ShowsState({
-    required this.shows,
-    required this.genre,
-    required this.collection,
-    required this.status,
-    required this.navigationCurrentIndex,
-    required this.carouselCurrentIndex,
-  });
+  const ShowsState(
+      {required this.shows,
+      required this.genre,
+      required this.collection,
+      required this.search,
+      required this.status,
+      required this.navigationCurrentIndex,
+      required this.carouselCurrentIndex,
+      required this.showsIndex,
+      required this.searchController,
+      required this.searchValueExist});
 
   factory ShowsState.initial() {
     return ShowsState(
-      shows: ShowsModel(),
-      genre: GenreModel(),
-      collection: AppConstants.COLLECTIONS.map((item) => ShowsModel()).toList(),
-      status: Network(),
-      navigationCurrentIndex: 0,
-      carouselCurrentIndex: 0,
-    );
+        shows: ShowsModel(),
+        genre: Result(),
+        collection:
+            ApiConstants.COLLECTIONS.map((item) => ShowsModel()).toList(),
+        search: ShowsModel(),
+        status: Network(),
+        navigationCurrentIndex: 0,
+        carouselCurrentIndex: 0,
+        showsIndex: 0,
+        searchController: TextEditingController(),
+        searchValueExist: false);
   }
 
-  ShowsState copyWith({
-    ShowsModel? shows,
-    GenreModel? genre,
-    List<ShowsModel>? collection,
-    Network? status,
-    int? navigationCurrentIndex,
-    int? carouselCurrentIndex,
-    bool? isRefreshing,
-  }) {
+  ShowsState copyWith(
+      {ShowsModel? shows,
+      Result? genre,
+      List<ShowsModel>? collection,
+      ShowsModel? search,
+      Network? status,
+      int? navigationCurrentIndex,
+      int? carouselCurrentIndex,
+      int? showsIndex,
+      bool? isRefreshing,
+      bool? searchValueExist}) {
     return ShowsState(
-      shows: shows ?? this.shows,
-      genre: genre ?? this.genre,
-      collection: collection ?? this.collection,
-      status: status ?? this.status,
-      navigationCurrentIndex:
-          navigationCurrentIndex ?? this.navigationCurrentIndex,
-      carouselCurrentIndex: carouselCurrentIndex ?? this.carouselCurrentIndex,
-    );
+        shows: shows ?? this.shows,
+        genre: genre ?? this.genre,
+        collection: collection ?? this.collection,
+        search: search ?? this.search,
+        status: status ?? this.status,
+        navigationCurrentIndex:
+            navigationCurrentIndex ?? this.navigationCurrentIndex,
+        carouselCurrentIndex: carouselCurrentIndex ?? this.carouselCurrentIndex,
+        showsIndex: showsIndex ?? this.showsIndex,
+        searchController: searchController,
+        searchValueExist: searchValueExist ?? this.searchValueExist);
   }
 }
 
 class ShowsProvider extends StateNotifier<ShowsState> {
-  ShowsProvider() : super(ShowsState.initial());
+  ShowsProvider() : super(ShowsState.initial()) {
+    loadAllData();
+  }
 
   // final Map<ShowType, DateTime> _lastFetchTimes = {};
   // static const Duration _cacheTimeout = Duration(minutes: 5);
+
+  // SEARCH
+  Future<void> searchResult() async {
+    if (state.search.isLoading) return;
+
+    // if (!forceRefresh && _isDataCached(ShowType.SHOWS)) return;
+
+    state = state.copyWith(
+      search: state.search.setApiStatus(ApiStatus.LOADING),
+    );
+
+    log("Fetching shows data");
+    final searchResult =
+        await ShowsServices.instance.search(state.searchController.text);
+
+    if (searchResult != null && searchResult.results != null) {
+      // _updateCache(ShowType.SHOWS);
+      state = state.copyWith(
+        search: searchResult.setApiStatus(ApiStatus.SUCCESS,
+            successMessage: "Search loaded successfully)"),
+      );
+      log("Search loaded successfully: ${searchResult.results?.length}");
+    } else {
+      state = state.copyWith(
+          search: state.search.setApiStatus(ApiStatus.ERROR,
+              errorMessage: "No Shows to search"));
+      log("No searched shows data to received");
+    }
+  }
 
   // SHOWS
   Future<void> loadShows({bool forceRefresh = false}) async {
@@ -104,14 +151,14 @@ class ShowsProvider extends StateNotifier<ShowsState> {
 
     log("Fetching collections data");
     List<ShowsModel?>? collection;
-    for (int attempt = 1; attempt <= 5; attempt++) {
+    for (int attempt = 1; attempt <= 3; attempt++) {
       collection = await ShowsServices.instance.fetchCollections();
       if (collection != null) {
         log("Collections fetched successfully on attempt $attempt");
         break;
       }
       log("Collections fetch attempt $attempt failed (null). Retrying...");
-      await Future.delayed(Duration(seconds: attempt));
+      await Future.delayed(Duration(seconds: 2 * attempt));
     }
 
     if (collection != null) {
@@ -169,6 +216,7 @@ class ShowsProvider extends StateNotifier<ShowsState> {
 
   // Update navigation index with validation
   void moveToPage(int index) {
+    log("Moving to page: $index");
     if (index < 0) {
       log("Invalid navigation index: $index");
       return;
@@ -184,6 +232,21 @@ class ShowsProvider extends StateNotifier<ShowsState> {
       return;
     }
     state = state.copyWith(carouselCurrentIndex: index);
+  }
+
+  // Update collection index to new screen
+  void chooseTo(int index) {
+    if (index < 0) {
+      log("Invalid shows index: $index");
+      return;
+    }
+    state = state.copyWith(showsIndex: index);
+  }
+
+  void readyToSearch(bool? value) {
+    if (value == null) return;
+    state = state.copyWith(searchValueExist: value);
+    log("search -> ${state.searchValueExist}");
   }
 
   // bool _isDataCached(ShowType key) {
@@ -205,6 +268,5 @@ class ShowsProvider extends StateNotifier<ShowsState> {
 }
 
 /// Optimized provider with auto-dispose and better memory management
-final showsProvider = StateNotifierProvider<ShowsProvider, ShowsState>(
-  (ref) => ShowsProvider(),
-);
+final showsProvider =
+    StateNotifierProvider<ShowsProvider, ShowsState>((ref) => ShowsProvider());
