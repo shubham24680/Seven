@@ -49,10 +49,13 @@ class CustomCollection extends StatelessWidget {
 
       final textWidget = (isLoading)
           ? customShimmer(height: 0.03.sh, width: 0.5.sw, borderRadius: 0.01.sh)
-          : CustomText(
-              text: collectionName ?? "",
-              family: AppFonts.STAATLICHES,
-              size: 0.03.sh,
+          : Expanded(
+              child: CustomText(
+                text: collectionName ?? "",
+                family: AppFonts.STAATLICHES,
+                size: 0.03.sh,
+                maxLines: 1,
+              ),
             );
 
       final seeAll = (isLoading)
@@ -90,6 +93,7 @@ class CustomCollection extends StatelessWidget {
         controller: scrollController,
         itemCount: results?.length ?? 3,
         scrollDirection: scrollDirection,
+        physics: ClampingScrollPhysics(),
         shrinkWrap: true,
         padding: EdgeInsets.symmetric(
             horizontal: AppConstants.SIDE_PADDING,

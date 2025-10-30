@@ -52,7 +52,7 @@ class CustomButton extends StatelessWidget {
         baseButton = CustomText(
           text: icon ?? "",
           size: 0.015.sh,
-          color: AppColors.lightSteel1.withAlpha(150),
+          color: forgroundColor ?? AppColors.lightSteel1.withAlpha(150),
         ).onTap(event: onPressed ?? () {});
         break;
       case ButtonType.ICON:

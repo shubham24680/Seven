@@ -34,14 +34,16 @@ class HomeCarousel extends ConsumerWidget {
             borderRadius: BorderRadius.circular(1.sh),
             event: () => showsController
                 .moveToPage(AppAssets.BOTTOM_NAVIGATION_ICONS.length - 1)),
-        CustomButton(
-            buttonType: ButtonType.ICON,
-            icon: AppSvgs.NOTIFICATION,
-            onPressed: () => context.push("/notification"))
+        // CustomButton(
+        //     buttonType: ButtonType.ICON,
+        //     icon: AppSvgs.NOTIFICATION,
+        //     onPressed: () => context.push("/notification"))
       ]);
     }
 
     Widget buildCarouselChild(int index) {
+      final voteAverage = results?[index].voteAverage?.toStringAsFixed(1);
+
       return Stack(alignment: Alignment.topRight, children: [
         CustomImage(
             imageType: ImageType.REMOTE,
@@ -49,10 +51,9 @@ class HomeCarousel extends ConsumerWidget {
             imageUrl:
                 ApiConstants.IMAGE_PATH + (results?[index].posterPath ?? ""),
             borderRadius: BorderRadius.circular(0.1 * carouselHeight)),
-        if (results?[index].voteAverage != null)
+        if (voteAverage != null && voteAverage != "0.0")
           IgnorePointer(
-              child: customTag(AppSvgs.STAR,
-                      (results?[index].voteAverage ?? 0.0).toStringAsFixed(1))
+              child: CustomTag(icon: AppSvgs.STAR, value: voteAverage)
                   .paddingAll(0.05 * carouselHeight))
       ]);
     }
@@ -78,6 +79,7 @@ class HomeCarousel extends ConsumerWidget {
           6.0,
           Container(
               height: height,
+              width: width,
               decoration: const BoxDecoration(
                   gradient: LinearGradient(
                       begin: Alignment.topCenter,

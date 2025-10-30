@@ -50,6 +50,151 @@ class Dates {
       };
 }
 
+class Result extends Network<Result> {
+  final bool? adult;
+  final String? backdropPath;
+  final Result? belongsToCollection;
+  final int? budget;
+  final List<Genre>? genres;
+  final List<dynamic>? genreIds;
+  final String? homepage;
+  final int? id;
+  final String? imdbId;
+  final String? originalLanguage;
+  final String? originalTitle;
+  final String? originalName;
+  final String? overview;
+  final List<Result>? parts;
+  final double? popularity;
+  final String? posterPath;
+  final List<ProductionCompany>? productionCompanies;
+  final List<ProductionCountry>? productionCountries;
+  final DateTime? releaseDate;
+  final int? revenue;
+  final int? runtime;
+  final List<SpokenLanguage>? spokenLanguages;
+  final String? status;
+  final String? tagline;
+  final String? title;
+  final bool? video;
+  final double? voteAverage;
+  final int? voteCount;
+  final String? mediaType;
+  final String? name;
+
+  Result(
+      {this.adult,
+      this.backdropPath,
+      this.belongsToCollection,
+      this.budget,
+      this.genres,
+      this.genreIds,
+      this.homepage,
+      this.id,
+      this.imdbId,
+      this.originalLanguage,
+      this.originalTitle,
+      this.originalName,
+      this.overview,
+      this.parts,
+      this.popularity,
+      this.posterPath,
+      this.productionCompanies,
+      this.productionCountries,
+      this.releaseDate,
+      this.revenue,
+      this.runtime,
+      this.spokenLanguages,
+      this.status,
+      this.tagline,
+      this.title,
+      this.video,
+      this.voteAverage,
+      this.voteCount,
+      this.mediaType,
+      this.name});
+
+  factory Result.fromJson(Map<String, dynamic> json) => Result(
+      adult: json["adult"],
+      backdropPath: json["backdrop_path"],
+      genreIds: (json["genre_ids"] as List<dynamic>?)?.cast<int>(),
+      belongsToCollection: json["belongs_to_collection"] != null
+          ? Result.fromJson(
+              json["belongs_to_collection"] as Map<String, dynamic>)
+          : null,
+      budget: json["budget"],
+      genres: (json["genres"] as List<dynamic>?)
+          ?.map((x) => Genre.fromJson(x as Map<String, dynamic>))
+          .toList(),
+      homepage: json["homepage"],
+      id: json["id"],
+      imdbId: json["imdb_id"],
+      originalLanguage: json["original_language"],
+      originalTitle: json["original_title"],
+      originalName: json["original_name"],
+      overview: json["overview"],
+      parts: (json["parts"] as List<dynamic>?)
+          ?.map((x) => Result.fromJson(x as Map<String, dynamic>))
+          .toList(),
+      popularity: json["popularity"]?.toDouble(),
+      posterPath: json["poster_path"],
+      productionCompanies: (json["production_companies"] as List<dynamic>?)
+          ?.map((x) => ProductionCompany.fromJson(x as Map<String, dynamic>))
+          .toList(),
+      productionCountries: (json["production_countries"] as List<dynamic>?)
+          ?.map((x) => ProductionCountry.fromJson(x as Map<String, dynamic>))
+          .toList(),
+      releaseDate: _parseDateTime(json["release_date"]),
+      revenue: json["revenue"],
+      runtime: json["runtime"],
+      spokenLanguages: (json["spoken_languages"] as List<dynamic>?)
+          ?.map((x) => SpokenLanguage.fromJson(x as Map<String, dynamic>))
+          .toList(),
+      status: json["status"],
+      tagline: json["tagline"],
+      title: json["title"],
+      video: json["video"],
+      voteAverage: json["vote_average"]?.toDouble(),
+      voteCount: json["vote_count"],
+      mediaType: json["media_type"],
+      name: json["name"]);
+
+  Map<String, dynamic> toJson() => {
+        "adult": adult,
+        "backdrop_path": backdropPath,
+        "genre_ids": genreIds,
+        "belongs_to_collection": belongsToCollection,
+        "budget": budget,
+        "genres": genres?.map((x) => x.toJson()).toList(),
+        "homepage": homepage,
+        "id": id,
+        "imdb_id": imdbId,
+        "original_language": originalLanguage,
+        "original_title": originalTitle,
+        "original_name": originalName,
+        "overview": overview,
+        "parts": parts?.map((x) => x.toJson()),
+        "popularity": popularity,
+        "poster_path": posterPath,
+        "production_companies":
+            productionCompanies?.map((x) => x.toJson()).toList(),
+        "production_countries":
+            productionCountries?.map((x) => x.toJson()).toList(),
+        "release_date": dateFormat(releaseDate),
+        "revenue": revenue,
+        "runtime": runtime,
+        "spoken_languages": spokenLanguages?.map((x) => x.toJson()).toList(),
+        "status": status,
+        "tagline": tagline,
+        "title": title,
+        "video": video,
+        "vote_average": voteAverage,
+        "vote_count": voteCount,
+        "media_type": mediaType,
+        "name": name
+      };
+}
+
 class Genre {
   final int? id;
   final String? name;
@@ -115,137 +260,9 @@ class SpokenLanguage {
       {"english_name": englishName, "iso_639_1": iso6391, "name": name};
 }
 
-class Result extends Network<Result> {
-  final bool? adult;
-  final String? backdropPath;
-  final dynamic belongsToCollection;
-  final int? budget;
-  final List<Genre>? genres;
-  final List<dynamic>? genreIds;
-  final String? homepage;
-  final int? id;
-  final String? imdbId;
-  final String? originalLanguage;
-  final String? originalTitle;
-  final String? overview;
-  final double? popularity;
-  final String? posterPath;
-  final List<ProductionCompany>? productionCompanies;
-  final List<ProductionCountry>? productionCountries;
-  final DateTime? releaseDate;
-  final int? revenue;
-  final int? runtime;
-  final List<SpokenLanguage>? spokenLanguages;
-  final String? status;
-  final String? tagline;
-  final String? title;
-  final bool? video;
-  final double? voteAverage;
-  final int? voteCount;
-  final String? mediaType;
-
-  Result(
-      {this.adult,
-      this.backdropPath,
-      this.belongsToCollection,
-      this.budget,
-      this.genres,
-      this.genreIds,
-      this.homepage,
-      this.id,
-      this.imdbId,
-      this.originalLanguage,
-      this.originalTitle,
-      this.overview,
-      this.popularity,
-      this.posterPath,
-      this.productionCompanies,
-      this.productionCountries,
-      this.releaseDate,
-      this.revenue,
-      this.runtime,
-      this.spokenLanguages,
-      this.status,
-      this.tagline,
-      this.title,
-      this.video,
-      this.voteAverage,
-      this.voteCount,
-      this.mediaType});
-
-  factory Result.fromJson(Map<String, dynamic> json) => Result(
-      adult: json["adult"],
-      backdropPath: json["backdrop_path"],
-      genreIds: (json["genre_ids"] as List<dynamic>?)?.cast<int>(),
-      belongsToCollection: json["belongs_to_collection"],
-      budget: json["budget"],
-      genres: (json["genres"] as List<dynamic>?)
-          ?.map((x) => Genre.fromJson(x as Map<String, dynamic>))
-          .toList(),
-      homepage: json["homepage"],
-      id: json["id"],
-      imdbId: json["imdb_id"],
-      originalLanguage: json["original_language"],
-      originalTitle: json["original_title"],
-      overview: json["overview"],
-      popularity: json["popularity"]?.toDouble(),
-      posterPath: json["poster_path"],
-      productionCompanies: (json["production_companies"] as List<dynamic>?)
-          ?.map((x) => ProductionCompany.fromJson(x as Map<String, dynamic>))
-          .toList(),
-      productionCountries: (json["production_countries"] as List<dynamic>?)
-          ?.map((x) => ProductionCountry.fromJson(x as Map<String, dynamic>))
-          .toList(),
-      releaseDate: _parseDateTime(json["release_date"]),
-      revenue: json["revenue"],
-      runtime: json["runtime"],
-      spokenLanguages: (json["spoken_languages"] as List<dynamic>?)
-          ?.map((x) => SpokenLanguage.fromJson(x as Map<String, dynamic>))
-          .toList(),
-      status: json["status"],
-      tagline: json["tagline"],
-      title: json["title"],
-      video: json["video"],
-      voteAverage: json["vote_average"]?.toDouble(),
-      voteCount: json["vote_count"],
-      mediaType: json["media_type"]);
-
-  Map<String, dynamic> toJson() => {
-        "adult": adult,
-        "backdrop_path": backdropPath,
-        "genre_ids": genreIds,
-        "belongs_to_collection": belongsToCollection,
-        "budget": budget,
-        "genres": genres?.map((x) => x.toJson()).toList(),
-        "homepage": homepage,
-        "id": id,
-        "imdb_id": imdbId,
-        "original_language": originalLanguage,
-        "original_title": originalTitle,
-        "overview": overview,
-        "popularity": popularity,
-        "poster_path": posterPath,
-        "production_companies":
-            productionCompanies?.map((x) => x.toJson()).toList(),
-        "production_countries":
-            productionCountries?.map((x) => x.toJson()).toList(),
-        "release_date": dateFormat(releaseDate),
-        "revenue": revenue,
-        "runtime": runtime,
-        "spoken_languages": spokenLanguages?.map((x) => x.toJson()).toList(),
-        "status": status,
-        "tagline": tagline,
-        "title": title,
-        "video": video,
-        "vote_average": voteAverage,
-        "vote_count": voteCount,
-        "media_type": mediaType
-      };
-}
-
 /// Safely parses a date string to DateTime
 DateTime? _parseDateTime(dynamic dateString) {
-  if (dateString == null || dateString is !String) return null;
+  if (dateString == null || dateString is! String) return null;
   try {
     return DateTime.parse(dateString);
   } catch (e) {

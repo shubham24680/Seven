@@ -62,9 +62,10 @@ class AppConstants {
   ];
 
   // ERROR
-  static ErrorData ERRORDATA = ErrorData(
-      title: "OH NO!",
-      subtitle: "No internet connection.\nCheck your network and try again.",
-      image: AppSvgs.NO_CONNECTION,
-      buttonText: "Try again");
+  static HelperModel ERRORDATA = HelperModel(
+      string1: "OH NO!",
+      string2: "No internet connection.\nCheck your network and try again.",
+      string3: AppSvgs.NO_CONNECTION,
+      string4: "Try again",
+      string5: "Back");
 }
