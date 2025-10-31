@@ -6,24 +6,14 @@ class HomeCarousel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profileIndex = ref.watch(profileProvider).profilePicIndex;
-    final showsState = ref.watch(showsProvider);
-    final showsController = ref.read(showsProvider.notifier);
-    final results = showsState.shows.results;
-    final genres = showsState.genre.genres;
+    final carouselState = ref.watch(showsProvider);
+    final carouselController = ref.read(showsProvider.notifier);
+    final trending = ref.watch(trendingShowProvider);
 
     final viewportFraction = 0.7;
     final width = 1.sw;
     final height = 1.5 * width;
     final carouselHeight = viewportFraction * height;
-
-    String getGenre(int genreId) {
-      final value = genres?.firstWhere(
-        (gen) => gen.id == genreId,
-        orElse: () => Genre(id: -1, name: null),
-      );
-
-      return value?.name ?? "";
-    }
 
     Widget buildAppBar() {
       return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -32,115 +22,117 @@ class HomeCarousel extends ConsumerWidget {
             imageUrl: AppAssets.AVATARS[profileIndex],
             height: 0.048.sh,
             borderRadius: BorderRadius.circular(1.sh),
-            event: () => showsController
+            event: () => carouselController
                 .moveToPage(AppAssets.BOTTOM_NAVIGATION_ICONS.length - 1)),
         // CustomButton(
         //     buttonType: ButtonType.ICON,
         //     icon: AppSvgs.NOTIFICATION,
         //     onPressed: () => context.push("/notification"))
-      ]);
+      ]).paddingFromLTRB(
+          left: AppConstants.SIDE_PADDING,
+          top: 0.5 * AppConstants.SIDE_PADDING,
+          right: AppConstants.SIDE_PADDING);
     }
 
-    Widget buildCarouselChild(int index) {
-      final voteAverage = results?[index].voteAverage?.toStringAsFixed(1);
+    String? getGenre(int genreId) {
+      final allGenre = carouselState.genres?.genres;
+      final value = allGenre?.firstWhere(
+        (gen) => gen.id == genreId,
+        orElse: () => Genre(id: -1, name: null),
+      );
 
-      return Stack(alignment: Alignment.topRight, children: [
-        CustomImage(
-            imageType: ImageType.REMOTE,
-            event: () => context.push("/detail/${results?[index].id}"),
-            imageUrl:
-                ApiConstants.IMAGE_PATH + (results?[index].posterPath ?? ""),
-            borderRadius: BorderRadius.circular(0.1 * carouselHeight)),
-        if (voteAverage != null && voteAverage != "0.0")
-          IgnorePointer(
-              child: CustomTag(icon: AppSvgs.STAR, value: voteAverage)
-                  .paddingAll(0.05 * carouselHeight))
-      ]);
+      return value?.name;
     }
 
-    Widget buildCarousel() {
-      return CarouselSlider.builder(
-          itemBuilder: (context, index, realIndex) => buildCarouselChild(index),
-          itemCount: results?.length ?? 0,
-          options: CarouselOptions(
-              onPageChanged: (index, _) => showsController.nextTo(index),
-              initialPage: showsState.carouselCurrentIndex,
-              height: carouselHeight,
-              viewportFraction: viewportFraction,
-              autoPlay: true,
-              enlargeCenterPage: true));
-    }
+    return trending.when(
+        data: (show) {
+          final currentShow = show[carouselState.carouselCurrentIndex];
 
-    Widget buildMainWidget() {
-      final showGenre = getGenre(
-          results?[showsState.carouselCurrentIndex].genreIds?[0] ?? -1);
+          Widget buildCarouselChild(int index) {
+            final voteAverage = show[index].voteAverage?.toStringAsFixed(1);
 
-      return blurEffect(
-          6.0,
-          Container(
-              height: height,
-              width: width,
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [AppColors.transparent, AppColors.black3])),
-              child: SafeArea(
-                  child: Column(children: [
-                buildAppBar()
-                    .paddingSymmetric(horizontal: AppConstants.SIDE_PADDING),
-                const Spacer(),
-                buildCarousel(),
-                const Spacer(),
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  if (genres?.firstOrNull != null)
-                    Wrap(children: [
-                      CustomText(
-                        text: showGenre,
-                        size: 0.025 * height,
-                        weight: FontWeight.w900,
-                      ),
-                      CustomText(text: " • ")
-                    ]),
+            return Stack(alignment: Alignment.topRight, children: [
+              CustomImage(
+                  imageType: ImageType.REMOTE,
+                  event: () => context.push("/detail/${show[index].id}"),
+                  imageUrl: getImageUrl(show[index].posterPath),
+                  borderRadius: BorderRadius.circular(0.1 * carouselHeight)),
+              if (voteAverage != null && voteAverage != "0.0")
+                IgnorePointer(
+                    child: CustomTag(icon: AppSvgs.STAR, value: voteAverage)
+                        .paddingAll(0.05 * carouselHeight))
+            ]);
+          }
+
+          Widget buildCarousel() {
+            return CarouselSlider.builder(
+                itemCount: show.length,
+                itemBuilder: (context, index, realIndex) =>
+                    buildCarouselChild(index),
+                options: CarouselOptions(
+                    onPageChanged: (index, _) =>
+                        carouselController.nextTo(index),
+                    initialPage: carouselState.carouselCurrentIndex,
+                    height: carouselHeight,
+                    viewportFraction: viewportFraction,
+                    autoPlay: true,
+                    enlargeCenterPage: true));
+          }
+
+          Widget buildMainWidget() {
+            final decoration = const BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [AppColors.transparent, AppColors.black3]));
+
+            final showGenre = getGenre(currentShow.genreIds?.first);
+            final mediaType = currentShow.mediaType;
+            final item = <String>[
+              if (showGenre != null) showGenre,
+              if (mediaType != null) mediaType
+            ];
+            final overview = currentShow.overview ?? "";
+            final child = Container(
+                height: height,
+                width: width,
+                decoration: decoration,
+                child: SafeArea(
+                    child: Column(children: [
+                  buildAppBar(),
+                  const Spacer(),
+                  buildCarousel(),
+                  const Spacer(),
                   CustomText(
-                      text:
-                          results?[showsState.carouselCurrentIndex].mediaType ??
-                              "",
-                      size: 0.025 * height,
-                      weight: FontWeight.w900,
-                      capitalFirstWord: true)
-                ]).paddingSymmetric(horizontal: AppConstants.SIDE_PADDING),
-                SizedBox(height: 0.01 * height),
-                CustomText(
-                        text: results?[showsState.carouselCurrentIndex]
-                                .overview ??
-                            "",
-                        size: 0.02 * height,
-                        align: TextAlign.center,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis)
-                    .paddingSymmetric(horizontal: AppConstants.SIDE_PADDING)
-              ]))));
-    }
+                          text: item.join(" • "),
+                          size: 0.025 * height,
+                          weight: FontWeight.w900)
+                      .paddingSymmetric(horizontal: AppConstants.SIDE_PADDING),
+                  SizedBox(height: 0.01 * height),
+                  CustomText(
+                          text: overview,
+                          size: 0.02 * height,
+                          align: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis)
+                      .paddingSymmetric(horizontal: AppConstants.SIDE_PADDING)
+                ])));
 
-    if (showsState.shows.isSuccess) {
-      return Stack(alignment: Alignment.center, children: [
-        CustomImage(
-            imageType: ImageType.REMOTE,
-            imageUrl: ApiConstants.IMAGE_PATH +
-                (results?[showsState.carouselCurrentIndex].posterPath ?? ""),
-            height: height),
-        buildMainWidget(),
-      ]);
-    }
+            return blurEffect(6.0, child);
+          }
 
-    debugPrint(
-        "${showsState.shows.apiStatus} -> ${showsState.shows.errorMessage}");
-    return Stack(
-      children: [
-        if (showsState.shows.isLoading) customShimmer(height: height),
-        SafeArea(child: buildAppBar().paddingAll(AppConstants.SIDE_PADDING))
-      ],
-    );
+          return Stack(alignment: Alignment.center, children: [
+            CustomImage(
+                height: height,
+                imageType: ImageType.REMOTE,
+                imageUrl: getImageUrl(currentShow.posterPath)),
+            buildMainWidget(),
+          ]);
+        },
+        loading: () => Stack(children: [
+              customShimmer(height: height),
+              SafeArea(child: buildAppBar())
+            ]),
+        error: (error, stackTrace) => SafeArea(child: buildAppBar()));
   }
 }

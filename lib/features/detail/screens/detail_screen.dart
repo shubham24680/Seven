@@ -72,8 +72,7 @@ class DetailScreen extends ConsumerWidget {
                         .paddingSymmetric(
                             horizontal: AppConstants.SIDE_PADDING),
                     Row(children: [
-                      if (item.isNotEmpty)
-                        CustomText(text: item.join(" • "), size: 0.02 * height),
+                      CustomText(text: item.join(" • "), size: 0.02 * height),
                       Spacer(),
                       if (voteAverage != null && voteAverage != "0.0")
                         CustomTag(icon: AppSvgs.STAR, value: voteAverage),

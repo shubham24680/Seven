@@ -11,6 +11,8 @@ export 'packages/app_packages.dart';
 export 'routes/routes.dart';
 
 // SERVICES
+export 'services/api_exception.dart';
+export 'services/api_result.dart';
 export 'services/base_services.dart';
 export 'services/shows_services.dart';
 export 'services/network.dart';
@@ -23,6 +25,7 @@ export 'theme/dark_theme.dart';
 
 // UTILS
 export 'utils/colors.dart';
+export 'utils/widgets.dart';
 
 // CUSTOM
 export 'customs/extension.dart';

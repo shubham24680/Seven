@@ -63,7 +63,7 @@ class CustomCard extends StatelessWidget {
         break;
       default:
         imageType = ImageType.REMOTE;
-        imageUrl = ApiConstants.IMAGE_PATH + imagePath;
+        imageUrl = getImageUrl(imagePath);
         textCard = blurEffect(
             blurValue,
             Container(

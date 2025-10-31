@@ -7,6 +7,7 @@ class CustomCollection extends StatelessWidget {
       this.scrollDirection = Axis.horizontal,
       this.crossAxisCount = 1,
       this.isLoading = true,
+      this.loadingItemCount = 3,
       this.collectionName,
       this.cardType = CardType.SHOWS,
       this.orientation = CardOrientation.LANDSCAPE,
@@ -23,6 +24,7 @@ class CustomCollection extends StatelessWidget {
   final int crossAxisCount;
   final bool isSafeHeight;
   final bool isLoading;
+  final int loadingItemCount;
   final String? collectionName;
   final void Function()? onPressed;
   final CardType cardType;
@@ -91,10 +93,10 @@ class CustomCollection extends StatelessWidget {
 
     final collectionItems = GridView.builder(
         controller: scrollController,
-        itemCount: results?.length ?? 3,
         scrollDirection: scrollDirection,
-        physics: ClampingScrollPhysics(),
+        itemCount: results?.length ?? loadingItemCount,
         shrinkWrap: true,
+        physics: ClampingScrollPhysics(),
         padding: EdgeInsets.symmetric(
             horizontal: AppConstants.SIDE_PADDING,
             vertical: isVertical ? AppConstants.SIDE_PADDING : 0),

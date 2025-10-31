@@ -6,8 +6,6 @@ export 'onboarding/providers/onboarding_providers.dart';
 export 'onboarding/screens/onboading_screen.dart';
 
 // SHOWS
-export 'movies/providers/shows_provider.dart';
-
 export 'movies/screens/shows.dart';
 export 'movies/screens/home_screen.dart';
 export 'movies/screens/profile_screen.dart';

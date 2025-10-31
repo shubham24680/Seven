@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:seven/app/app.dart';
 
 class ShowsServices {
@@ -10,7 +9,7 @@ class ShowsServices {
   Future<ShowsModel?> search(String query) async {
     try {
       final response = await BaseService.instance.fetchData(
-          apiHost: ApiConstants.API_HOST,
+          apiHost: ApiConstants.BASE_URL,
           endPoint: ApiConstants.SEARCH,
           responseType: ResponseType.GET,
           queryParams: {"query": query});
@@ -22,41 +21,24 @@ class ShowsServices {
     }
   }
 
-  Future<ShowsModel?> fetchShows() async {
-    try {
-      final response = await BaseService.instance.fetchData(
-        apiHost: ApiConstants.API_HOST,
-        endPoint: ApiConstants.TRENDING_MOVIES,
-        responseType: ResponseType.GET,
-      );
+  Future<ShowsModel> fetchTrendingShows({int page = 1}) async =>
+      _fetchShows(ApiConstants.TRENDING_MOVIES, page, "fetchTrendingShows");
 
-      return response != null ? ShowsModel.fromJson(response) : null;
-    } catch (e) {
-      log("Internal Error -> $e");
-      return null;
-    }
-  }
+  Future<ShowsModel> fetchTopShows({int page = 1}) async =>
+      _fetchShows(ApiConstants.TOP_RATED, page, "fetchTopShows");
 
-  Future<Result?> fetchGenres() async {
-    try {
-      final response = await BaseService.instance.fetchData(
-        apiHost: ApiConstants.API_HOST,
-        endPoint: ApiConstants.GENRES,
-        responseType: ResponseType.GET,
-      );
+  Future<ShowsModel> fetchNewReleaseShows({int page = 1}) async =>
+      _fetchShows(ApiConstants.NOW_PLAYING, page, "fetchNewReleaseShows");
 
-      return response != null ? Result.fromJson(response) : null;
-    } catch (e) {
-      log("Internal Error -> $e");
-      return null;
-    }
-  }
+  Future<ShowsModel> fetchUpcomingShows({int page = 1}) async =>
+      _fetchShows(ApiConstants.UPCOMING, page, "fetchUpcomingShows");
 
+  // Remove this and use _fetchShows.
   Future<List<ShowsModel?>?> fetchCollections() async {
     try {
       final response = await Future.wait(ApiConstants.COLLECTIONS
           .map((endPoint) => BaseService.instance.fetchData(
-                apiHost: ApiConstants.API_HOST,
+                apiHost: ApiConstants.BASE_URL,
                 endPoint: endPoint,
                 responseType: ResponseType.GET,
               ))
@@ -72,31 +54,58 @@ class ShowsServices {
     }
   }
 
-  Future<Result?> fetchShowDetail(String id) async {
+  Future<Result> fetchGenres() async =>
+      _fetchResult(ApiConstants.GENRES, "fetchGenres");
+
+  Future<Result> fetchShowDetail(String id) async =>
+      _fetchResult(ApiConstants.MOVIE_DETAIL + id, "fetchShowDetail");
+
+  Future<Result> fetchCollectionDetail(String id) async => _fetchResult(
+      ApiConstants.COLLECTION_DETAIL + id, "fetchCollectionDetail");
+
+  // SHOW
+  Future<ShowsModel> _fetchShows(
+      String endPoint, int page, String errorContext) async {
     try {
       final response = await BaseService.instance.fetchData(
-          apiHost: ApiConstants.API_HOST,
-          endPoint: ApiConstants.MOVIE_DETAIL + id,
-          responseType: ResponseType.GET);
+          apiHost: ApiConstants.BASE_URL,
+          endPoint: endPoint,
+          responseType: ResponseType.GET,
+          queryParams: {
+            'page': page.toString(),
+            'language': ApiConstants.DEFAULT_LANGUAGE
+          });
 
-      return response != null ? Result.fromJson(response) : null;
-    } catch (e) {
-      log("Internal Error -> $e");
-      return null;
+      return ShowsModel.fromJson(response);
+    } on ApiException catch (e) {
+      log('API Error in $errorContext: ${e.message}',
+          name: 'ShowsService', error: e);
+      rethrow;
+    } catch (e, stackTrace) {
+      log('Unexpected Error in $errorContext',
+          name: 'ShowsService', error: e, stackTrace: stackTrace);
+      throw ApiException(message: 'Failed to fetch shows', error: e);
     }
   }
 
-  Future<Result?> fetchCollectionDetail(String id) async {
+// RESULT
+  Future<Result> _fetchResult(String endPoint, String errorContext) async {
     try {
       final response = await BaseService.instance.fetchData(
-          apiHost: ApiConstants.API_HOST,
-          endPoint: ApiConstants.COLLECTION_DETAIL + id,
-          responseType: ResponseType.GET);
+          apiHost: ApiConstants.BASE_URL,
+          endPoint: endPoint,
+          responseType: ResponseType.GET,
+          queryParams: {'language': ApiConstants.DEFAULT_LANGUAGE});
 
-      return response != null ? Result.fromJson(response) : null;
-    } catch (e) {
-      log("Internal Error -> $e");
-      return null;
+      return Result.fromJson(response);
+    } on ApiException catch (e) {
+      log('API Error in $errorContext: ${e.message}',
+          name: 'ShowsService', error: e);
+      rethrow;
+    } catch (e, stackTrace) {
+      log('Unexpected Error in $errorContext',
+          name: 'ShowsService', error: e, stackTrace: stackTrace);
+      throw ApiException(message: 'Failed to fetch result', error: e);
     }
   }
 }

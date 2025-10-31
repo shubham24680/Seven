@@ -11,42 +11,39 @@ class HomeScreen extends StatelessWidget {
           const HomeCarousel(),
           SizedBox(height: 0.02.sh),
           Consumer(builder: (_, ref, __) {
-            final showsState = ref.watch(showsProvider);
-            final showsController = ref.read(showsProvider.notifier);
+            final top = ref.watch(topShowsProvider);
+            final newRelease = ref.watch(newReleaseShowsProvider);
+            final upcoming = ref.watch(upcomingShowsProvider);
 
-            return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children:
-                    List.generate(ApiConstants.COLLECTIONS.length, (index) {
-                  final collection = showsState.collection[index];
-                  final isLoading = collection.isLoading;
-                  final isError = collection.isError;
-
-                  if (isError ||
-                      (!isLoading && collection.results?.firstOrNull == null)) {
-                    return const SizedBox.shrink();
-                  }
-
-                  return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (index != 0)
-                          const Divider(
-                            color: AppColors.black2,
-                          ).paddingSymmetric(
-                              horizontal: AppConstants.SIDE_PADDING),
-                        CustomCollection(
-                          collectionName: AppConstants.COLLECTIONS[index],
-                          isLoading: isLoading,
-                          results: collection.results,
-                          onPressed: () {
-                            showsController.chooseTo(index);
-                            context.push("/collection");
-                          },
-                        )
-                      ]);
-                }));
+            return Column(children: [
+              buildCollection("Top 20 Movies", top, isStart: true),
+              buildCollection("New Release", newRelease),
+              buildCollection("Upcoming", upcoming),
+            ]);
           })
         ]));
+  }
+
+  buildCollection(String collectionName, AsyncValue<List<Result>> shows,
+      {bool isStart = false}) {
+    return shows.when(
+      data: (show) {
+        return Column(children: [
+          if (!isStart)
+            Divider(
+              color: AppColors.black2,
+            ).paddingSymmetric(horizontal: AppConstants.SIDE_PADDING),
+          CustomCollection(
+              collectionName: collectionName,
+              isLoading: false,
+              results: show,
+              onPressed: () {
+                // context.push("/collection");
+              }),
+        ]);
+      },
+      loading: () => CustomCollection(isLoading: true),
+      error: (error, stackTrace) => const SizedBox.shrink(),
+    );
   }
 }
