@@ -16,7 +16,7 @@ class HomeScreen extends StatelessWidget {
             final upcoming = ref.watch(upcomingShowsProvider);
 
             return Column(children: [
-              buildCollection("Top 20 Movies", top, isStart: true),
+              buildCollection("Top 20 Movies", top),
               buildCollection("New Release", newRelease),
               buildCollection("Upcoming", upcoming),
             ]);
@@ -29,10 +29,10 @@ class HomeScreen extends StatelessWidget {
     return shows.when(
       data: (show) {
         return Column(children: [
-          if (!isStart)
-            Divider(
-              color: AppColors.black2,
-            ).paddingSymmetric(horizontal: AppConstants.SIDE_PADDING),
+          // if (!isStart)
+          // Divider(
+          //   color: AppColors.black2,
+          // ).paddingSymmetric(horizontal: AppConstants.SIDE_PADDING),
           CustomCollection(
               collectionName: collectionName,
               isLoading: false,
@@ -42,7 +42,7 @@ class HomeScreen extends StatelessWidget {
               }),
         ]);
       },
-      loading: () => CustomCollection(isLoading: true),
+      loading: () => CustomCollection(collectionName: collectionName),
       error: (error, stackTrace) => const SizedBox.shrink(),
     );
   }

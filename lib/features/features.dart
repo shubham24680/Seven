@@ -21,8 +21,6 @@ export 'profile/screens/help_screen.dart';
 export 'profile/screens/notification_settings_screen.dart';
 
 // DETAIL
-export 'detail/providers/show_detail_provider.dart';
-
 export 'collections/screens/collection_screen.dart';
 export 'detail/screens/detail_screen.dart';
 

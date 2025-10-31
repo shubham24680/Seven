@@ -1,8 +1,6 @@
 import 'dart:developer';
 import 'package:seven/app/app.dart';
 
-// enum ShowType { SHOWS, GENRES }
-
 abstract class ShowNotifier extends AutoDisposeAsyncNotifier<List<Result>> {
   int _currentPage = 1;
   bool _hasMorePages = true;

@@ -33,27 +33,6 @@ class ShowsServices {
   Future<ShowsModel> fetchUpcomingShows({int page = 1}) async =>
       _fetchShows(ApiConstants.UPCOMING, page, "fetchUpcomingShows");
 
-  // Remove this and use _fetchShows.
-  Future<List<ShowsModel?>?> fetchCollections() async {
-    try {
-      final response = await Future.wait(ApiConstants.COLLECTIONS
-          .map((endPoint) => BaseService.instance.fetchData(
-                apiHost: ApiConstants.BASE_URL,
-                endPoint: endPoint,
-                responseType: ResponseType.GET,
-              ))
-          .toList());
-
-      return response.map((json) {
-        log("Collection -> ${json == null ? null : "Success"}");
-        return (json != null) ? ShowsModel.fromJson(json) : null;
-      }).toList();
-    } catch (e) {
-      log("Internal Error -> $e");
-      return null;
-    }
-  }
-
   Future<Result> fetchGenres() async =>
       _fetchResult(ApiConstants.GENRES, "fetchGenres");
 
