@@ -8,17 +8,21 @@ class Shows extends ConsumerWidget {
     final navigationState = ref.watch(showsProvider);
     final navigationController = ref.read(showsProvider.notifier);
 
+    buildIcon(String icon, int index) {
+      return SvgPicture.asset(icon,
+          colorFilter: ColorFilter.mode(
+              (index == navigationState.navigationCurrentIndex)
+                  ? AppColors.vividNightfall4
+                  : AppColors.black1,
+              BlendMode.srcIn));
+    }
+
     final bottomIcon = AppAssets.BOTTOM_NAVIGATION_ICONS;
     final items = List.generate(
         bottomIcon.length,
         (index) => BottomNavigationBarItem(
             label: "Item$index",
-            icon: CustomImage(
-                imageType: ImageType.SVG_LOCAL,
-                imageUrl: bottomIcon[index].icon,
-                color: (index == navigationState.navigationCurrentIndex)
-                    ? AppColors.vividNightfall4
-                    : AppColors.black1)));
+            icon: buildIcon(bottomIcon[index].icon, index)));
 
     return Scaffold(
         body: bottomIcon[navigationState.navigationCurrentIndex].screen,

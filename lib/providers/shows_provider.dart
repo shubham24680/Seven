@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:seven/app/app.dart';
 
-abstract class ShowNotifier extends AutoDisposeAsyncNotifier<List<Result>> {
+abstract class ShowNotifier extends AsyncNotifier<List<Result>> {
   int _currentPage = 1;
   bool _hasMorePages = true;
 
@@ -52,7 +52,7 @@ class TrendingShowNotifier extends ShowNotifier {
 }
 
 final trendingShowProvider =
-    AutoDisposeAsyncNotifierProvider<TrendingShowNotifier, List<Result>>(
+    AsyncNotifierProvider<TrendingShowNotifier, List<Result>>(
   () => TrendingShowNotifier(),
 );
 
@@ -64,8 +64,7 @@ class TopShowNotifier extends ShowNotifier {
   }
 }
 
-final topShowsProvider =
-    AutoDisposeAsyncNotifierProvider<TopShowNotifier, List<Result>>(
+final topShowsProvider = AsyncNotifierProvider<TopShowNotifier, List<Result>>(
   () => TopShowNotifier(),
 );
 
@@ -78,7 +77,7 @@ class NewReleaseShowsNotifier extends ShowNotifier {
 }
 
 final newReleaseShowsProvider =
-    AutoDisposeAsyncNotifierProvider<NewReleaseShowsNotifier, List<Result>>(
+    AsyncNotifierProvider<NewReleaseShowsNotifier, List<Result>>(
   () => NewReleaseShowsNotifier(),
 );
 
@@ -91,7 +90,7 @@ class UpcomingShowsNotifier extends ShowNotifier {
 }
 
 final upcomingShowsProvider =
-    AutoDisposeAsyncNotifierProvider<UpcomingShowsNotifier, List<Result>>(
+    AsyncNotifierProvider<UpcomingShowsNotifier, List<Result>>(
   () => UpcomingShowsNotifier(),
 );
 
@@ -135,9 +134,8 @@ class ShowsProvider extends StateNotifier<ShowsState> {
 
   Future<void> _loadData() async {
     final service = ShowsServices.instance;
-    final genres = await service.fetchGenres();
-
     try {
+      final genres = await service.fetchGenres();
       state = state.copyWith(genres: genres);
     } on ApiException catch (e) {
       log("Genre Exception -> $e");
