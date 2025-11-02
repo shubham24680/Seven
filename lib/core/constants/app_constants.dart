@@ -15,7 +15,6 @@ class AppConstants {
         path: "/notificationSettings",
         child: const NotificationSettingsScreen()),
     ScreenRoutes(path: "/help", child: const HelpScreen()),
-    ScreenRoutes(path: "/collection", child: const CollectionScreen()),
   ];
 
   // ONBOARDING

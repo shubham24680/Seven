@@ -4,46 +4,41 @@ abstract class ResultNotifier extends FamilyAsyncNotifier<Result, String> {
   Future<Result> fetchResult(String id);
 
   @override
-  Future<Result> build(String id) async {
-    try {
-      final response = await fetchResult(id);
-      return response;
-    } on ApiException {
-      rethrow;
-    }
-  }
+  Future<Result> build(String id) => fetchResult(id);
 
   Future<void> refresh() async {
-    final id = arg;
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      final result = await build(id);
-      return result;
-    });
+    state = await AsyncValue.guard(() => fetchResult(arg));
   }
 }
 
 class ShowDetailNotifier extends ResultNotifier {
   @override
-  Future<Result> fetchResult(String showId) {
-    final service = ShowsServices.instance;
-    return service.fetchShowDetail(showId);
-  }
+  Future<Result> fetchResult(String showId) =>
+      ShowsServices.instance.fetchShowDetail(showId);
 }
 
 final showDetailProvider =
     AsyncNotifierProviderFamily<ShowDetailNotifier, Result, String>(
         ShowDetailNotifier.new);
 
+class ShowCollectionDetailNotifier extends ResultNotifier {
+  @override
+  Future<Result> fetchResult(String collectionId) =>
+      ShowsServices.instance.fetchCollectionDetail(collectionId);
+}
+
+final showCollectionDetailProvider =
+    AsyncNotifierProviderFamily<ShowCollectionDetailNotifier, Result, String>(
+        ShowCollectionDetailNotifier.new);
+
 class ShowCollectionNotifier extends ResultNotifier {
   @override
   Future<Result> fetchResult(String showId) async {
-    final showDetail = await ref.watch(showDetailProvider(showId).future);
+    final showDetail = await ref.read(showDetailProvider(showId).future);
     final collectionId = showDetail.belongsToCollection?.id.toString();
     if (collectionId == null) throw Exception("No Collection");
-
-    final service = ShowsServices.instance;
-    return service.fetchCollectionDetail(collectionId);
+    return ref.read(showCollectionDetailProvider(collectionId).future);
   }
 }
 

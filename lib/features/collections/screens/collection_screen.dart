@@ -1,26 +1,30 @@
 import 'package:seven/app/app.dart';
 
 class CollectionScreen extends ConsumerWidget {
-  const CollectionScreen({super.key});
+  const CollectionScreen(
+      {super.key, required this.id, required this.collectionName});
+
+  final String id;
+  final String collectionName;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final collectionState = ref.watch(showsProvider);
-    final collectionController = ref.read(showsProvider.notifier);
-    // final results =
-    //     collectionState.collection[collectionState.showsIndex].results;
-    // final appBarTitle = AppConstants.COLLECTIONS[collectionState.showsIndex];
+    final collection = ref.watch(collectionProvider(id));
 
     return Scaffold(
-      appBar: customAppBar(() => context.pop(), "appBarTitle"),
-      // body: CustomCollection(
-      //   isLoading: collectionState.shows.isLoading,
-      //   orientation: CardOrientation.POTRAIT,
-      //   isSafeHeight: true,
-      //   crossAxisCount: 2,
-      //   scrollDirection: Axis.vertical,
-      //   results: results,
-      // ),
+      appBar: customAppBar(() => context.pop(), collectionName),
+      body: collection.when(
+        data: (data) => CustomCollection(
+          scrollDirection: Axis.vertical,
+          orientation: CardOrientation.POTRAIT,
+          crossAxisCount: 2,
+          isSafeHeight: true,
+          isLoading: false,
+          results: data,
+        ),
+        loading: () => CustomCollection(collectionName: collectionName),
+        error: (error, stackTrace) => const SizedBox.shrink(),
+      ),
     );
   }
 }

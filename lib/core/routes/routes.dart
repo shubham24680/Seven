@@ -11,12 +11,20 @@ final GoRouter routes = GoRouter(
     },
     routes: [
       GoRoute(
-        path: "/detail/:id",
-        builder: (context, state) {
-          final id = state.pathParameters['id'] ?? "";
-          return DetailScreen(id);
-        },
-      ),
+          path: "/detail/:id",
+          pageBuilder: (context, state) {
+            final id = state.pathParameters['id'] ?? "";
+            return FadeTransistionPage(child: DetailScreen(id));
+          }),
+      GoRoute(
+          path: "/collection/:id",
+          pageBuilder: (context, state) {
+            final id = state.pathParameters['id'] ?? "";
+            final collectionName = state.extra as String;
+            return FadeTransistionPage(
+                child:
+                    CollectionScreen(id: id, collectionName: collectionName));
+          }),
       ...List.generate(
         AppConstants.APP_ROUTES.length,
         (index) => GoRoute(

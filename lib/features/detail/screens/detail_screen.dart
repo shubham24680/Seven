@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:intl/intl.dart';
 import 'package:seven/app/app.dart';
 
@@ -27,6 +29,7 @@ class DetailScreen extends ConsumerWidget {
     return Scaffold(
         body: showDetail.when(
             data: (detail) {
+              log('detail: ${detail.id}, belongTo: ${detail.belongsToCollection?.id} , name: DetailScreen');
               final overview = detail.overview;
               final collectionName =
                   detail.belongsToCollection?.name ?? "More in the series";
@@ -141,6 +144,7 @@ class DetailScreen extends ConsumerWidget {
                         SizedBox(height: 0.02.sh),
                         collectionDetail.when(
                             data: (show) {
+                              log('show: ${show.id}', name: 'DetailScreen');
                               return Column(children: [
                                 CustomCollection(
                                     collectionName: collectionName,
