@@ -35,7 +35,7 @@ final showCollectionDetailProvider =
 class ShowCollectionNotifier extends ResultNotifier {
   @override
   Future<Result> fetchResult(String showId) async {
-    final showDetail = await ref.read(showDetailProvider(showId).future);
+    final showDetail = await ref.watch(showDetailProvider(showId).future);
     final collectionId = showDetail.belongsToCollection?.id.toString();
     if (collectionId == null) throw Exception("No Collection");
     return ref.read(showCollectionDetailProvider(collectionId).future);

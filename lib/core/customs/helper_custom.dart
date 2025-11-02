@@ -46,3 +46,29 @@ PreferredSizeWidget customAppBar(
       leading: leading,
       title: title);
 }
+
+// Bottom Sheet
+void customBottomSheet(BuildContext context, String title, Widget child,
+    {Color? backgroundColor}) {
+  final borderRadius = BorderRadius.vertical(top: Radius.circular(0.02.sh));
+  final sheetColor = AppColors.lightSteel1;
+
+  showModalBottomSheet(
+      context: context,
+      backgroundColor: backgroundColor ?? sheetColor.withAlpha(10),
+      barrierColor: AppColors.transparent,
+      shape: RoundedRectangleBorder(borderRadius: borderRadius),
+      isScrollControlled: true,
+      builder: (context) => blurEffect(
+          10.0,
+          Column(mainAxisSize: MainAxisSize.min, children: [
+            CustomText(
+              text: title,
+              family: AppFonts.STAATLICHES,
+              color: sheetColor.withAlpha(150),
+            ),
+            Divider(color: sheetColor.withAlpha(40)),
+            child
+          ]).paddingAll(AppConstants.SIDE_PADDING),
+          borderRadius: borderRadius));
+}

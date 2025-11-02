@@ -77,7 +77,7 @@ class Result extends Network<Result> {
   final String? tagline;
   final String? title;
   final bool? video;
-  final double? voteAverage;
+  final String? voteAverage;
   final int? voteCount;
   final String? mediaType;
   final String? name;
@@ -154,7 +154,7 @@ class Result extends Network<Result> {
       tagline: json["tagline"],
       title: json["title"],
       video: json["video"],
-      voteAverage: json["vote_average"]?.toDouble(),
+      voteAverage: json["vote_average"]?.toStringAsFixed(1),
       voteCount: json["vote_count"],
       mediaType: json["media_type"],
       name: json["name"]);
@@ -188,7 +188,7 @@ class Result extends Network<Result> {
         "tagline": tagline,
         "title": title,
         "video": video,
-        "vote_average": voteAverage,
+        "vote_average": double.parse(voteAverage ?? "0.0"),
         "vote_count": voteCount,
         "media_type": mediaType,
         "name": name

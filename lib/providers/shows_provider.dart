@@ -37,7 +37,7 @@ abstract class ShowNotifier extends AsyncNotifier<List<Result>> {
       final totalPages = response.totalPages?.toInt();
       if (totalPages != null) _hasMorePages = _currentPage < totalPages;
       return response.results;
-    } on ApiException catch (e) {
+    } on ApiException catch (_) {
       rethrow;
     }
   }
