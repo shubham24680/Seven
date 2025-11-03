@@ -6,6 +6,7 @@ A beautiful and modern Flutter application for discovering and exploring movies 
 
 ![Flutter](https://img.shields.io/badge/Flutter-3.6.0+-02569B?logo=flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-3.6.0+-0175C2?logo=dart&logoColor=white)
+<!-- ![License](https://img.shields.io/badge/license-MIT-blue) -->
 
 ---
 
@@ -92,6 +93,31 @@ A beautiful and modern Flutter application for discovering and exploring movies 
 
 ---
 
+## 📦 Installation
+
+### Prerequisites
+
+- Flutter SDK (3.6.0 or higher)
+- Dart SDK (3.6.0 or higher)
+- Android Studio / Xcode (for mobile development)
+- VS Code or Android Studio with Flutter extensions
+- Git
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/seven.git
+cd seven
+```
+
+### Install Dependencies
+
+```bash
+flutter pub get
+```
+
+---
+
 ## ⚙️ Configuration
 
 ### API Setup
@@ -109,10 +135,10 @@ Seven uses The Movie Database (TMDB) API to fetch movie data. You need to config
 
    ```dart
    class ApiConstants {
-    static const String API_KEY = "YOUR_API_KEY_HERE";
-    static const String BEARER_TOKEN = "Bearer YOUR_BEARER_TOKEN_HERE";
+     static const String API_KEY = "YOUR_API_KEY_HERE";
+     static const String BEARER_TOKEN = "Bearer YOUR_BEARER_TOKEN_HERE";
      
-    // BASE URLs
+     // BASE URLs
     static const String BASE_URL = "https://api.themoviedb.org/";
     static const String VERSION_3 = "3/";
     static const String IMAGE_PATH = "https://image.tmdb.org/t/p/";
@@ -140,7 +166,8 @@ Seven uses The Movie Database (TMDB) API to fetch movie data. You need to config
 
     static const String SEARCH = "search/movie";
     static const String GENRES = "genre/movie/list";
-   }
+  }
+   ```
 
 ### Build Configuration
 
@@ -155,6 +182,42 @@ Seven uses The Movie Database (TMDB) API to fetch movie data. You need to config
 1. Minimum iOS: 12.0
 2. Update `ios/Podfile` if needed
 3. Run `pod install` in the `ios` directory
+
+---
+
+## 📁 Project Structure
+
+```
+lib/
+├── app/
+│   └── app.dart                 # Central export file
+├── core/
+│   ├── constants/               # App constants (API, assets, etc.)
+│   ├── customs/                 # Custom reusable widgets
+│   ├── packages/                # Package exports
+│   ├── routes/                  # Navigation configuration
+│   ├── services/                # API and business logic
+│   ├── storage/                 # Local storage utilities
+│   ├── theme/                   # App theming
+│   └── utils/                   # Utility functions
+├── features/                    # Feature modules
+│   ├── collections/             # Collection screens
+│   ├── detail/                  # Movie detail screens
+│   ├── error/                   # Error handling screens
+│   ├── movies/                  # Main movie screens
+│   ├── notification/           # Notification screens
+│   ├── onboarding/              # Onboarding flow
+│   └── profile/                 # Profile management
+├── model/                       # Data models
+│   ├── helper_model.dart
+│   ├── models.dart
+│   └── shows_model.dart
+├── providers/                   # Riverpod providers
+│   ├── providers.dart
+│   ├── show_detail_provider.dart
+│   └── shows_provider.dart
+└── main.dart                    # App entry point
+```
 
 ---
 
@@ -187,6 +250,100 @@ All UI components are built with custom widgets for consistency:
 - `CustomTextField` - Input fields with validation
 - `CustomTag` - Badge/tag widgets
 
+### Data Flow
+
+```
+UI (Screens) 
+  ↓
+Providers (State Management)
+  ↓
+Services (API Calls)
+  ↓
+Models (Data Parsing)
+  ↓
+UI (Display)
+```
+
+---
+
+## 📖 Usage
+
+### Navigation
+
+- **Home**: Browse trending movies and collections
+- **Profile**: View and edit your profile
+- **Movie Details**: Tap any movie card to view details
+- **Collections**: Tap "See all" to view full collections
+- **Onboarding**: Shown on first launch
+
+### Features Guide
+
+1. **Browse Movies**
+   - Swipe through trending carousel on home
+   - Scroll through collections horizontally
+   - Tap "See all" for full collection view
+
+2. **View Details**
+   - Tap any movie card
+   - Scroll to see complete information
+   - View related movies in collection
+   - Read full overview
+
+3. **Manage Profile**
+   - Navigate to Profile tab
+   - Tap "Edit profile" to modify
+   - Select avatar, name, gender, and DOB
+   - Save changes
+
+---
+
+## 🎯 Key Features Implementation
+
+### Image Caching
+- Uses `CachedNetworkImage` for efficient image loading
+- Automatic placeholder and error handling
+- Shimmer loading effects
+
+### Responsive Design
+- ScreenUtil for device-independent sizing
+- Supports phones, tablets, and desktop
+- Adaptive layouts for different screen sizes
+
+### Error Handling
+- Comprehensive error screens
+- Network error detection
+- Retry mechanisms
+- Graceful fallbacks
+
+### Performance
+- Lazy loading for lists
+- Image caching
+- Efficient state updates
+- Optimized rebuilds
+
+---
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**API Errors**
+- Verify API key and Bearer token in `api_constants.dart`
+- Check internet connection
+- Ensure TMDB API is accessible
+
+**Build Errors**
+- Run `flutter clean` then `flutter pub get`
+- Ensure all dependencies are compatible
+- Check Flutter and Dart SDK versions
+
+**Image Loading Issues**
+- Check network connectivity
+- Verify image URLs from TMDB
+- Ensure proper image paths in constants
+
+---
+
 ## 📝 Documentation
 
 - **Features Documentation**: See `documents/feature_document.md` for detailed screen documentation
@@ -213,11 +370,17 @@ Contributions are welcome! Please follow these steps:
 
 ---
 
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
 ## 👤 Author
 
-**Shubham Patel**
-- GitHub: [shubham24680](https://github.com/shubham24680)
-- Email: subhampatel8092@gmail.com
+**Your Name**
+- GitHub: [@yourusername](https://github.com/yourusername)
+- Email: your.email@example.com
 
 ---
 
@@ -229,9 +392,37 @@ Contributions are welcome! Please follow these steps:
 
 ---
 
+## 📊 Version History
+
+### v1.0.0 (Current)
+- Initial release
+- Onboarding flow
+- Movie browsing and discovery
+- Movie details view
+- Collections view
+- User profile management
+- Dark theme implementation
+- Responsive design support
+
+---
+
+## 🔮 Future Enhancements
+
+- [ ] Search functionality
+- [ ] Favorites/watchlist
+- [ ] Movie trailers playback
+- [ ] User reviews and ratings
+- [ ] Social features
+- [ ] Offline mode
+- [ ] Push notifications
+- [ ] Multiple language support
+- [ ] Advanced filtering and sorting
+
+---
+
 ## 📞 Support
 
-For support, email subhampatel@gmail.com or open an issue on GitHub.
+For support, email your.email@example.com or open an issue on GitHub.
 
 ---
 

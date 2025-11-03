@@ -84,12 +84,12 @@ flutter_native_splash:
   android: true
   ios: true
 
-  color: "#000000"
-  image: assets/pictures/seven_min.png
+  color: "#131213"
+  image: assets/images/playstore.png
 
   android_12:
-    color: "#000000"
-    image: assets/pictures/seven_max.png
+    color: "#131213"
+    image: assets/images/android_splash_screen.png
 
 # The following section is specific to Flutter packages.
 flutter:
