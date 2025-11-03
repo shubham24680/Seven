@@ -9,30 +9,6 @@ class EditProfileScreen extends ConsumerWidget {
     final profileState = ref.watch(profileProvider);
     final profileController = ref.read(profileProvider.notifier);
 
-    void buildBottomSheet(String title, Widget child) {
-      final borderRadius = BorderRadius.vertical(top: Radius.circular(0.02.sh));
-      final sheetColor = AppColors.lightSteel1;
-
-      showModalBottomSheet(
-          context: context,
-          backgroundColor: sheetColor.withAlpha(10),
-          barrierColor: AppColors.transparent,
-          shape: RoundedRectangleBorder(borderRadius: borderRadius),
-          isScrollControlled: true,
-          builder: (context) => blurEffect(
-              10.0,
-              Column(mainAxisSize: MainAxisSize.min, children: [
-                CustomText(
-                  text: title,
-                  family: AppFonts.STAATLICHES,
-                  color: sheetColor.withAlpha(150),
-                ),
-                Divider(color: sheetColor.withAlpha(40)),
-                child
-              ]).paddingAll(AppConstants.SIDE_PADDING),
-              borderRadius: borderRadius));
-    }
-
     void chooseAvatar() {
       final child = GridView.builder(
           itemCount: AppAssets.AVATARS.length,
@@ -63,7 +39,7 @@ class EditProfileScreen extends ConsumerWidget {
             ]);
           });
 
-      buildBottomSheet("Choose your avatar", child);
+      customBottomSheet(context, "Choose your avatar", child);
     }
 
     void chooseDate() {
@@ -76,6 +52,9 @@ class EditProfileScreen extends ConsumerWidget {
       final initialDate = profileState.dateOfBirthController.text.isEmpty
           ? lastDate
           : dateFormat.parse(profileState.dateOfBirthController.text);
+      // final initialDate = profileState.dateOfBirthController.text.isEmpty
+      //     ? lastDate
+      //     : getDateFormat(profileState.dateOfBirthController.text);
 
       final child = Theme(
         data: Theme.of(context).copyWith(
@@ -107,7 +86,7 @@ class EditProfileScreen extends ConsumerWidget {
         ),
       );
 
-      buildBottomSheet("Select date", child);
+      customBottomSheet(context, "Select date", child);
     }
 
     Widget editData() {

@@ -26,7 +26,7 @@ class ProfileScreen extends StatelessWidget {
         }),
         SizedBox(height: 0.02.sh),
         buildButtons(context, false),
-        contentList(context),
+        // contentList(context),
         const Spacer(),
         CustomText(
             text: "Version 1.0.0",

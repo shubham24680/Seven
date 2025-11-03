@@ -36,7 +36,6 @@ dependencies:
 
   # UI & State
   flutter_riverpod: ^2.6.1
-  provider: ^6.1.5+1
   go_router: ^16.2.4
 
   # Networking & http
@@ -68,6 +67,7 @@ dependencies:
   flutter_screenutil: ^5.9.3
   intl: ^0.20.2
   smooth_page_indicator: ^1.2.1
+  url_launcher: ^6.3.2
   
 dev_dependencies:
   flutter_test:

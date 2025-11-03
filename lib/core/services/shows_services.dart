@@ -14,7 +14,7 @@ class ShowsServices {
           responseType: ResponseType.GET,
           queryParams: {"query": query});
 
-      return response != null ? ShowsModel.fromJson(response) : null;
+      return ShowsModel.fromJson(response);
     } catch (e) {
       log("Internal Error -> $e");
       return null;

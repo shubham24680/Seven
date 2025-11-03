@@ -37,7 +37,7 @@ abstract class ShowNotifier extends AsyncNotifier<List<Result>> {
       final totalPages = response.totalPages?.toInt();
       if (totalPages != null) _hasMorePages = _currentPage < totalPages;
       return response.results;
-    } on ApiException catch (e) {
+    } on ApiException catch (_) {
       rethrow;
     }
   }
@@ -93,6 +93,30 @@ final upcomingShowsProvider =
     AsyncNotifierProvider<UpcomingShowsNotifier, List<Result>>(
   () => UpcomingShowsNotifier(),
 );
+
+AsyncNotifierProvider<ShowNotifier, List<Result>> getProviderById(String id) {
+  switch (id) {
+    case "top_20_movies":
+      return topShowsProvider;
+    case "new_release":
+      return newReleaseShowsProvider;
+    case "upcoming":
+      return upcomingShowsProvider;
+    default:
+      throw Exception("Invalid collection id: $id");
+  }
+}
+
+final collectionProvider =
+    Provider.autoDispose.family<AsyncValue<List<Result>>, String>((ref, id) {
+  try {
+    final provider = getProviderById(id);
+    return ref.watch(provider);
+  } catch (e) {
+    log("Error getting provider: $e", name: 'ProviderWrapper');
+    return AsyncValue.error(e, StackTrace.current);
+  }
+});
 
 final genreProvider = FutureProvider<Result>((ref) {
   final service = ShowsServices.instance;

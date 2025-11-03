@@ -16,15 +16,17 @@ class HomeScreen extends StatelessWidget {
             final upcoming = ref.watch(upcomingShowsProvider);
 
             return Column(children: [
-              buildCollection("Top 20 Movies", top),
-              buildCollection("New Release", newRelease),
-              buildCollection("Upcoming", upcoming),
+              buildCollection(context, "Top 20 Movies", top, "top_20_movies"),
+              buildCollection(
+                  context, "New Release", newRelease, "new_release"),
+              buildCollection(context, "Upcoming", upcoming, "upcoming"),
             ]);
           })
         ]));
   }
 
-  buildCollection(String collectionName, AsyncValue<List<Result>> shows,
+  buildCollection(BuildContext context, String collectionName,
+      AsyncValue<List<Result>> shows, String collectionId,
       {bool isStart = false}) {
     return shows.when(
       data: (show) {
@@ -38,12 +40,13 @@ class HomeScreen extends StatelessWidget {
               isLoading: false,
               results: show,
               onPressed: () {
-                // context.push("/collection");
+                context.push("/collection/$collectionId",
+                    extra: collectionName);
               }),
         ]);
       },
       loading: () => CustomCollection(collectionName: collectionName),
-      error: (error, stackTrace) => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
     );
   }
 }

@@ -49,7 +49,7 @@ class HomeCarousel extends ConsumerWidget {
           final currentShow = show[carouselState.carouselCurrentIndex];
 
           Widget buildCarouselChild(int index) {
-            final voteAverage = show[index].voteAverage?.toStringAsFixed(1);
+            final voteAverage = show[index].voteAverage;
 
             return Stack(alignment: Alignment.topRight, children: [
               CustomImage(
