@@ -18,32 +18,19 @@ class AppConstants {
   ];
 
   // ONBOARDING
-  static const List<Map<String, String>> ONBOARDING_TEXT = [
-    {
-      'heading':
-          "When the Sun Sets\nand the\nWorld Grows Quiet,\nNew Journeys Begin\nin Stories\nYet Untold.",
-      'description':
-          "Discover adventures that blur the line\nbetween reality and imagination\n— stories you can see, feel, and live."
-    },
-    {
-      'heading':
-          "Beyond Screens,\nInto Worlds\nWhere Stories Breathe\nand\nAdventures\nNever End.",
-      'description':
-          "From anime adventures to movie sagas and games\n— step into worlds where every journey feels alive.\nand every scene holds a new chapter."
-    },
-    {
-      'heading':
-          "Not all gifts are\nwrapped in\nribbons.\nSome are born\nunder a\nblood-lit moon.",
-      'description':
-          "Every story has a beginning, and this\none starts where the city ends\n— in the silence of the night."
-    },
-  ];
-
-  // COLLECTION
-  static final List<String> COLLECTIONS = [
-    "Top 20 Movies",
-    "New Release",
-    "Upcoming",
+  static List<HelperModel> ONBOARDING = [
+    HelperModel(
+        string1: AppImages.ONBOARDING_1,
+        string2:
+            "When the Sun Sets\nand the\nWorld Grows Quiet,\nNew Journeys Begin\nin Stories\nYet Untold.",
+        string3:
+            "Discover adventures that blur the line\nbetween reality and imagination\n— stories you can see, feel, and live."),
+    HelperModel(
+        string1: AppImages.ONBOARDING_2,
+        string2:
+            "Beyond Screens,\nInto Worlds\nWhere Stories Breathe\nand\nAdventures\nNever End.",
+        string3:
+            "Discover adventures that blur the line\nbetween reality and imagination\n— stories you can see, feel, and live."),
   ];
 
   // PROFILE
