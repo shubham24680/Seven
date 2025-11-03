@@ -109,10 +109,10 @@ Seven uses The Movie Database (TMDB) API to fetch movie data. You need to config
 
    ```dart
    class ApiConstants {
-     static const String API_KEY = "YOUR_API_KEY_HERE";
-     static const String BEARER_TOKEN = "Bearer YOUR_BEARER_TOKEN_HERE";
+    static const String API_KEY = "YOUR_API_KEY_HERE";
+    static const String BEARER_TOKEN = "Bearer YOUR_BEARER_TOKEN_HERE";
      
-     // BASE URLs
+    // BASE URLs
     static const String BASE_URL = "https://api.themoviedb.org/";
     static const String VERSION_3 = "3/";
     static const String IMAGE_PATH = "https://image.tmdb.org/t/p/";
@@ -140,8 +140,7 @@ Seven uses The Movie Database (TMDB) API to fetch movie data. You need to config
 
     static const String SEARCH = "search/movie";
     static const String GENRES = "genre/movie/list";
-  }
-   ```
+   }
 
 ### Build Configuration
 
