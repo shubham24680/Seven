@@ -8,6 +8,11 @@ A beautiful and modern Flutter application for discovering and exploring movies 
 ![Dart](https://img.shields.io/badge/Dart-3.6.0+-0175C2?logo=dart&logoColor=white)
 
 ---
+## 📺 Screens
+
+<img width="330" height="717" alt="onboarding" src="https://github.com/user-attachments/assets/b64258a2-ca22-437b-97eb-aaac7ef3920c" />     <img width="330" height="717" alt="home" src="https://github.com/user-attachments/assets/0459849b-21cd-4fb4-8b38-5971e61e82dc" />     <img width="330" height="717" alt="detail" src="https://github.com/user-attachments/assets/8adb99d5-4eec-40cd-a4bd-90e6508943b1" />     <img width="330" height="717" alt="profile" src="https://github.com/user-attachments/assets/24c107b0-d58f-4eb8-b1c0-94aa650ef564" />
+
+---
 
 ## 📱 Features
 
