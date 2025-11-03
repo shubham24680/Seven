@@ -7,8 +7,8 @@ class OnboadingScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pageState = ref.watch(pageProvider);
     final pageController = ref.read(pageProvider.notifier);
-    bool isLastIndex =
-        pageState.currentIndex != AppConstants.ONBOARDING_TEXT.length - 1;
+    final onboarding = AppConstants.ONBOARDING;
+    bool isLastIndex = pageState.currentIndex != onboarding.length - 1;
 
     // MARK: Child
     buildChild(int index) {
@@ -18,7 +18,7 @@ class OnboadingScreen extends ConsumerWidget {
         children: [
           // HEADING
           CustomText(
-              text: AppConstants.ONBOARDING_TEXT[index]['heading']!,
+              text: onboarding[index].string2 ?? "",
               align: TextAlign.end,
               family: AppFonts.STAATLICHES,
               size: 32.sp,
@@ -28,7 +28,7 @@ class OnboadingScreen extends ConsumerWidget {
 
           // DESCRIPTION
           CustomText(
-              text: AppConstants.ONBOARDING_TEXT[index]['description']!,
+              text: onboarding[index].string3 ?? "",
               align: TextAlign.end,
               color: AppColors.lightSteel1.withAlpha(150),
               size: 12.sp),
@@ -38,7 +38,7 @@ class OnboadingScreen extends ConsumerWidget {
           CustomButton(
               buttonType: ButtonType.ELEVATED,
               onPressed: () {
-                if (index + 1 < AppConstants.ONBOARDING_TEXT.length) {
+                if (index + 1 < onboarding.length) {
                   pageController.jumpToPage(pageState.currentIndex + 1);
                 } else {
                   pageController.changeFirstTimeVisitStatus();
@@ -48,9 +48,8 @@ class OnboadingScreen extends ConsumerWidget {
               height: 0.065.sh,
               child: Row(mainAxisSize: MainAxisSize.min, children: [
                 CustomText(
-                  text: isLastIndex ? "Next" : "Get the vibe",
-                  weight: FontWeight.w900,
-                ),
+                    text: isLastIndex ? "Next" : "Get the vibe",
+                    weight: FontWeight.w900),
                 SizedBox(width: 0.02.sw),
                 CustomImage(
                     imageType: ImageType.SVG_LOCAL,
@@ -66,20 +65,16 @@ class OnboadingScreen extends ConsumerWidget {
     return Scaffold(
         body: PageView.builder(
             controller: pageState.pageController,
-            itemCount: AppConstants.ONBOARDING_TEXT.length,
+            itemCount: onboarding.length,
             onPageChanged: (index) => pageController.moveToPage(index),
             itemBuilder: (context, index) => Container(
                 width: 1.sw,
-                padding: EdgeInsets.only(
-                    bottom: 60.h,
-                    right: AppConstants.SIDE_PADDING,
-                    left: AppConstants.SIDE_PADDING),
+                padding: EdgeInsets.symmetric(
+                    horizontal: AppConstants.SIDE_PADDING, vertical: 0.1.sh),
                 decoration: BoxDecoration(
-                    // BACKGROUND IMAGE
                     image: DecorationImage(
-                        image: AssetImage(AppAssets.ONBOARDING_IMAGES[index]),
-                        fit: BoxFit.cover,
-                        alignment: const Alignment(-0.4, 0.0))),
+                        image: AssetImage(onboarding[index].string1 ?? ""),
+                        fit: BoxFit.cover)),
                 child: buildChild(index))));
   }
 }
