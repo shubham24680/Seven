@@ -17,13 +17,15 @@ final GoRouter routes = GoRouter(
             return FadeTransistionPage(child: DetailScreen(id));
           }),
       GoRoute(
-          path: "/collection/:id",
+          path: "/collection/:collectionName",
           pageBuilder: (context, state) {
-            final id = state.pathParameters['id'] ?? "";
-            final collectionName = state.extra as String;
+            final collectionName = state.pathParameters['collectionName'] ?? "";
+            final collectionProvider = state.extra
+                as AsyncNotifierProvider<ShowNotifier, List<Result>>;
             return FadeTransistionPage(
-                child:
-                    CollectionScreen(id: id, collectionName: collectionName));
+                child: CollectionScreen(
+                    collectionName: collectionName,
+                    collectionProvider: collectionProvider));
           }),
       ...List.generate(
         AppConstants.APP_ROUTES.length,

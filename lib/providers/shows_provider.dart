@@ -4,13 +4,35 @@ import 'package:seven/app/app.dart';
 abstract class ShowNotifier extends AsyncNotifier<List<Result>> {
   int _currentPage = 1;
   bool _hasMorePages = true;
-
   Future<ShowsModel> fetchShows(int page);
+  String key;
+
+  ShowNotifier(this.key);
 
   @override
   Future<List<Result>> build() async {
-    final result = await load();
-    return result ?? [];
+    final storage = await SPD.getInstance();
+    try {
+      final cache = storage.getShows(key);
+      if (cache != null) {
+        final cacheData = ShowsModel.fromJson(cache);
+        AsyncData(cacheData);
+      }
+
+      final response = await fetchShows(_currentPage);
+      final totalPages = response.totalPages?.toInt();
+      if (totalPages != null) _hasMorePages = _currentPage < totalPages;
+
+      await storage.setShows(key, response.toJson());
+      return response.results ?? [];
+    } on ApiException catch (_) {
+      final cache = storage.getShows(key);
+      if (cache != null) {
+        final cacheData = ShowsModel.fromJson(cache);
+        return cacheData.results ?? [];
+      }
+      rethrow;
+    }
   }
 
   Future<void> refresh() async {
@@ -23,27 +45,26 @@ abstract class ShowNotifier extends AsyncNotifier<List<Result>> {
   Future<void> loadMore() async {
     if (!_hasMorePages || state.isLoading) return;
 
-    _currentPage++;
     final currentShows = state.valueOrNull ?? [];
     state = await AsyncValue.guard(() async {
-      final result = await load();
-      return [...currentShows, ...result ?? []];
+      try {
+        _currentPage++;
+        final response = await fetchShows(_currentPage);
+        final totalPages = response.totalPages?.toInt();
+        if (totalPages != null) _hasMorePages = _currentPage < totalPages;
+        await Future.delayed(Duration(seconds: 5));
+        return [...currentShows, ...response.results ?? []];
+      } on ApiException catch (_) {
+        _currentPage--;
+        return currentShows;
+      }
     });
-  }
-
-  Future<List<Result>?> load() async {
-    try {
-      final response = await fetchShows(_currentPage);
-      final totalPages = response.totalPages?.toInt();
-      if (totalPages != null) _hasMorePages = _currentPage < totalPages;
-      return response.results;
-    } on ApiException catch (_) {
-      rethrow;
-    }
   }
 }
 
 class TrendingShowNotifier extends ShowNotifier {
+  TrendingShowNotifier(super.key);
+
   @override
   Future<ShowsModel> fetchShows(int page) async {
     final service = ShowsServices.instance;
@@ -53,10 +74,12 @@ class TrendingShowNotifier extends ShowNotifier {
 
 final trendingShowProvider =
     AsyncNotifierProvider<TrendingShowNotifier, List<Result>>(
-  () => TrendingShowNotifier(),
+  () => TrendingShowNotifier(StorageConstants.TRENDING),
 );
 
 class TopShowNotifier extends ShowNotifier {
+  TopShowNotifier(super.key);
+
   @override
   Future<ShowsModel> fetchShows(int page) async {
     final service = ShowsServices.instance;
@@ -65,10 +88,12 @@ class TopShowNotifier extends ShowNotifier {
 }
 
 final topShowsProvider = AsyncNotifierProvider<TopShowNotifier, List<Result>>(
-  () => TopShowNotifier(),
+  () => TopShowNotifier(StorageConstants.TOP_20_MOVIES),
 );
 
 class NewReleaseShowsNotifier extends ShowNotifier {
+  NewReleaseShowsNotifier(super.key);
+
   @override
   Future<ShowsModel> fetchShows(int page) async {
     final service = ShowsServices.instance;
@@ -78,10 +103,12 @@ class NewReleaseShowsNotifier extends ShowNotifier {
 
 final newReleaseShowsProvider =
     AsyncNotifierProvider<NewReleaseShowsNotifier, List<Result>>(
-  () => NewReleaseShowsNotifier(),
+  () => NewReleaseShowsNotifier(StorageConstants.NEW_RELEASE),
 );
 
 class UpcomingShowsNotifier extends ShowNotifier {
+  UpcomingShowsNotifier(super.key);
+
   @override
   Future<ShowsModel> fetchShows(int page) async {
     final service = ShowsServices.instance;
@@ -91,36 +118,22 @@ class UpcomingShowsNotifier extends ShowNotifier {
 
 final upcomingShowsProvider =
     AsyncNotifierProvider<UpcomingShowsNotifier, List<Result>>(
-  () => UpcomingShowsNotifier(),
+  () => UpcomingShowsNotifier(StorageConstants.UPCOMING),
 );
 
-AsyncNotifierProvider<ShowNotifier, List<Result>> getProviderById(String id) {
-  switch (id) {
-    case "top_20_movies":
-      return topShowsProvider;
-    case "new_release":
-      return newReleaseShowsProvider;
-    case "upcoming":
-      return upcomingShowsProvider;
-    default:
-      throw Exception("Invalid collection id: $id");
+final genreProvider = FutureProvider<Result>((ref) async {
+  final storage = await SPD.getInstance();
+  final key = StorageConstants.GENRES;
+  final cache = storage.getShows(key);
+  if (cache != null) {
+    final cacheData = Result.fromJson(cache);
+    return cacheData;
   }
-}
 
-final collectionProvider =
-    Provider.autoDispose.family<AsyncValue<List<Result>>, String>((ref, id) {
-  try {
-    final provider = getProviderById(id);
-    return ref.watch(provider);
-  } catch (e) {
-    log("Error getting provider: $e", name: 'ProviderWrapper');
-    return AsyncValue.error(e, StackTrace.current);
-  }
-});
-
-final genreProvider = FutureProvider<Result>((ref) {
   final service = ShowsServices.instance;
-  return service.fetchGenres();
+  final genre = await service.fetchGenres();
+  await storage.setShows(key, genre.toJson());
+  return genre;
 });
 
 // STATE

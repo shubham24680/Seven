@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:seven/app/app.dart';
 
 class SPD {
@@ -11,7 +13,7 @@ class SPD {
     return _instance ??= SPD._();
   }
 
-  // GET
+  // PROFILE: GET
   bool get isFirstTimeVisit =>
       _prefs?.getBool(StorageConstants.FIRST_VISIT) ?? true;
   int get profilePicIndex =>
@@ -42,9 +44,25 @@ class SPD {
     return await _prefs?.remove(StorageConstants.PROFILE_PIC_INDEX) ?? false;
   }
 
-  Future<bool> clearAll() async {
-    return await _prefs?.clear() ?? false;
+  //SHOWS: GET
+  Map<String, dynamic>? getShows(String key) {
+    final data = _prefs?.getString(key);
+    if (data != null) {
+      return jsonDecode(data);
+    }
+
+    return null;
   }
+
+  //SET
+  Future<bool> setShows(String key, Map<String, dynamic> value) async {
+    final data = jsonEncode(value);
+    return await _prefs?.setString(key, data) ?? false;
+  }
+
+  // Future<bool> clearAll() async {
+  //   return await _prefs?.clear() ?? false;
+  // }
 
   bool containsKey(String key) {
     return _prefs?.containsKey(key) ?? false;

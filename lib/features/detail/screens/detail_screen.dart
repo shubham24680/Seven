@@ -201,7 +201,7 @@ class DetailScreen extends ConsumerWidget {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       _buildHeader("Information"),
       _buildInformationRow(detail.status,
-          getDateFormat(detail.releaseDate, type: FormatType.DATE)),
+          getDateFormat(detail.releaseDate, formatType: FormatType.YMMMD)),
       _buildInformationRow("Runtime", getRuntime(detail.runtime)),
       _buildInformationRow(
           "Budget", getCurrencyFormat(detail.budget, detail.originalLanguage)),
