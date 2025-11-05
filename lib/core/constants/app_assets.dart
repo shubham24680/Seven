@@ -6,16 +6,11 @@ class AppAssets {
     // BottomNavigation(icon: AppSvgs.SEARCH, screen: const SearchScreen()),
     BottomNavigation(icon: AppSvgs.PROFILE, screen: const ProfileScreen()),
   ];
-
-  static const List<String> AVATARS = [
-    AppImages.AVATAR_1,
-    AppImages.AVATAR_2,
-  ];
 }
 
 class AppImages {
-  static const AVATAR_1 = "assets/avatars/avatar (1).jpg";
-  static const AVATAR_2 = "assets/avatars/avatar (2).jpg";
+  static final AVATARS =
+      List.generate(10, (index) => "assets/avatars/avatar (${index + 1}).jpeg");
   static const GENRE_CARD_1 = "assets/images/genre_card (1).jpg";
   static const GENRE_CARD_2 = "assets/images/genre_card (2).jpg";
   static const ONBOARDING_1 = "assets/images/onboarding (1).jpg";

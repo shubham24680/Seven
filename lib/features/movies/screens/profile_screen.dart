@@ -13,7 +13,7 @@ class ProfileScreen extends StatelessWidget {
           return Column(children: [
             CustomImage(
                 imageType: ImageType.LOCAL,
-                imageUrl: AppAssets.AVATARS[profileState.profilePicIndex],
+                imageUrl: AppImages.AVATARS[profileState.profilePicIndex],
                 height: 0.15.sh,
                 borderRadius: BorderRadius.circular(1.sh)),
             SizedBox(height: 0.01.sh),

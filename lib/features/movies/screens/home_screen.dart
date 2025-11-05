@@ -22,10 +22,9 @@ class HomeScreen extends StatelessWidget {
                           collectionName: collectionName,
                           isLoading: false,
                           results: show,
-                          onPressed: () {
-                            context.push("/collection/$collectionName",
-                                extra: provider);
-                          }),
+                          onPressed: () => context.push(
+                              "/collection/$collectionName",
+                              extra: provider)),
                       Divider(
                         color: AppColors.black2,
                       ).paddingSymmetric(horizontal: AppConstants.SIDE_PADDING),

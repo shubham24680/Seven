@@ -49,7 +49,7 @@ class DetailScreen extends ConsumerWidget {
           if (detail.overview?.isNotEmpty ?? false)
             _buildOverviewSection(context, detail),
           SizedBox(height: 0.02.sh),
-          _buildCollection(collectionDetail, detail),
+          _buildCollection(context, collectionDetail, detail),
           _buildProduction("Production Companies", detail.productionCompanies),
           _buildProduction("Production Countries", detail.productionCountries),
           _buildInformation(detail),
@@ -169,7 +169,8 @@ class DetailScreen extends ConsumerWidget {
             bottom: 0.15 * _sidePadding);
   }
 
-  Widget _buildCollection(AsyncValue<Result> collectionDetail, Result detail) {
+  Widget _buildCollection(BuildContext context,
+      AsyncValue<Result> collectionDetail, Result detail) {
     final collectionName =
         detail.belongsToCollection?.name ?? "More in the series";
 
@@ -183,7 +184,9 @@ class DetailScreen extends ConsumerWidget {
                 collectionName: collectionName,
                 isLoading: false,
                 results: filteredParts,
-                onPressed: () {}),
+                onPressed: () => context.push(
+                    "/detailCollection/$collectionName",
+                    extra: show.parts)),
             const Divider(color: AppColors.black2)
                 .paddingSymmetric(horizontal: _sidePadding)
           ]);

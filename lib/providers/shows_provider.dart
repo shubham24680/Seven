@@ -52,7 +52,6 @@ abstract class ShowNotifier extends AsyncNotifier<List<Result>> {
         final response = await fetchShows(_currentPage);
         final totalPages = response.totalPages?.toInt();
         if (totalPages != null) _hasMorePages = _currentPage < totalPages;
-        await Future.delayed(Duration(seconds: 5));
         return [...currentShows, ...response.results ?? []];
       } on ApiException catch (_) {
         _currentPage--;
@@ -121,21 +120,6 @@ final upcomingShowsProvider =
   () => UpcomingShowsNotifier(StorageConstants.UPCOMING),
 );
 
-final genreProvider = FutureProvider<Result>((ref) async {
-  final storage = await SPD.getInstance();
-  final key = StorageConstants.GENRES;
-  final cache = storage.getShows(key);
-  if (cache != null) {
-    final cacheData = Result.fromJson(cache);
-    return cacheData;
-  }
-
-  final service = ShowsServices.instance;
-  final genre = await service.fetchGenres();
-  await storage.setShows(key, genre.toJson());
-  return genre;
-});
-
 // STATE
 class ShowsState {
   final int navigationCurrentIndex;
@@ -170,9 +154,19 @@ class ShowsProvider extends StateNotifier<ShowsState> {
   }
 
   Future<void> _loadData() async {
-    final service = ShowsServices.instance;
+    final storage = await SPD.getInstance();
+
     try {
+      final key = StorageConstants.GENRES;
+      final cache = storage.getShows(key);
+      if (cache != null) {
+        final cacheData = Result.fromJson(cache);
+        state = state.copyWith(genres: cacheData);
+      }
+
+      final service = ShowsServices.instance;
       final genres = await service.fetchGenres();
+      await storage.setShows(key, genres.toJson());
       state = state.copyWith(genres: genres);
     } on ApiException catch (e) {
       log("Genre Exception -> $e");

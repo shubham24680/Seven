@@ -111,7 +111,7 @@ class CustomCollection extends StatelessWidget {
       buildText(),
       SizedBox(
           height: isSafeHeight
-              ? 0.88.sh
+              ? 1.sh
               : crossAxisCount * height +
                   (crossAxisCount - 1) * AppConstants.SIDE_PADDING,
           child: collectionItems),

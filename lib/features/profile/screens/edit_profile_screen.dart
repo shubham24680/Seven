@@ -11,7 +11,7 @@ class EditProfileScreen extends ConsumerWidget {
 
     void chooseAvatar() {
       final child = GridView.builder(
-          itemCount: AppAssets.AVATARS.length,
+          itemCount: AppImages.AVATARS.length,
           shrinkWrap: true,
           padding:
               const EdgeInsets.symmetric(vertical: AppConstants.SIDE_PADDING),
@@ -24,18 +24,17 @@ class EditProfileScreen extends ConsumerWidget {
             return Stack(children: [
               CustomImage(
                   imageType: ImageType.LOCAL,
-                  event: () {
-                    profileController.setProfileIndexTo(index);
-                    context.pop();
-                  },
-                  imageUrl: AppAssets.AVATARS[index],
+                  event: () => profileController.setProfileIndexTo(index),
+                  imageUrl: AppImages.AVATARS[index],
                   borderRadius: BorderRadius.circular(1.sh)),
               if (index == profileState.profilePicIndex)
-                CustomImage(
-                    imageType: ImageType.SVG_LOCAL,
-                    imageUrl: AppSvgs.REMOVE_TO_FAVOURITE,
-                    height: double.infinity,
-                    color: AppColors.lightSteel1)
+                IgnorePointer(
+                  child: CustomImage(
+                      imageType: ImageType.SVG_LOCAL,
+                      imageUrl: AppSvgs.REMOVE_TO_FAVOURITE,
+                      height: double.infinity,
+                      color: AppColors.lightSteel1),
+                )
             ]);
           });
 
@@ -48,7 +47,7 @@ class EditProfileScreen extends ConsumerWidget {
 
       final dateFormat = DateFormat.yMMMd();
       final firstDate = DateTime(1950);
-      final lastDate = DateTime(2020);
+      final lastDate = DateTime(DateTime.now().year - 5, 12, 31);
       final initialDate = profileState.dateOfBirthController.text.isEmpty
           ? lastDate
           : dateFormat.parse(profileState.dateOfBirthController.text);
@@ -197,7 +196,7 @@ class EditProfileScreen extends ConsumerWidget {
                       CustomImage(
                           imageType: ImageType.LOCAL,
                           imageUrl:
-                              AppAssets.AVATARS[profileState.profilePicIndex],
+                              AppImages.AVATARS[profileState.profilePicIndex],
                           height: 0.25.sh,
                           width: 0.25.sh,
                           borderRadius: BorderRadius.circular(1.sh)),

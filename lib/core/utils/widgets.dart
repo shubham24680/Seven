@@ -14,7 +14,7 @@ String? getRuntime(int? runtime) {
   if (runtime == null || runtime <= 0) return null;
   final hours = runtime ~/ 60;
   final minutes = runtime % 60;
-  return "$hours h $minutes min";
+  return [if (hours > 0) "$hours h", if (minutes > 0) "$minutes min"].join(" ");
 }
 
 enum FormatType { YMMMD, Y, DATE }

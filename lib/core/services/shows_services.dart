@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:seven/app/app.dart';
 
 final now = DateTime.now();
-final maxDate = getDateFormat(now, formatType: FormatType.DATE).toString();
 
 class ShowsServices {
   static ShowsServices? _instance;
@@ -43,10 +42,10 @@ class ShowsServices {
     final minDate = getDateFormat(DateTime(now.year - 1, now.month, now.day),
             formatType: FormatType.DATE)
         .toString();
+    final maxDate = getDateFormat(now, formatType: FormatType.DATE).toString();
     final queryParams = {
       'page': page.toString(),
       'sort_by': SortBy.POPULARITY_DESC,
-      'with_release_type': "2|3",
       'primary_release_date.gte': minDate,
       'primary_release_date.lte': maxDate
     };
@@ -55,11 +54,13 @@ class ShowsServices {
   }
 
   Future<ShowsModel> fetchUpcomingShows({int page = 1}) async {
+    final maxDate = getDateFormat(DateTime(now.year, now.month, now.day + 1),
+            formatType: FormatType.DATE)
+        .toString();
     final queryParams = {
       'page': page.toString(),
-      'primary_release_date.gte': maxDate,
       'sort_by': SortBy.PRIMARY_RELEASE_DATE_ASC,
-      'with_release_type': "2|3"
+      'primary_release_date.gte': maxDate
     };
     return _fetchShows(ApiConstants.MOVIES, queryParams, "fetchUpcomingShows");
   }
