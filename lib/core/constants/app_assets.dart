@@ -26,6 +26,7 @@ class AppSvgs {
   static const FEMALE = "assets/icons/outlined_icons/female.svg";
   static const HOME = "assets/icons/filled_icons/home.svg";
   static const HELP = "assets/icons/outlined_icons/help.svg";
+  static const LINK = "assets/icons/outlined_icons/link.svg";
   static const MALE = "assets/icons/outlined_icons/male.svg";
   static const NOTIFICATION = "assets/icons/outlined_icons/notification.svg";
   static const NO_INTERNET = "assets/images/no_internet.svg";

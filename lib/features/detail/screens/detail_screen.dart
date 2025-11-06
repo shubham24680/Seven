@@ -200,6 +200,7 @@ class DetailScreen extends ConsumerWidget {
         ?.map((l) => l.englishName)
         .whereType<String>()
         .join(", ");
+    final homepage = detail.homepage;
 
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       _buildHeader("Information"),
@@ -211,7 +212,16 @@ class DetailScreen extends ConsumerWidget {
       _buildInformationRow("Revenue",
           getCurrencyFormat(detail.revenue, detail.originalLanguage)),
       _buildInformationRow("Orignal Audio", language),
-      _buildInformationRow("Homepage", detail.homepage)
+      if (homepage != null && homepage.isNotEmpty)
+        Row(children: [
+          CustomText(text: "Homepage", size: 0.015.sh),
+          SizedBox(width: 0.01.sw),
+          CustomImage(
+              imageType: ImageType.SVG_LOCAL,
+              imageUrl: AppSvgs.LINK,
+              color: AppColors.lightSteel1.withAlpha(70),
+              event: () => customUrlLauncher(homepage))
+        ]).paddingSymmetric(horizontal: _sidePadding),
     ]);
   }
 
@@ -223,10 +233,9 @@ class DetailScreen extends ConsumerWidget {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       CustomText(text: key, size: 0.015.sh),
       CustomText(
-        text: value,
-        size: 0.015.sh,
-        color: AppColors.lightSteel1.withAlpha(150),
-      ),
+          text: value,
+          size: 0.015.sh,
+          color: AppColors.lightSteel1.withAlpha(150)),
       SizedBox(height: 0.02.sh)
     ]).paddingSymmetric(horizontal: _sidePadding);
   }

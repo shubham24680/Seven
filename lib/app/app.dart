@@ -1,3 +1,4 @@
+export 'native/native_bridge.dart';
 export 'package:seven/core/core.dart';
 export 'package:seven/features/features.dart';
 export 'package:seven/model/models.dart';

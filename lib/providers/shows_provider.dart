@@ -151,6 +151,7 @@ class ShowsState {
 class ShowsProvider extends StateNotifier<ShowsState> {
   ShowsProvider() : super(ShowsState.initial()) {
     _loadData();
+    _getNative();
   }
 
   Future<void> _loadData() async {
@@ -172,6 +173,15 @@ class ShowsProvider extends StateNotifier<ShowsState> {
       log("Genre Exception -> $e");
     } catch (e) {
       log("Genre Error -> $e");
+    }
+  }
+
+  Future<void> _getNative() async {
+    try {
+      final deviceName = await NativeBridge.getDeviceName();
+      log("Device name -> $deviceName");
+    } catch (e) {
+      log("Native Exception -> $e");
     }
   }
 
