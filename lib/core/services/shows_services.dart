@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'package:seven/app/app.dart';
 
+final now = DateTime.now();
+
 class ShowsServices {
   static ShowsServices? _instance;
   ShowsServices._();
@@ -21,17 +23,47 @@ class ShowsServices {
     }
   }
 
-  Future<ShowsModel> fetchTrendingShows({int page = 1}) async =>
-      _fetchShows(ApiConstants.TRENDING_MOVIES, page, "fetchTrendingShows");
+  Future<ShowsModel> fetchTrendingShows({int page = 1}) async {
+    final queryParams = {'page': page.toString()};
+    return _fetchShows(
+        ApiConstants.TRENDING_MOVIES, queryParams, "fetchTrendingShows");
+  }
 
-  Future<ShowsModel> fetchTopShows({int page = 1}) async =>
-      _fetchShows(ApiConstants.TOP_RATED, page, "fetchTopShows");
+  Future<ShowsModel> fetchTopShows({int page = 1}) async {
+    final queryParams = {
+      'page': page.toString(),
+      'sort_by': SortBy.VOTE_AVERAGE_DESC,
+      'vote_count.gte': "200"
+    };
+    return _fetchShows(ApiConstants.MOVIES, queryParams, "fetchTopShows");
+  }
 
-  Future<ShowsModel> fetchNewReleaseShows({int page = 1}) async =>
-      _fetchShows(ApiConstants.NOW_PLAYING, page, "fetchNewReleaseShows");
+  Future<ShowsModel> fetchNewReleaseShows({int page = 1}) async {
+    final minDate = getDateFormat(DateTime(now.year - 1, now.month, now.day),
+            formatType: FormatType.DATE)
+        .toString();
+    final maxDate = getDateFormat(now, formatType: FormatType.DATE).toString();
+    final queryParams = {
+      'page': page.toString(),
+      'sort_by': SortBy.POPULARITY_DESC,
+      'primary_release_date.gte': minDate,
+      'primary_release_date.lte': maxDate
+    };
+    return _fetchShows(
+        ApiConstants.MOVIES, queryParams, "fetchNewReleaseShows");
+  }
 
-  Future<ShowsModel> fetchUpcomingShows({int page = 1}) async =>
-      _fetchShows(ApiConstants.UPCOMING, page, "fetchUpcomingShows");
+  Future<ShowsModel> fetchUpcomingShows({int page = 1}) async {
+    final maxDate = getDateFormat(DateTime(now.year, now.month, now.day + 1),
+            formatType: FormatType.DATE)
+        .toString();
+    final queryParams = {
+      'page': page.toString(),
+      'sort_by': SortBy.PRIMARY_RELEASE_DATE_ASC,
+      'primary_release_date.gte': maxDate
+    };
+    return _fetchShows(ApiConstants.MOVIES, queryParams, "fetchUpcomingShows");
+  }
 
   Future<Result> fetchGenres() async =>
       _fetchResult(ApiConstants.GENRES, "fetchGenres");
@@ -43,17 +75,14 @@ class ShowsServices {
       ApiConstants.COLLECTION_DETAIL + id, "fetchCollectionDetail");
 
   // SHOW
-  Future<ShowsModel> _fetchShows(
-      String endPoint, int page, String errorContext) async {
+  Future<ShowsModel> _fetchShows(String endPoint,
+      Map<String, String> queryParams, String errorContext) async {
     try {
       final response = await BaseService.instance.fetchData(
           apiHost: ApiConstants.BASE_URL,
           endPoint: endPoint,
           responseType: ResponseType.GET,
-          queryParams: {
-            'page': page.toString(),
-            'language': ApiConstants.DEFAULT_LANGUAGE
-          });
+          queryParams: queryParams);
 
       return ShowsModel.fromJson(response);
     } on ApiException catch (e) {

@@ -77,7 +77,7 @@ class CustomCollection extends StatelessWidget {
     }
 
     Widget buildCard(int index) {
-      if (isLoading) {
+      if (index >= (results?.length ?? 0)) {
         return customShimmer(borderRadius: borderRadius);
       }
 
@@ -94,7 +94,7 @@ class CustomCollection extends StatelessWidget {
     final collectionItems = GridView.builder(
         controller: scrollController,
         scrollDirection: scrollDirection,
-        itemCount: results?.length ?? loadingItemCount,
+        itemCount: (results?.length ?? 0) + (isLoading ? loadingItemCount : 0),
         shrinkWrap: true,
         physics: ClampingScrollPhysics(),
         padding: EdgeInsets.symmetric(

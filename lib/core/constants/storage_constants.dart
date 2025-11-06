@@ -6,4 +6,11 @@ class StorageConstants {
   static const NAME = 'name';
   static const GENDER_INDEX = 'gender_index';
   static const DATE_OF_BIRTH = 'date_of_birth';
+
+  //Shows
+  static const TRENDING = 'trending';
+  static const TOP_20_MOVIES = 'top_20_movies';
+  static const NEW_RELEASE = 'new_release';
+  static const UPCOMING = 'upcoming';
+  static const GENRES = 'genres';
 }

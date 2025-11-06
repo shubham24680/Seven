@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 import 'package:seven/app/app.dart';
 
@@ -71,4 +72,12 @@ void customBottomSheet(BuildContext context, String title, Widget child,
             child
           ]).paddingAll(AppConstants.SIDE_PADDING),
           borderRadius: borderRadius));
+}
+
+Future<void> customUrlLauncher(String url) async {
+  log("Url -> $url");
+  final uri = Uri.parse(url);
+  if (!await launchUrl(uri)) {
+    log("Error while launch url");
+  }
 }

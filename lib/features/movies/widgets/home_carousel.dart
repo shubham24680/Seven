@@ -19,7 +19,7 @@ class HomeCarousel extends ConsumerWidget {
       return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         CustomImage(
             imageType: ImageType.LOCAL,
-            imageUrl: AppAssets.AVATARS[profileIndex],
+            imageUrl: AppImages.AVATARS[profileIndex],
             height: 0.048.sh,
             borderRadius: BorderRadius.circular(1.sh),
             event: () => carouselController

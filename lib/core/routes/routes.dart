@@ -1,4 +1,5 @@
 import 'package:seven/app/app.dart';
+import 'package:seven/features/detail/screens/detail_collection_screen.dart';
 
 final GoRouter routes = GoRouter(
     initialLocation: "/",
@@ -17,13 +18,25 @@ final GoRouter routes = GoRouter(
             return FadeTransistionPage(child: DetailScreen(id));
           }),
       GoRoute(
-          path: "/collection/:id",
+          path: "/collection/:collectionName",
           pageBuilder: (context, state) {
-            final id = state.pathParameters['id'] ?? "";
-            final collectionName = state.extra as String;
+            final collectionName = state.pathParameters['collectionName'] ?? "";
+            final collectionProvider = state.extra
+                as AsyncNotifierProvider<ShowNotifier, List<Result>>;
             return FadeTransistionPage(
-                child:
-                    CollectionScreen(id: id, collectionName: collectionName));
+                child: CollectionScreen(
+                    collectionName: collectionName,
+                    collectionProvider: collectionProvider));
+          }),
+      GoRoute(
+          path: "/detailCollection/:collectionName",
+          pageBuilder: (context, state) {
+            final collectionName = state.pathParameters['collectionName'] ?? "";
+            final detailCollection = state.extra as List<Result>;
+            return FadeTransistionPage(
+                child: DetailCollectionScreen(
+                    collectionName: collectionName,
+                    detailCollection: detailCollection));
           }),
       ...List.generate(
         AppConstants.APP_ROUTES.length,

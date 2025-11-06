@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:seven/app/app.dart';
 
 String? getImageUrl(String? endPoint) {
-  if (endPoint == null) return null;
+  if (endPoint == null || endPoint.isEmpty) return null;
 
   final imageUrl = ApiConstants.IMAGE_PATH + ApiConstants.PIXEL_500 + endPoint;
   return imageUrl;
@@ -14,17 +14,19 @@ String? getRuntime(int? runtime) {
   if (runtime == null || runtime <= 0) return null;
   final hours = runtime ~/ 60;
   final minutes = runtime % 60;
-  return "$hours h $minutes min";
+  return [if (hours > 0) "$hours h", if (minutes > 0) "$minutes min"].join(" ");
 }
 
-enum FormatType { DATE, YEAR }
+enum FormatType { YMMMD, Y, DATE }
 
-dynamic getDateFormat(dynamic date, {FormatType type = FormatType.YEAR}) {
+dynamic getDateFormat(dynamic date, {FormatType formatType = FormatType.Y}) {
   if (date == null) return null;
 
   DateFormat dateFormat;
-  switch (type) {
+  switch (formatType) {
     case FormatType.DATE:
+      dateFormat = DateFormat('yyyy-MM-dd');
+    case FormatType.YMMMD:
       dateFormat = DateFormat.yMMMd();
     default:
       dateFormat = DateFormat.y();

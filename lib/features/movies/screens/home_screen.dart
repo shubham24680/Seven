@@ -11,42 +11,36 @@ class HomeScreen extends StatelessWidget {
           const HomeCarousel(),
           SizedBox(height: 0.02.sh),
           Consumer(builder: (_, ref, __) {
-            final top = ref.watch(topShowsProvider);
-            final newRelease = ref.watch(newReleaseShowsProvider);
-            final upcoming = ref.watch(upcomingShowsProvider);
+            buildCollection(String collectionName,
+                AsyncNotifierProvider<ShowNotifier, List<Result>> provider) {
+              final shows = ref.watch(provider);
+
+              return shows.when(
+                  data: (show) {
+                    return Column(children: [
+                      CustomCollection(
+                          collectionName: collectionName,
+                          isLoading: false,
+                          results: show,
+                          onPressed: () => context.push(
+                              "/collection/$collectionName",
+                              extra: provider)),
+                      Divider(
+                        color: AppColors.black2,
+                      ).paddingSymmetric(horizontal: AppConstants.SIDE_PADDING),
+                    ]);
+                  },
+                  loading: () =>
+                      CustomCollection(collectionName: collectionName),
+                  error: (_, __) => const SizedBox.shrink());
+            }
 
             return Column(children: [
-              buildCollection(context, "Top 20 Movies", top, "top_20_movies"),
-              buildCollection(
-                  context, "New Release", newRelease, "new_release"),
-              buildCollection(context, "Upcoming", upcoming, "upcoming"),
+              buildCollection("Top 20 Movies", topShowsProvider),
+              buildCollection("New Release", newReleaseShowsProvider),
+              buildCollection("Upcoming", upcomingShowsProvider),
             ]);
           })
         ]));
-  }
-
-  buildCollection(BuildContext context, String collectionName,
-      AsyncValue<List<Result>> shows, String collectionId,
-      {bool isStart = false}) {
-    return shows.when(
-      data: (show) {
-        return Column(children: [
-          // if (!isStart)
-          // Divider(
-          //   color: AppColors.black2,
-          // ).paddingSymmetric(horizontal: AppConstants.SIDE_PADDING),
-          CustomCollection(
-              collectionName: collectionName,
-              isLoading: false,
-              results: show,
-              onPressed: () {
-                context.push("/collection/$collectionId",
-                    extra: collectionName);
-              }),
-        ]);
-      },
-      loading: () => CustomCollection(collectionName: collectionName),
-      error: (_, __) => const SizedBox.shrink(),
-    );
   }
 }
