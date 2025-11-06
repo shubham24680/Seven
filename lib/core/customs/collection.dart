@@ -109,12 +109,12 @@ class CustomCollection extends StatelessWidget {
 
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       buildText(),
-      SizedBox(
-          height: isSafeHeight
-              ? 1.sh
-              : crossAxisCount * height +
+      isSafeHeight
+          ? Flexible(child: collectionItems)
+          : SizedBox(
+              height: crossAxisCount * height +
                   (crossAxisCount - 1) * AppConstants.SIDE_PADDING,
-          child: collectionItems),
+              child: collectionItems),
       SizedBox(height: isSafeHeight ? 0 : 0.05.sh)
     ]);
   }
