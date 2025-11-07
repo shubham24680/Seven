@@ -1,18 +1,18 @@
 import 'package:flutter/rendering.dart';
 import 'package:seven/app/app.dart';
 
-abstract class SearchNotifier extends AsyncNotifier<List<Result>> {
+abstract class SearchNotifier extends AutoDisposeAsyncNotifier<List<Result>> {
   int _currentPage = 1;
   bool _hasMorePages = true;
   String _title = "";
   Future<ShowsModel> searchData(int page, String query);
 
   @override
-  Future<List<Result>> build() async {
-    return [];
-  }
+  List<Result> build() => [];
 
   Future<void> search(String query) async {
+    if (query == _title) return;
+
     state = AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       try {
@@ -56,7 +56,7 @@ class SearchWithTitleNotifier extends SearchNotifier {
 }
 
 final searchWithTitle =
-    AsyncNotifierProvider<SearchWithTitleNotifier, List<Result>>(
+    AutoDisposeAsyncNotifierProvider<SearchWithTitleNotifier, List<Result>>(
         () => SearchWithTitleNotifier());
 
 class SearchState {
@@ -92,7 +92,8 @@ class SearchState {
 
 class SearchProvider extends StateNotifier<SearchState> {
   final Ref ref;
-  final AsyncNotifierProvider<SearchNotifier, List<Result>> searchProvider;
+  final AutoDisposeAsyncNotifierProvider<SearchNotifier, List<Result>>
+      searchProvider;
 
   SearchProvider(this.ref, this.searchProvider) : super(SearchState.initial()) {
     state.scrollController.addListener(_onScroll);
@@ -126,6 +127,8 @@ class SearchProvider extends StateNotifier<SearchState> {
   }
 }
 
-final searchProvider = StateNotifierProvider.family<SearchProvider, SearchState,
-        AsyncNotifierProvider<SearchNotifier, List<Result>>>(
+final searchProvider = StateNotifierProvider.autoDispose.family<
+        SearchProvider,
+        SearchState,
+        AutoDisposeAsyncNotifierProvider<SearchNotifier, List<Result>>>(
     (ref, provider) => SearchProvider(ref, provider));

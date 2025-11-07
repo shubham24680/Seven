@@ -11,7 +11,7 @@ class CustomCard extends StatelessWidget {
       this.orientation = CardOrientation.LANDSCAPE,
       this.height,
       this.width,
-      this.result,
+      this.results,
       this.blurValue = 6.0,
       this.event});
 
@@ -19,7 +19,7 @@ class CustomCard extends StatelessWidget {
   final CardOrientation orientation;
   final double? height;
   final double? width;
-  final Result? result;
+  final Result? results;
   final double blurValue;
   final void Function()? event;
 
@@ -29,8 +29,8 @@ class CustomCard extends StatelessWidget {
     final Size size = getSize(isPortrait, height, width);
     final double borderRadius = (isPortrait ? 0.06 : 0.1) * size.height;
     final imagePath = isPortrait
-        ? (result?.posterPath ?? result?.backdropPath ?? "")
-        : (result?.backdropPath ?? result?.posterPath ?? "");
+        ? (results?.posterPath ?? results?.backdropPath ?? "")
+        : (results?.backdropPath ?? results?.posterPath ?? "");
     final double textSize = (isPortrait ? 0.05 : 0.11) * size.height;
     final int maxLines = isPortrait ? 2 : 1;
     final decoration = BoxDecoration(color: AppColors.black5.withAlpha(70));
@@ -53,9 +53,9 @@ class CustomCard extends StatelessWidget {
                     vertical: 0.5 * AppConstants.SIDE_PADDING),
                 decoration: decoration,
                 child: CustomText(
-                    text: result?.title ?? result?.originalTitle ?? "",
+                    text: results?.title ?? results?.originalTitle ?? "",
                     family: AppFonts.STAATLICHES,
-                    size: 2.0 * textSize,
+                    size: 2 * textSize,
                     weight: FontWeight.w900,
                     maxLines: maxLines,
                     overflow: TextOverflow.ellipsis)),
@@ -74,7 +74,7 @@ class CustomCard extends StatelessWidget {
                   EdgeInsets.symmetric(horizontal: AppConstants.SIDE_PADDING),
               decoration: decoration,
               child: CustomText(
-                text: result?.title ?? result?.originalTitle ?? "",
+                text: results?.title ?? results?.originalTitle ?? "",
                 size: textSize,
                 weight: FontWeight.w900,
                 maxLines: maxLines,
@@ -106,7 +106,7 @@ class CustomCard extends StatelessWidget {
 
     double h, w;
     if (width != null) {
-      h = width * aspectRatio;
+      h = width / aspectRatio;
       return Size(width, h);
     }
 

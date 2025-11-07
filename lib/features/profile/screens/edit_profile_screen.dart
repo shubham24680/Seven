@@ -114,7 +114,11 @@ class EditProfileScreen extends ConsumerWidget {
                       : null,
                   hintText: "Gender",
                   suffixIcon: (profileState.genderIndex != -1)
-                      ? AppConstants.GENDER[profileState.genderIndex].string2
+                      ? CustomImage(
+                          imageType: ImageType.SVG_LOCAL,
+                          imageUrl: AppConstants
+                              .GENDER[profileState.genderIndex].string2,
+                          color: AppColors.lightSteel1.withAlpha(40))
                       : null,
                   filled: true)),
           SizedBox(width: 0.02.sh),
@@ -123,7 +127,11 @@ class EditProfileScreen extends ConsumerWidget {
                 controller: profileState.dateOfBirthController,
                 onTap: () => chooseDate(),
                 hintText: "DOB",
-                suffixIcon: AppSvgs.CALENDAR,
+                suffixIcon: CustomImage(
+                  imageType: ImageType.SVG_LOCAL,
+                  imageUrl: AppSvgs.CALENDAR,
+                  color: AppColors.lightSteel1.withAlpha(40),
+                ),
                 filled: true,
                 readOnly: true),
           )
