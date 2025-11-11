@@ -29,7 +29,7 @@ class ProfileScreen extends StatelessWidget {
         // contentList(context),
         const Spacer(),
         CustomText(
-            text: "Version 1.0.0",
+            text: "Version 1.1.0",
             size: 0.015.sh,
             color: AppColors.lightSteel1.withAlpha(150))
       ],

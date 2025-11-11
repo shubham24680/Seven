@@ -24,15 +24,15 @@ class AppConstants {
     HelperModel(
         string1: AppImages.ONBOARDING_1,
         string2:
-            "When the Sun Sets\nand the\nWorld Grows Quiet,\nNew Journeys Begin\nin Stories\nYet Untold.",
+            "In the Shadows\nof Power,\nEven Light\nFinds Its Path.\nEvery Choice Forged\nin Fire and Fate.",
         string3:
-            "Discover adventures that blur the line\nbetween reality and imagination\n— stories you can see, feel, and live."),
+            "Step into worlds where destiny collides\nwith courage — where every story\nhas a light waiting to rise."),
     HelperModel(
         string1: AppImages.ONBOARDING_2,
         string2:
-            "Beyond Screens,\nInto Worlds\nWhere Stories Breathe\nand\nAdventures\nNever End.",
+            "From the Ashes of Darkness,\nHope Ignites Again.\nBalance Lives\nWhere Heroes Dare to Dream.",
         string3:
-            "Discover adventures that blur the line\nbetween reality and imagination\n— stories you can see, feel, and live."),
+            "Discover tales that transcend time —\nwhere legends fight not for victory,\nbut for the soul of the galaxy.")
   ];
 
   static List<Result> GENRES = [

@@ -119,7 +119,7 @@ class EditProfileScreen extends ConsumerWidget {
                           imageUrl: AppConstants
                               .GENDER[profileState.genderIndex].string2,
                           color: AppColors.lightSteel1.withAlpha(40),
-                          height: 0.04.sh)
+                          height: 0.036.sh)
                       : null,
                   filled: true)),
           SizedBox(width: 0.02.sh),

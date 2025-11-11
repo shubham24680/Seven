@@ -60,7 +60,7 @@ class CustomTextField extends StatelessWidget {
         hintStyle: buildHint(hintColor).getTextStyle(),
         errorStyle: buildHint(errorColor).getTextStyle(),
         prefixIcon: perfixIcon?.paddingAll(0.01.sh),
-        suffixIcon: suffixIcon ?? const SizedBox.shrink(),
+        suffixIcon: suffixIcon?.paddingAll(0.01.sh) ?? const SizedBox.shrink(),
         errorBorder: buildBorder(AppColors.red1),
         focusedBorder: buildBorder(AppColors.vividNightfall4),
         enabledBorder: buildBorder(defaultColor));
@@ -75,9 +75,9 @@ class CustomTextField extends StatelessWidget {
       case TextFieldType.DROPDOWN:
         field = DropdownButtonFormField(
             items: dropDownMenu,
-            value: initialValue,
+            initialValue: initialValue,
             onChanged: onChanged,
-            decoration: decoration,
+            decoration: decoration.copyWith(suffixIcon: suffixIcon),
             style: buildHint(AppColors.lightSteel1).getTextStyle(),
             hint: buildHint(hintColor, text: hintText),
             dropdownColor: AppColors.vividNightfall4,
