@@ -67,6 +67,8 @@ class DetailScreen extends ConsumerWidget {
       if (year != null) year,
       if (runtime != null) runtime,
     ].join(" • ");
+    final voteAverage = detail.voteAverage;
+    final adult = detail.adult;
 
     return Stack(alignment: Alignment.center, children: [
       CustomImage(
@@ -94,10 +96,13 @@ class DetailScreen extends ConsumerWidget {
                       children: [
                         CustomText(text: metadataItems, size: 0.02 * height),
                         const Spacer(),
-                        if (detail.voteAverage != null &&
-                            detail.voteAverage != "0.0")
+                        if (adult != null && adult)
                           CustomTag(
-                              icon: AppSvgs.STAR, value: detail.voteAverage),
+                              value: "18+",
+                              backgroundColor: AppColors.red1.withAlpha(150)),
+                        SizedBox(width: 0.01.sw),
+                        if (voteAverage != null && voteAverage != "0.0")
+                          CustomTag(icon: AppSvgs.STAR, value: voteAverage),
                       ],
                     ).paddingSymmetric(horizontal: _sidePadding),
                     if (detail.genres?.isNotEmpty != null) ...[

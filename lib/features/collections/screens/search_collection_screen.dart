@@ -61,8 +61,7 @@ class SearchCollectionScreen extends ConsumerWidget {
                   isSafeHeight: true,
                   crossAxisCount: 2,
                   loadingItemCount: 2),
-              error: (error, stackTrace) =>
-                  Center(child: CustomText(text: "No Result"))));
+              error: (error, stackTrace) => ErrorScreen(isHomePage: true)));
     }
 
     return Scaffold(
