@@ -60,7 +60,7 @@ class CustomTextField extends StatelessWidget {
         hintStyle: buildHint(hintColor).getTextStyle(),
         errorStyle: buildHint(errorColor).getTextStyle(),
         prefixIcon: perfixIcon?.paddingAll(0.01.sh),
-        suffixIcon: suffixIcon?.paddingAll(0.01.sh),
+        suffixIcon: suffixIcon ?? const SizedBox.shrink(),
         errorBorder: buildBorder(AppColors.red1),
         focusedBorder: buildBorder(AppColors.vividNightfall4),
         enabledBorder: buildBorder(defaultColor));

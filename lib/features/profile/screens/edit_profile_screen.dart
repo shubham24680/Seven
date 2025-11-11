@@ -118,7 +118,8 @@ class EditProfileScreen extends ConsumerWidget {
                           imageType: ImageType.SVG_LOCAL,
                           imageUrl: AppConstants
                               .GENDER[profileState.genderIndex].string2,
-                          color: AppColors.lightSteel1.withAlpha(40))
+                          color: AppColors.lightSteel1.withAlpha(40),
+                          height: 0.04.sh)
                       : null,
                   filled: true)),
           SizedBox(width: 0.02.sh),
@@ -128,10 +129,9 @@ class EditProfileScreen extends ConsumerWidget {
                 onTap: () => chooseDate(),
                 hintText: "DOB",
                 suffixIcon: CustomImage(
-                  imageType: ImageType.SVG_LOCAL,
-                  imageUrl: AppSvgs.CALENDAR,
-                  color: AppColors.lightSteel1.withAlpha(40),
-                ),
+                    imageType: ImageType.SVG_LOCAL,
+                    imageUrl: AppSvgs.CALENDAR,
+                    color: AppColors.lightSteel1.withAlpha(40)),
                 filled: true,
                 readOnly: true),
           )
