@@ -1,5 +1,5 @@
 import 'package:seven/app/app.dart';
-import 'package:seven/features/detail/screens/detail_collection_screen.dart';
+import 'package:seven/features/collections/screens/detail_collection_screen.dart';
 
 final GoRouter routes = GoRouter(
     initialLocation: "/",
@@ -37,6 +37,12 @@ final GoRouter routes = GoRouter(
                 child: DetailCollectionScreen(
                     collectionName: collectionName,
                     detailCollection: detailCollection));
+          }),
+      GoRoute(
+          path: "/genreCollection/:id",
+          pageBuilder: (context, state) {
+            final id = state.pathParameters['id'] ?? "";
+            return FadeTransistionPage(child: GenreCollectionScreen(id));
           }),
       ...List.generate(
         AppConstants.APP_ROUTES.length,

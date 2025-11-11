@@ -8,19 +8,13 @@ class ShowsServices {
   ShowsServices._();
   static ShowsServices get instance => _instance ??= ShowsServices._();
 
-  Future<ShowsModel?> search(String query) async {
-    try {
-      final response = await BaseService.instance.fetchData(
-          apiHost: ApiConstants.BASE_URL,
-          endPoint: ApiConstants.SEARCH,
-          responseType: ResponseType.GET,
-          queryParams: {"query": query});
-
-      return ShowsModel.fromJson(response);
-    } catch (e) {
-      log("Internal Error -> $e");
-      return null;
-    }
+  Future<ShowsModel> searchWithTitle({int page = 1, String title = ""}) async {
+    final queryParams = {
+      'page': page.toString(),
+      'sort_by': SortBy.POPULARITY_DESC,
+      if (title.isNotEmpty) 'query': title
+    };
+    return _fetchShows(ApiConstants.SEARCH, queryParams, "searchWithTitle");
   }
 
   Future<ShowsModel> fetchTrendingShows({int page = 1}) async {
@@ -63,6 +57,17 @@ class ShowsServices {
       'primary_release_date.gte': maxDate
     };
     return _fetchShows(ApiConstants.MOVIES, queryParams, "fetchUpcomingShows");
+  }
+
+  Future<ShowsModel> fetchGenreCollection(
+      {int page = 1, String genreId = ""}) async {
+    final queryParams = {
+      'page': page.toString(),
+      'sort_by': SortBy.POPULARITY_DESC,
+      if (genreId.isNotEmpty) 'with_genres': genreId
+    };
+    return _fetchShows(
+        ApiConstants.MOVIES, queryParams, "fetchGenreCollection");
   }
 
   Future<Result> fetchGenres() async =>

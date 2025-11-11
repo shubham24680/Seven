@@ -106,6 +106,8 @@ flutter:
     - assets/icons/filled_icons/
     - assets/icons/outlined_icons/
     - assets/images/
+    - assets/images/genre_cards/back_drop/
+    - assets/images/genre_cards/poster/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

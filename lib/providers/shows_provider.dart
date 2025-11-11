@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:flutter/rendering.dart';
 import 'package:seven/app/app.dart';
 
 abstract class ShowNotifier extends AsyncNotifier<List<Result>> {
@@ -125,26 +126,36 @@ class ShowsState {
   final int navigationCurrentIndex;
   final int carouselCurrentIndex;
   final Result? genres;
+  final ScrollController scrollController;
+  final bool crossFadeState;
 
-  const ShowsState({
-    required this.navigationCurrentIndex,
-    required this.carouselCurrentIndex,
-    this.genres,
-  });
+  const ShowsState(
+      {required this.navigationCurrentIndex,
+      required this.carouselCurrentIndex,
+      this.genres,
+      required this.scrollController,
+      required this.crossFadeState});
 
   factory ShowsState.initial() {
-    return ShowsState(navigationCurrentIndex: 0, carouselCurrentIndex: 0);
+    return ShowsState(
+        navigationCurrentIndex: 0,
+        carouselCurrentIndex: 0,
+        scrollController: ScrollController(),
+        crossFadeState: false);
   }
 
   ShowsState copyWith(
       {int? navigationCurrentIndex,
       int? carouselCurrentIndex,
-      Result? genres}) {
+      Result? genres,
+      bool? crossFadeState}) {
     return ShowsState(
         navigationCurrentIndex:
             navigationCurrentIndex ?? this.navigationCurrentIndex,
         carouselCurrentIndex: carouselCurrentIndex ?? this.carouselCurrentIndex,
-        genres: genres ?? this.genres);
+        genres: genres ?? this.genres,
+        scrollController: scrollController,
+        crossFadeState: crossFadeState ?? this.crossFadeState);
   }
 }
 
@@ -152,6 +163,7 @@ class ShowsProvider extends StateNotifier<ShowsState> {
   ShowsProvider() : super(ShowsState.initial()) {
     _loadData();
     _getNative();
+    state.scrollController.addListener(_onScroll);
   }
 
   Future<void> _loadData() async {
@@ -183,6 +195,13 @@ class ShowsProvider extends StateNotifier<ShowsState> {
     } catch (e) {
       log("Native Exception -> $e");
     }
+  }
+
+  void _onScroll() {
+    final crossFadeState =
+        state.scrollController.position.userScrollDirection ==
+            ScrollDirection.reverse;
+    state = state.copyWith(crossFadeState: crossFadeState);
   }
 
   // Update navigation index with validation

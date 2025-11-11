@@ -16,7 +16,7 @@ class CustomCollection extends StatelessWidget {
       this.onPressed,
       this.results,
       this.blurValue = 6.0,
-      this.event,
+      this.screenPath = "/detail/",
       this.isSafeHeight = false});
 
   final ScrollController? scrollController;
@@ -33,7 +33,7 @@ class CustomCollection extends StatelessWidget {
   final double? cardWidth;
   final List<Result>? results;
   final double blurValue;
-  final void Function()? event;
+  final String screenPath;
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +44,9 @@ class CustomCollection extends StatelessWidget {
         ? AppConstants.CARD_RATIO_PORTRAIT
         : AppConstants.CARD_RATIO_LANDSCAPE;
     final double height = isPortrait ? 0.32.sh : 0.17.sh;
+    final double width =
+        (1.sw - (crossAxisCount + 1) * AppConstants.SIDE_PADDING) /
+            crossAxisCount;
     final double borderRadius = (isPortrait ? 0.06 : 0.1) * height;
 
     Widget buildText() {
@@ -84,11 +87,11 @@ class CustomCollection extends StatelessWidget {
       return CustomCard(
           cardType: cardType,
           orientation: orientation,
-          height: cardHeight,
-          width: cardWidth,
-          result: results?[index],
+          height: isVertical ? null : height,
+          width: isVertical ? width : null,
+          results: results?[index],
           blurValue: blurValue,
-          event: () => context.push("/detail/${results?[index].id}"));
+          event: () => context.push("$screenPath${results?[index].id}"));
     }
 
     final collectionItems = GridView.builder(
@@ -102,20 +105,23 @@ class CustomCollection extends StatelessWidget {
             vertical: isVertical ? AppConstants.SIDE_PADDING : 0),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: crossAxisCount,
-            crossAxisSpacing: AppConstants.SIDE_PADDING,
+            crossAxisSpacing: 0.5 * AppConstants.SIDE_PADDING,
             mainAxisSpacing: 0.5 * AppConstants.SIDE_PADDING,
             childAspectRatio: isVertical ? aspectRatio : 1 / aspectRatio),
         itemBuilder: (context, index) => buildCard(index));
 
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      buildText(),
-      SizedBox(
-          height: isSafeHeight
-              ? 1.sh
-              : crossAxisCount * height +
-                  (crossAxisCount - 1) * AppConstants.SIDE_PADDING,
-          child: collectionItems),
-      SizedBox(height: isSafeHeight ? 0 : 0.05.sh)
-    ]);
+    return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          buildText(),
+          isSafeHeight
+              ? Flexible(child: collectionItems)
+              : SizedBox(
+                  height: crossAxisCount * height +
+                      (crossAxisCount - 1) * AppConstants.SIDE_PADDING,
+                  child: collectionItems),
+          SizedBox(height: isSafeHeight ? 0 : 0.05.sh)
+        ]);
   }
 }

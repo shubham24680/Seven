@@ -15,31 +15,33 @@ class CustomTextField extends StatelessWidget {
       this.errorText,
       this.floatingHintColor,
       this.errorColor,
-      this.suffixIconColor,
-      this.suffixIcon,
       this.keyboardType,
       this.items = const [],
       this.onChanged,
       this.readOnly = false,
+      this.autofocus = false,
       this.onTap,
-      this.initialValue});
+      this.initialValue,
+      this.perfixIcon,
+      this.suffixIcon});
 
   final TextFieldType textFieldType;
   final TextEditingController? controller;
   final bool? filled;
   final bool readOnly;
+  final bool autofocus;
   final Color? fillColor;
   final Color? hintColor;
   final Color? floatingHintColor;
   final Color? errorColor;
-  final Color? suffixIconColor;
   final String? labelText;
   final String? hintText;
   final String? errorText;
-  final String? suffixIcon;
   final String? initialValue;
   final List<String> items;
   final TextInputType? keyboardType;
+  final Widget? perfixIcon;
+  final Widget? suffixIcon;
   final void Function(String?)? onChanged;
   final void Function()? onTap;
 
@@ -57,7 +59,8 @@ class CustomTextField extends StatelessWidget {
         floatingLabelStyle: buildHint(floatingHintColor).getTextStyle(),
         hintStyle: buildHint(hintColor).getTextStyle(),
         errorStyle: buildHint(errorColor).getTextStyle(),
-        suffixIcon: buildIcon(suffixIcon, suffixIconColor),
+        prefixIcon: perfixIcon?.paddingAll(0.01.sh),
+        suffixIcon: suffixIcon?.paddingAll(0.01.sh),
         errorBorder: buildBorder(AppColors.red1),
         focusedBorder: buildBorder(AppColors.vividNightfall4),
         enabledBorder: buildBorder(defaultColor));
@@ -87,6 +90,7 @@ class CustomTextField extends StatelessWidget {
           onChanged: onChanged,
           decoration: decoration,
           readOnly: readOnly,
+          autofocus: autofocus,
           keyboardType: keyboardType ?? TextInputType.text,
           style: buildHint(AppColors.lightSteel1).getTextStyle(),
           cursorColor: AppColors.vividNightfall4,
@@ -103,16 +107,6 @@ class CustomTextField extends StatelessWidget {
         text: text ?? "",
         color: color ?? AppColors.lightSteel1.withAlpha(40),
         weight: FontWeight.w900);
-  }
-
-  Widget buildIcon(String? icon, Color? color) {
-    if (icon == null) return SizedBox.shrink();
-
-    return CustomImage(
-      imageType: ImageType.SVG_LOCAL,
-      imageUrl: icon,
-      color: color ?? AppColors.lightSteel1.withAlpha(40),
-    ).paddingAll(0.01.sh);
   }
 
   InputBorder buildBorder(Color color) {

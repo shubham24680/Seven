@@ -24,16 +24,24 @@ class Shows extends ConsumerWidget {
             label: "Item$index",
             icon: buildIcon(bottomIcon[index].icon, index)));
 
+    final bottomNavigationBar = BottomNavigationBar(
+        onTap: (index) => navigationController.moveToPage(index),
+        currentIndex: navigationState.navigationCurrentIndex,
+        backgroundColor: AppColors.black4,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        type: BottomNavigationBarType.fixed,
+        items: items);
+
     return Scaffold(
         body: bottomIcon[navigationState.navigationCurrentIndex].screen,
-        bottomNavigationBar: BottomNavigationBar(
-            onTap: (index) => navigationController.moveToPage(index),
-            currentIndex: navigationState.navigationCurrentIndex,
-            backgroundColor: AppColors.black4,
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
-            type: BottomNavigationBarType.fixed,
-            items: items));
+        bottomNavigationBar: AnimatedCrossFade(
+            firstChild: bottomNavigationBar,
+            secondChild: const SizedBox.shrink(),
+            crossFadeState: navigationState.crossFadeState
+                ? CrossFadeState.showSecond
+                : CrossFadeState.showFirst,
+            duration: Duration(milliseconds: 300)));
   }
 }
 

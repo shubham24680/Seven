@@ -36,11 +36,11 @@ class CustomButton extends StatelessWidget {
 
     Size? getSize() {
       if (height != null && width != null) {
-        return Size(width!, height!);
+        return Size(width ?? 0, height ?? 0);
       } else if (height != null) {
-        return Size.fromHeight(height!);
+        return Size.fromHeight(height ?? 0);
       } else if (width != null) {
-        return Size.fromWidth(width!);
+        return Size.fromWidth(width ?? 0);
       }
 
       return null;

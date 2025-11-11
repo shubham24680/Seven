@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:seven/app/app.dart';
 
 class CollectionState {
@@ -34,9 +32,7 @@ class CollectionNotifier extends StateNotifier<CollectionState> {
   }
 
   Future<void> _onScroll() async {
-    final v1 = isBottom;
-    if (v1 && !state.isLoading) {
-      log("$v1 ${!state.isLoading}");
+    if (isBottom && !state.isLoading) {
       state = state.copyWith(isLoading: true);
       await ref.read(collectionProvider.notifier).loadMore();
       state = state.copyWith(isLoading: false);
