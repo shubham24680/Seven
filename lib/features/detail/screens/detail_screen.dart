@@ -204,13 +204,23 @@ class DetailScreen extends ConsumerWidget {
 
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       _buildHeader("Information"),
-      _buildInformationRow(detail.status,
-          getDateFormat(detail.releaseDate, formatType: FormatType.YMMMD)),
-      _buildInformationRow("Runtime", getRuntime(detail.runtime)),
-      _buildInformationRow(
-          "Budget", getCurrencyFormat(detail.budget, detail.originalLanguage)),
-      _buildInformationRow("Revenue",
-          getCurrencyFormat(detail.revenue, detail.originalLanguage)),
+      GridView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.all(0),
+          physics: NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, childAspectRatio: 3.5),
+          children: [
+            _buildInformationRow(
+                detail.status,
+                getDateFormat(detail.releaseDate,
+                    formatType: FormatType.YMMMD)),
+            _buildInformationRow("Runtime", getRuntime(detail.runtime)),
+            _buildInformationRow("Budget",
+                getCurrencyFormat(detail.budget, detail.originalLanguage)),
+            _buildInformationRow("Revenue",
+                getCurrencyFormat(detail.revenue, detail.originalLanguage))
+          ]),
       _buildInformationRow("Orignal Audio", language),
       if (homepage != null && homepage.isNotEmpty)
         Row(children: [
@@ -230,14 +240,17 @@ class DetailScreen extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      CustomText(text: key, size: 0.015.sh),
-      CustomText(
-          text: value,
-          size: 0.015.sh,
-          color: AppColors.lightSteel1.withAlpha(150)),
-      SizedBox(height: 0.02.sh)
-    ]).paddingSymmetric(horizontal: _sidePadding);
+    return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomText(text: key, size: 0.015.sh),
+          CustomText(
+              text: value,
+              size: 0.015.sh,
+              color: AppColors.lightSteel1.withAlpha(150)),
+          SizedBox(height: 0.02.sh)
+        ]).paddingSymmetric(horizontal: _sidePadding);
   }
 
   Widget _buildProduction(String prodName, List<dynamic>? prod) {

@@ -41,11 +41,7 @@ PreferredSizeWidget customAppBar(
       text: appBarTitle, family: AppFonts.STAATLICHES, size: 0.03.sh);
 
   return AppBar(
-      backgroundColor: AppColors.transparent,
-      toolbarHeight: 50,
-      centerTitle: true,
-      leading: leading,
-      title: title);
+      toolbarHeight: 50, centerTitle: true, leading: leading, title: title);
 }
 
 // Bottom Sheet
