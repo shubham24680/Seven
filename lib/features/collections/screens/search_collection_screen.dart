@@ -41,39 +41,29 @@ class SearchCollectionScreen extends ConsumerWidget {
       ]).paddingAll(AppConstants.SIDE_PADDING),
     );
 
-    Widget buildResult() {
-      return Flexible(
-          child: search.when(
-              data: (data) {
-                return CustomCollection(
-                    scrollController: searchState.scrollController,
-                    scrollDirection: Axis.vertical,
-                    orientation: CardOrientation.POTRAIT,
-                    isSafeHeight: true,
-                    isLoading: searchState.isLoading,
-                    crossAxisCount: 2,
-                    loadingItemCount: 2,
-                    results: data);
-              },
-              loading: () => CustomCollection(
-                  scrollDirection: Axis.vertical,
-                  orientation: CardOrientation.POTRAIT,
-                  isSafeHeight: true,
-                  crossAxisCount: 2,
-                  loadingItemCount: 2),
-              error: (error, stackTrace) => ErrorScreen(isHomePage: true)));
-    }
-
     return Scaffold(
-        body: Column(children: [
-      AnimatedCrossFade(
-          firstChild: firstChild,
-          secondChild: const SizedBox.shrink(),
-          crossFadeState: searchState.crossFadeState
-              ? CrossFadeState.showSecond
-              : CrossFadeState.showFirst,
-          duration: Duration(milliseconds: 300)),
-      buildResult()
+        body: CustomScrollView(physics: ClampingScrollPhysics(), slivers: [
+      appbar,
+      SliverToBoxAdapter(
+          child: Flexible(
+              child: search.when(
+                  data: (data) => CustomCollection(
+                      scrollController: searchState.scrollController,
+                      scrollDirection: Axis.vertical,
+                      orientation: CardOrientation.POTRAIT,
+                      isSafeHeight: true,
+                      isLoading: searchState.isLoading,
+                      crossAxisCount: 2,
+                      loadingItemCount: 2,
+                      results: data),
+                  loading: () => CustomCollection(
+                      scrollDirection: Axis.vertical,
+                      orientation: CardOrientation.POTRAIT,
+                      isSafeHeight: true,
+                      crossAxisCount: 2,
+                      loadingItemCount: 2),
+                  error: (error, stackTrace) =>
+                      Center(child: CustomText(text: "No Result")))))
     ]).onTap(event: () => FocusScope.of(context).unfocus()));
   }
 }
