@@ -10,36 +10,46 @@ class SearchCollectionScreen extends ConsumerWidget {
     final search = ref.watch(searchWithTitle);
     final controller = ref.read(searchWithTitle.notifier);
 
-    final firstChild = SafeArea(
-      bottom: false,
-      child: Row(children: [
+    final firstChild = Row(children: [
+      Expanded(
+          flex: 4,
+          child: CustomTextField(
+              controller: searchState.searchController,
+              onChanged: (value) =>
+                  searchController.readyToSearch((value?.length ?? 0) > 1),
+              filled: true,
+              autofocus: true,
+              hintText: "Search movies",
+              perfixIcon: CustomImage(
+                  imageType: ImageType.SVG_LOCAL,
+                  imageUrl: AppSvgs.ARROW_LEFT,
+                  color: AppColors.lightSteel1.withAlpha(40),
+                  event: () => context.pop()))),
+      if (searchState.searchValueExist) ...[
+        SizedBox(width: 0.02.sw),
         Expanded(
-            flex: 4,
-            child: CustomTextField(
-                controller: searchState.searchController,
-                onChanged: (value) =>
-                    searchController.readyToSearch(value?.isNotEmpty),
-                filled: true,
-                autofocus: true,
-                hintText: "Search movies",
-                perfixIcon: CustomImage(
-                    imageType: ImageType.SVG_LOCAL,
-                    imageUrl: AppSvgs.ARROW_LEFT,
-                    color: AppColors.lightSteel1.withAlpha(40),
-                    event: () => context.pop()))),
-        if (searchState.searchValueExist) ...[
-          SizedBox(width: 0.02.sw),
-          Expanded(
-              child: CustomButton(
-                  buttonType: ButtonType.ELEVATED,
-                  onPressed: () =>
-                      controller.search(searchState.searchController.text),
-                  height: 0.065.sh,
-                  backgroundColor: AppColors.vividNightfall4,
-                  child: CustomText(text: "Go", weight: FontWeight.w900)))
-        ],
-      ]).paddingAll(AppConstants.SIDE_PADDING),
-    );
+            child: CustomButton(
+                buttonType: ButtonType.ELEVATED,
+                onPressed: () =>
+                    controller.search(searchState.searchController.text),
+                height: 0.07.sh,
+                backgroundColor: AppColors.vividNightfall4,
+                child: CustomText(text: "Go", weight: FontWeight.w900)))
+      ],
+    ]).paddingSymmetric(vertical: AppConstants.SIDE_PADDING);
+
+    final borderRadius =
+        BorderRadius.vertical(bottom: Radius.circular(0.015.sh));
+    final appbar = SliverAppBar(
+        automaticallyImplyLeading: false,
+        title: firstChild,
+        floating: true,
+        snap: true,
+        toolbarHeight: 0.095.sh,
+        shape: RoundedRectangleBorder(borderRadius: borderRadius),
+        flexibleSpace: blurEffect(
+            20.0, Container(color: AppColors.black3.withAlpha(200)),
+            borderRadius: borderRadius));
 
     return Scaffold(
         body: CustomScrollView(physics: ClampingScrollPhysics(), slivers: [

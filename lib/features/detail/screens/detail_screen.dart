@@ -206,6 +206,11 @@ class DetailScreen extends ConsumerWidget {
         .whereType<String>()
         .join(", ");
     final homepage = detail.homepage;
+    final date =
+        getDateFormat(detail.releaseDate, formatType: FormatType.YMMMD);
+    final runtime = getRuntime(detail.runtime);
+    final budget = getCurrencyFormat(detail.budget, detail.originalLanguage);
+    final revenue = getCurrencyFormat(detail.revenue, detail.originalLanguage);
 
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       _buildHeader("Information"),
@@ -216,15 +221,14 @@ class DetailScreen extends ConsumerWidget {
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2, childAspectRatio: 3.5),
           children: [
-            _buildInformationRow(
-                detail.status,
-                getDateFormat(detail.releaseDate,
-                    formatType: FormatType.YMMMD)),
-            _buildInformationRow("Runtime", getRuntime(detail.runtime)),
-            _buildInformationRow("Budget",
-                getCurrencyFormat(detail.budget, detail.originalLanguage)),
-            _buildInformationRow("Revenue",
-                getCurrencyFormat(detail.revenue, detail.originalLanguage))
+            if (detail.status != null && date != null)
+              _buildInformationRow(detail.status, date),
+            if (runtime != null && runtime.isNotEmpty)
+              _buildInformationRow("Runtime", runtime),
+            if (budget != null && budget.isNotEmpty)
+              _buildInformationRow("Budget", budget),
+            if (revenue != null && revenue.isNotEmpty)
+              _buildInformationRow("Revenue", revenue)
           ]),
       _buildInformationRow("Orignal Audio", language),
       if (homepage != null && homepage.isNotEmpty)

@@ -10,15 +10,14 @@ class SearchScreen extends StatelessWidget {
 
       return Flexible(
           child: CustomCollection(
-        cardType: CardType.GENRE,
-        scrollDirection: Axis.vertical,
-        isSafeHeight: true,
-        isLoading: false,
-        crossAxisCount: 2,
-        loadingItemCount: genres.length,
-        results: genres,
-        screenPath: "/genreCollection/",
-      ));
+              cardType: CardType.GENRE,
+              scrollDirection: Axis.vertical,
+              isSafeHeight: true,
+              isLoading: false,
+              crossAxisCount: 2,
+              loadingItemCount: genres.length,
+              results: genres,
+              screenPath: "/genreCollection/"));
     }
 
     return SafeArea(
