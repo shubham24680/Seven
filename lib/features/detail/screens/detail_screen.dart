@@ -67,6 +67,8 @@ class DetailScreen extends ConsumerWidget {
       if (year != null) year,
       if (runtime != null) runtime,
     ].join(" • ");
+    final voteAverage = detail.voteAverage;
+    final adult = detail.adult;
 
     return Stack(alignment: Alignment.center, children: [
       CustomImage(
@@ -94,10 +96,13 @@ class DetailScreen extends ConsumerWidget {
                       children: [
                         CustomText(text: metadataItems, size: 0.02 * height),
                         const Spacer(),
-                        if (detail.voteAverage != null &&
-                            detail.voteAverage != "0.0")
+                        if (adult != null && adult)
                           CustomTag(
-                              icon: AppSvgs.STAR, value: detail.voteAverage),
+                              value: "18+",
+                              backgroundColor: AppColors.red1.withAlpha(150)),
+                        SizedBox(width: 0.01.sw),
+                        if (voteAverage != null && voteAverage != "0.0")
+                          CustomTag(icon: AppSvgs.STAR, value: voteAverage),
                       ],
                     ).paddingSymmetric(horizontal: _sidePadding),
                     if (detail.genres?.isNotEmpty != null) ...[
@@ -201,16 +206,30 @@ class DetailScreen extends ConsumerWidget {
         .whereType<String>()
         .join(", ");
     final homepage = detail.homepage;
+    final date =
+        getDateFormat(detail.releaseDate, formatType: FormatType.YMMMD);
+    final runtime = getRuntime(detail.runtime);
+    final budget = getCurrencyFormat(detail.budget, detail.originalLanguage);
+    final revenue = getCurrencyFormat(detail.revenue, detail.originalLanguage);
 
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       _buildHeader("Information"),
-      _buildInformationRow(detail.status,
-          getDateFormat(detail.releaseDate, formatType: FormatType.YMMMD)),
-      _buildInformationRow("Runtime", getRuntime(detail.runtime)),
-      _buildInformationRow(
-          "Budget", getCurrencyFormat(detail.budget, detail.originalLanguage)),
-      _buildInformationRow("Revenue",
-          getCurrencyFormat(detail.revenue, detail.originalLanguage)),
+      GridView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.all(0),
+          physics: NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, childAspectRatio: 3.5),
+          children: [
+            if (detail.status != null && date != null)
+              _buildInformationRow(detail.status, date),
+            if (runtime != null && runtime.isNotEmpty)
+              _buildInformationRow("Runtime", runtime),
+            if (budget != null && budget.isNotEmpty)
+              _buildInformationRow("Budget", budget),
+            if (revenue != null && revenue.isNotEmpty)
+              _buildInformationRow("Revenue", revenue)
+          ]),
       _buildInformationRow("Orignal Audio", language),
       if (homepage != null && homepage.isNotEmpty)
         Row(children: [
@@ -230,14 +249,17 @@ class DetailScreen extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      CustomText(text: key, size: 0.015.sh),
-      CustomText(
-          text: value,
-          size: 0.015.sh,
-          color: AppColors.lightSteel1.withAlpha(150)),
-      SizedBox(height: 0.02.sh)
-    ]).paddingSymmetric(horizontal: _sidePadding);
+    return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomText(text: key, size: 0.015.sh),
+          CustomText(
+              text: value,
+              size: 0.015.sh,
+              color: AppColors.lightSteel1.withAlpha(150)),
+          SizedBox(height: 0.02.sh)
+        ]).paddingSymmetric(horizontal: _sidePadding);
   }
 
   Widget _buildProduction(String prodName, List<dynamic>? prod) {

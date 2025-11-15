@@ -50,17 +50,23 @@ class HomeCarousel extends ConsumerWidget {
 
           Widget buildCarouselChild(int index) {
             final voteAverage = show[index].voteAverage;
+            final adult = currentShow.adult;
 
-            return Stack(alignment: Alignment.topRight, children: [
+            return Stack(children: [
               CustomImage(
                   imageType: ImageType.REMOTE,
                   event: () => context.push("/detail/${show[index].id}"),
                   imageUrl: getImageUrl(show[index].posterPath),
                   borderRadius: BorderRadius.circular(0.1 * carouselHeight)),
-              if (voteAverage != null && voteAverage != "0.0")
-                IgnorePointer(
-                    child: CustomTag(icon: AppSvgs.STAR, value: voteAverage)
-                        .paddingAll(0.05 * carouselHeight))
+              Row(mainAxisSize: MainAxisSize.min, children: [
+                if (voteAverage != null && voteAverage != "0.0")
+                  CustomTag(icon: AppSvgs.STAR, value: voteAverage),
+                SizedBox(width: 0.01 * carouselHeight),
+                if (adult != null && adult)
+                  CustomTag(
+                      value: "18+",
+                      backgroundColor: AppColors.black3.withAlpha(70))
+              ]).paddingAll(0.05 * carouselHeight)
             ]);
           }
 

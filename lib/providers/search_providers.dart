@@ -17,7 +17,7 @@ abstract class SearchNotifier extends AutoDisposeAsyncNotifier<List<Result>> {
     state = await AsyncValue.guard(() async {
       try {
         _currentPage = 1;
-        _title = query;
+        _title = query.trim().toLowerCase();
         final response = await searchData(_currentPage, _title);
         final totalPages = response.totalPages?.toInt();
         if (totalPages != null) _hasMorePages = _currentPage < totalPages;

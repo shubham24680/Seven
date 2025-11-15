@@ -63,7 +63,8 @@ class CustomTextField extends StatelessWidget {
         suffixIcon: suffixIcon?.paddingAll(0.01.sh) ?? const SizedBox.shrink(),
         errorBorder: buildBorder(AppColors.red1),
         focusedBorder: buildBorder(AppColors.vividNightfall4),
-        enabledBorder: buildBorder(defaultColor));
+        enabledBorder: buildBorder(defaultColor),
+        disabledBorder: buildBorder(defaultColor));
 
     final dropDownMenu = items
         .map((value) => DropdownMenuItem(
