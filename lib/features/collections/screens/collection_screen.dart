@@ -15,6 +15,7 @@ class CollectionScreen extends ConsumerWidget {
     final isBottomState = ref.watch(provider(collectionProvider));
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: customAppBar(() => context.pop(), collectionName),
       body: collection.when(
         data: (data) => CustomCollection(

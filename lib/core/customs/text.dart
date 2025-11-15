@@ -35,7 +35,7 @@ class CustomText extends StatelessWidget {
       words,
       textAlign: align,
       maxLines: maxLines,
-      overflow: overflow ?? TextOverflow.clip,
+      overflow: overflow,
       style: getTextStyle(),
     );
   }

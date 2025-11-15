@@ -29,8 +29,7 @@ Widget customShimmer({double? height, double? width, double? borderRadius}) {
 }
 
 // APPBAR
-PreferredSizeWidget customAppBar(
-    void Function()? onPressed, String appBarTitle) {
+AppBar customAppBar(void Function()? onPressed, String appBarTitle) {
   final leading = CustomButton(
       buttonType: ButtonType.ICON,
       onPressed: onPressed,
@@ -41,7 +40,11 @@ PreferredSizeWidget customAppBar(
       text: appBarTitle, family: AppFonts.STAATLICHES, size: 0.03.sh);
 
   return AppBar(
-      toolbarHeight: 50, centerTitle: true, leading: leading, title: title);
+    leading: leading,
+    title: title,
+    flexibleSpace:
+        blurEffect(20.0, Container(color: AppColors.black3.withAlpha(150))),
+  );
 }
 
 // Bottom Sheet
@@ -57,7 +60,7 @@ void customBottomSheet(BuildContext context, String title, Widget child,
       shape: RoundedRectangleBorder(borderRadius: borderRadius),
       isScrollControlled: true,
       builder: (context) => blurEffect(
-          10.0,
+          20.0,
           Column(mainAxisSize: MainAxisSize.min, children: [
             CustomText(
               text: title,

@@ -14,6 +14,7 @@ export 'routes/routes.dart';
 export 'services/api_exception.dart';
 export 'services/api_result.dart';
 export 'services/base_services.dart';
+export 'services/credits_services.dart';
 export 'services/shows_services.dart';
 export 'services/network.dart';
 

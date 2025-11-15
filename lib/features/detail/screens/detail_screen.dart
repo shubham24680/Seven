@@ -18,11 +18,13 @@ class DetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final showDetail = ref.watch(showDetailProvider(id));
-    final collectionDetail = ref.watch(showCollectionProvider(id));
+    final showCollection = ref.watch(showCollectionProvider(id));
+    final showCasts = ref.watch(showCastsProvider(id));
 
     return Scaffold(
       body: showDetail.when(
-        data: (detail) => _buildContent(context, detail, collectionDetail),
+        data: (detail) =>
+            _buildContent(context, detail, showCollection, showCasts),
         loading: () => const Center(
           child: CircularProgressIndicator(color: AppColors.vividNightfall4),
         ),
@@ -33,11 +35,8 @@ class DetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildContent(
-    BuildContext context,
-    Result detail,
-    AsyncValue<Result> collectionDetail,
-  ) {
+  Widget _buildContent(BuildContext context, Result detail,
+      AsyncValue<Result> showCollection, AsyncValue<List<Cast>> showCasts) {
     final width = 1.sw;
     final height = 1.5 * width;
 
@@ -49,7 +48,8 @@ class DetailScreen extends ConsumerWidget {
           if (detail.overview?.isNotEmpty ?? false)
             _buildOverviewSection(context, detail),
           SizedBox(height: 0.02.sh),
-          _buildCollection(context, collectionDetail, detail),
+          _buildCollection(context, showCollection, detail),
+          _buildCast(showCasts),
           _buildProduction("Production Companies", detail.productionCompanies),
           _buildProduction("Production Countries", detail.productionCountries),
           _buildInformation(detail),
@@ -197,6 +197,95 @@ class DetailScreen extends ConsumerWidget {
           ]);
         },
         loading: () => CustomCollection(collectionName: collectionName),
+        error: (_, __) => const SizedBox.shrink());
+  }
+
+  Widget _buildCast(AsyncValue<List<Cast>> showCasts) {
+    return showCasts.when(
+        data: (casts) {
+          return Column(children: [
+            CustomCollection(
+                    collectionName: "Casts", isLoading: false, onPressed: () {})
+                .buildText(),
+            SizedBox(
+              height: 0.2.sw + 0.1.sh,
+              child: ListView.builder(
+                  itemCount: casts.length,
+                  scrollDirection: Axis.horizontal,
+                  physics: ClampingScrollPhysics(),
+                  padding: EdgeInsets.only(left: _sidePadding),
+                  itemBuilder: (context, index) {
+                    final cast = casts[index];
+
+                    return SizedBox(
+                      width: 0.3.sw,
+                      child: Column(children: [
+                        CustomImage(
+                            imageType: ImageType.REMOTE,
+                            imageUrl: getImageUrl(cast.profilePath),
+                            height: 0.2.sw,
+                            width: 0.2.sw,
+                            borderRadius: BorderRadius.circular(1.sh)),
+                        SizedBox(height: 0.01.sh),
+                        CustomText(
+                            text: cast.name ?? "",
+                            size: 0.035.sw,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            align: TextAlign.center,
+                            weight: FontWeight.bold),
+                        SizedBox(height: 0.005.sh),
+                        CustomText(
+                            text: cast.character ?? "",
+                            color: AppColors.lightSteel1.withAlpha(150),
+                            size: 0.03.sw,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            align: TextAlign.center)
+                      ]).paddingFromLTRB(right: _sidePadding),
+                    );
+                  }),
+            ),
+            SizedBox(height: 0.02.sh),
+            const Divider(color: AppColors.black2)
+                .paddingSymmetric(horizontal: _sidePadding)
+          ]);
+        },
+        loading: () => Column(children: [
+              CustomCollection(collectionName: "Cast").buildText(),
+              SizedBox(
+                height: 0.2.sw + 0.05.sh,
+                child: ListView.builder(
+                    itemCount: 5,
+                    scrollDirection: Axis.horizontal,
+                    physics: ClampingScrollPhysics(),
+                    padding: EdgeInsets.only(left: _sidePadding),
+                    itemBuilder: (context, index) {
+                      return SizedBox(
+                        width: 0.29.sw,
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              customShimmer(
+                                  height: 0.2.sw,
+                                  width: 0.2.sw,
+                                  borderRadius: 1.sh),
+                              customShimmer(
+                                  height: 0.015.sh,
+                                  width: 0.2.sw,
+                                  borderRadius: 0.01.sh),
+                              customShimmer(
+                                  height: 0.015.sh,
+                                  width: 0.2.sw,
+                                  borderRadius: 0.01.sh)
+                            ]).paddingFromLTRB(right: _sidePadding),
+                      );
+                    }),
+              ),
+              SizedBox(height: 0.05.sh),
+              const Divider(color: AppColors.black2)
+                  .paddingSymmetric(horizontal: _sidePadding)
+            ]),
         error: (_, __) => const SizedBox.shrink());
   }
 

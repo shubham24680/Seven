@@ -133,8 +133,7 @@ class ShowsServices {
       final response = await BaseService.instance.fetchData(
           apiHost: ApiConstants.BASE_URL,
           endPoint: endPoint,
-          responseType: ResponseType.GET,
-          queryParams: {'language': ApiConstants.DEFAULT_LANGUAGE});
+          responseType: ResponseType.GET);
 
       return Result.fromJson(response);
     } on ApiException catch (e) {

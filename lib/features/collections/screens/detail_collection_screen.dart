@@ -12,6 +12,7 @@ class DetailCollectionScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+        extendBodyBehindAppBar: true,
         appBar: customAppBar(() => context.pop(), collectionName),
         body: CustomCollection(
             scrollDirection: Axis.vertical,

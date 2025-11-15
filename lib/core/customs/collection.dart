@@ -11,8 +11,6 @@ class CustomCollection extends StatelessWidget {
       this.collectionName,
       this.cardType = CardType.SHOWS,
       this.orientation = CardOrientation.LANDSCAPE,
-      this.cardHeight,
-      this.cardWidth,
       this.onPressed,
       this.results,
       this.blurValue = 6.0,
@@ -29,8 +27,6 @@ class CustomCollection extends StatelessWidget {
   final void Function()? onPressed;
   final CardType cardType;
   final CardOrientation orientation;
-  final double? cardHeight;
-  final double? cardWidth;
   final List<Result>? results;
   final double blurValue;
   final String screenPath;
@@ -48,36 +44,6 @@ class CustomCollection extends StatelessWidget {
         (1.sw - (crossAxisCount + 1) * AppConstants.SIDE_PADDING) /
             crossAxisCount;
     final double borderRadius = (isPortrait ? 0.06 : 0.1) * height;
-
-    Widget buildText() {
-      if (collectionName == null) return SizedBox.shrink();
-
-      final textWidget = (isLoading)
-          ? customShimmer(height: 0.03.sh, width: 0.5.sw, borderRadius: 0.01.sh)
-          : Expanded(
-              child: CustomText(
-                text: collectionName ?? "",
-                family: AppFonts.STAATLICHES,
-                size: 0.03.sh,
-                maxLines: 1,
-              ),
-            );
-
-      final seeAll = (isLoading)
-          ? customShimmer(height: 0.03.sh, width: 0.1.sw, borderRadius: 0.01.sh)
-          : CustomButton(
-              buttonType: ButtonType.TEXT,
-              onPressed: onPressed,
-              icon: "See all",
-            );
-
-      return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [textWidget, seeAll])
-          .paddingSymmetric(
-              horizontal: AppConstants.SIDE_PADDING,
-              vertical: AppConstants.SIDE_PADDING * 0.25);
-    }
 
     Widget buildCard(int index) {
       if (index >= (results?.length ?? 0)) {
@@ -102,7 +68,7 @@ class CustomCollection extends StatelessWidget {
         physics: ClampingScrollPhysics(),
         padding: EdgeInsets.symmetric(
             horizontal: AppConstants.SIDE_PADDING,
-            vertical: isVertical ? AppConstants.SIDE_PADDING : 0),
+            vertical: isVertical ? 0.13.sh : 0),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: crossAxisCount,
             crossAxisSpacing: 0.5 * AppConstants.SIDE_PADDING,
@@ -123,5 +89,36 @@ class CustomCollection extends StatelessWidget {
                   child: collectionItems),
           SizedBox(height: isSafeHeight ? 0 : 0.05.sh)
         ]);
+  }
+
+  Widget buildText() {
+    if (collectionName == null) return SizedBox.shrink();
+
+    final textWidget = (isLoading)
+        ? customShimmer(height: 0.03.sh, width: 0.5.sw, borderRadius: 0.01.sh)
+        : Expanded(
+            child: CustomText(
+              text: collectionName ?? "",
+              family: AppFonts.STAATLICHES,
+              size: 0.03.sh,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          );
+
+    final seeAll = (isLoading)
+        ? customShimmer(height: 0.03.sh, width: 0.1.sw, borderRadius: 0.01.sh)
+        : CustomButton(
+            buttonType: ButtonType.TEXT,
+            onPressed: onPressed,
+            icon: "See all",
+          );
+
+    return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [textWidget, SizedBox(width: 0.02.sw), seeAll])
+        .paddingSymmetric(
+            horizontal: AppConstants.SIDE_PADDING,
+            vertical: AppConstants.SIDE_PADDING * 0.25);
   }
 }

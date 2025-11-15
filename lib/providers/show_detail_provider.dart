@@ -18,6 +18,7 @@ class ShowDetailNotifier extends ResultNotifier {
       ShowsServices.instance.fetchShowDetail(showId);
 }
 
+// Detail
 final showDetailProvider =
     AsyncNotifierProviderFamily<ShowDetailNotifier, Result, String>(
         ShowDetailNotifier.new);
@@ -42,6 +43,25 @@ class ShowCollectionNotifier extends ResultNotifier {
   }
 }
 
+//Detail collection
 final showCollectionProvider =
     AsyncNotifierProviderFamily<ShowCollectionNotifier, Result, String>(
         ShowCollectionNotifier.new);
+
+class CreditsNotifier extends FamilyAsyncNotifier<List<Cast>, String> {
+  @override
+  Future<List<Cast>> build(String id) async {
+    final service = CreditsServices.instance;
+    final credit = await service.fetchCasts(id);
+    return credit.cast ?? [];
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() => build(arg));
+  }
+}
+
+final showCastsProvider =
+    AsyncNotifierProviderFamily<CreditsNotifier, List<Cast>, String>(
+        CreditsNotifier.new);
