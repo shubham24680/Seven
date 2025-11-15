@@ -24,10 +24,10 @@ class HomeCarousel extends ConsumerWidget {
             borderRadius: BorderRadius.circular(1.sh),
             event: () => carouselController
                 .moveToPage(AppAssets.BOTTOM_NAVIGATION_ICONS.length - 1)),
-        // CustomButton(
-        //     buttonType: ButtonType.ICON,
-        //     icon: AppSvgs.NOTIFICATION,
-        //     onPressed: () => context.push("/notification"))
+        CustomButton(
+            buttonType: ButtonType.ICON,
+            icon: AppSvgs.SEARCH,
+            onPressed: () => carouselController.moveToPage(1))
       ]).paddingFromLTRB(
           left: AppConstants.SIDE_PADDING,
           top: 0.5 * AppConstants.SIDE_PADDING,
