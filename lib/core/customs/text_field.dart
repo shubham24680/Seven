@@ -63,7 +63,8 @@ class CustomTextField extends StatelessWidget {
         suffixIcon: suffixIcon?.paddingAll(0.01.sh),
         errorBorder: buildBorder(AppColors.red1),
         focusedBorder: buildBorder(AppColors.vividNightfall4),
-        enabledBorder: buildBorder(defaultColor));
+        enabledBorder: buildBorder(defaultColor),
+        disabledBorder: buildBorder(defaultColor));
 
     final dropDownMenu = items
         .map((value) => DropdownMenuItem(
@@ -75,7 +76,7 @@ class CustomTextField extends StatelessWidget {
       case TextFieldType.DROPDOWN:
         field = DropdownButtonFormField(
             items: dropDownMenu,
-            value: initialValue,
+            initialValue: initialValue,
             onChanged: onChanged,
             decoration: decoration,
             style: buildHint(AppColors.lightSteel1).getTextStyle(),
