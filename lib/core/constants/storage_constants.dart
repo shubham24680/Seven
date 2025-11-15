@@ -12,5 +12,7 @@ class StorageConstants {
   static const TOP_20_MOVIES = 'top_20_movies';
   static const NEW_RELEASE = 'new_release';
   static const UPCOMING = 'upcoming';
+  static const ALL_TIME_CLASSIC = 'all_time_classic';
+  static const POPULAR_IN_INDIA = 'popular_in_india';
   static const GENRES = 'genres';
 }

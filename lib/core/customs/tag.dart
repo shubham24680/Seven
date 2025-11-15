@@ -2,16 +2,20 @@ import 'package:seven/app/app.dart';
 
 enum TagType { FILLED, OUTLINED }
 
+enum TagSize { LARGE, MEDIUM, SMALL }
+
 class CustomTag extends StatelessWidget {
   const CustomTag(
       {super.key,
       this.tagType = TagType.FILLED,
+      this.tagSize = TagSize.MEDIUM,
       this.icon,
       this.value,
       this.color,
       this.backgroundColor});
 
   final TagType tagType;
+  final TagSize tagSize;
   final String? icon;
   final String? value;
   final Color? color;
@@ -19,8 +23,21 @@ class CustomTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double height;
+    switch (tagSize) {
+      case TagSize.LARGE:
+        height = 0.022.sh;
+        break;
+      case TagSize.SMALL:
+        height = 0.014.sh;
+        break;
+      default:
+        height = 0.018.sh;
+        break;
+    }
+
     final outlined = tagType == TagType.OUTLINED;
-    final borderRadius = BorderRadius.circular(0.02.sh);
+    final borderRadius = BorderRadius.circular(height);
     final decoration = BoxDecoration(
         color: outlined
             ? AppColors.transparent
@@ -31,10 +48,11 @@ class CustomTag extends StatelessWidget {
     final image = CustomImage(
         imageType: ImageType.SVG_LOCAL,
         imageUrl: icon,
-        height: 0.02.sh,
+        height: height,
         color: color ?? AppColors.lightSteel1);
     final tagChild = Container(
-        padding: EdgeInsets.symmetric(horizontal: 0.02.sw, vertical: 0.005.sh),
+        padding: EdgeInsets.symmetric(
+            horizontal: 0.5 * height, vertical: 0.2 * height),
         decoration: decoration,
         child: Row(mainAxisSize: MainAxisSize.min, children: [
           if (icon != null) image,
@@ -42,7 +60,7 @@ class CustomTag extends StatelessWidget {
           if (value != null)
             CustomText(
                 text: value ?? "",
-                size: 0.015.sh,
+                size: 0.9 * height,
                 color: color,
                 weight: icon == null ? FontWeight.w900 : null)
         ]));

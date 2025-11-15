@@ -37,12 +37,12 @@ class CustomCard extends StatelessWidget {
 
     ImageType imageType;
     String? imageUrl;
-    Widget textCard;
+    Widget cardChild;
     switch (cardType) {
       case CardType.GENRE:
         imageType = ImageType.LOCAL;
         imageUrl = imagePath;
-        textCard = blurEffect(
+        cardChild = blurEffect(
             blurValue,
             Container(
                 height: size.height,
@@ -64,26 +64,42 @@ class CustomCard extends StatelessWidget {
       default:
         imageType = ImageType.REMOTE;
         imageUrl = getImageUrl(imagePath);
-        textCard = blurEffect(
+        final adult = results?.adult == true;
+        final voteAverage = results?.voteAverage;
+        final tags =
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          if (adult)
+            CustomTag(
+                tagSize: TagSize.SMALL,
+                value: "18+",
+                backgroundColor: AppColors.black3.withAlpha(70)),
+          SizedBox(width: 0.01 * size.height),
+          if (voteAverage != null && voteAverage != "0.0")
+            CustomTag(
+                tagSize: TagSize.SMALL, icon: AppSvgs.STAR, value: voteAverage),
+        ]).paddingAll(0.05 * size.height);
+        final textCard = blurEffect(
             blurValue,
             Container(
-              height: 0.2 * size.height,
-              width: width,
-              alignment: Alignment.center,
-              padding:
-                  EdgeInsets.symmetric(horizontal: AppConstants.SIDE_PADDING),
-              decoration: decoration,
-              child: CustomText(
-                text: results?.title ?? results?.originalTitle ?? "",
-                size: textSize,
-                weight: FontWeight.w900,
-                maxLines: maxLines,
-                align: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
+                height: 0.2 * size.height,
+                width: width,
+                alignment: Alignment.center,
+                padding:
+                    EdgeInsets.symmetric(horizontal: AppConstants.SIDE_PADDING),
+                decoration: decoration,
+                child: CustomText(
+                  text: results?.title ?? results?.originalTitle ?? "",
+                  size: textSize,
+                  weight: FontWeight.w900,
+                  maxLines: maxLines,
+                  align: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                )),
             borderRadius:
                 BorderRadius.vertical(bottom: Radius.circular(borderRadius)));
+        cardChild = Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [tags, textCard]);
         break;
     }
 
@@ -95,7 +111,7 @@ class CustomCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadius),
           height: size.height,
           width: size.width),
-      IgnorePointer(child: textCard)
+      IgnorePointer(child: cardChild)
     ]);
   }
 

@@ -3,8 +3,7 @@ import 'package:seven/app/app.dart';
 final ThemeData darkTheme = ThemeData(
     scaffoldBackgroundColor: AppColors.black3,
     appBarTheme: AppBarTheme(
-        backgroundColor: AppColors.transparent,
-        surfaceTintColor: AppColors.transparent),
+        backgroundColor: AppColors.black3),
     colorScheme: const ColorScheme.dark(
         primary: AppColors.lightSteel1,
         secondary: AppColors.vividNightfall4,

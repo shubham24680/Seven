@@ -27,7 +27,7 @@ class ShowsServices {
     final queryParams = {
       'page': page.toString(),
       'sort_by': SortBy.VOTE_AVERAGE_DESC,
-      'vote_count.gte': "200"
+      'vote_count.gte': "500"
     };
     return _fetchShows(ApiConstants.MOVIES, queryParams, "fetchTopShows");
   }
@@ -57,6 +57,32 @@ class ShowsServices {
       'primary_release_date.gte': maxDate
     };
     return _fetchShows(ApiConstants.MOVIES, queryParams, "fetchUpcomingShows");
+  }
+
+  Future<ShowsModel> fetchAllTimeClassicShows({int page = 1}) async {
+    final queryParams = {
+      'page': page.toString(),
+      'primary_release_date.gte': "1970-01-01",
+      'primary_release_date.lte': "2000-01-01",
+      'region': Region.INDIA,
+      'sort_by': SortBy.POPULARITY_DESC,
+      'vote_average.gte': "7",
+      'with_original_language': OriginalLanguage.INDIA
+    };
+    return _fetchShows(
+        ApiConstants.MOVIES, queryParams, "fetchAllTimeClassicShows");
+  }
+
+  Future<ShowsModel> fetchPopularInIndiaShows({int page = 1}) async {
+    final queryParams = {
+      'page': page.toString(),
+      'region': Region.INDIA,
+      'sort_by': SortBy.POPULARITY_DESC,
+      'vote_count.gte': "200",
+      'with_original_language': OriginalLanguage.INDIA
+    };
+    return _fetchShows(
+        ApiConstants.MOVIES, queryParams, "fetchPopularInIndiaShows");
   }
 
   Future<ShowsModel> fetchGenreCollection(

@@ -121,6 +121,36 @@ final upcomingShowsProvider =
   () => UpcomingShowsNotifier(StorageConstants.UPCOMING),
 );
 
+class AllTimeClassicShowsNotifier extends ShowNotifier {
+  AllTimeClassicShowsNotifier(super.key);
+
+  @override
+  Future<ShowsModel> fetchShows(int page) async {
+    final service = ShowsServices.instance;
+    return service.fetchAllTimeClassicShows(page: page);
+  }
+}
+
+final allTimeClassicShowsProvider =
+    AsyncNotifierProvider<AllTimeClassicShowsNotifier, List<Result>>(
+  () => AllTimeClassicShowsNotifier(StorageConstants.ALL_TIME_CLASSIC),
+);
+
+class PopularInIndiaShowsNotifier extends ShowNotifier {
+  PopularInIndiaShowsNotifier(super.key);
+
+  @override
+  Future<ShowsModel> fetchShows(int page) async {
+    final service = ShowsServices.instance;
+    return service.fetchPopularInIndiaShows(page: page);
+  }
+}
+
+final popularInIndiaShowsProvider =
+    AsyncNotifierProvider<PopularInIndiaShowsNotifier, List<Result>>(
+  () => PopularInIndiaShowsNotifier(StorageConstants.POPULAR_IN_INDIA),
+);
+
 // STATE
 class ShowsState {
   final int navigationCurrentIndex;

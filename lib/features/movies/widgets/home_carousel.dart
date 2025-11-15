@@ -26,7 +26,7 @@ class HomeCarousel extends ConsumerWidget {
                 .moveToPage(AppAssets.BOTTOM_NAVIGATION_ICONS.length - 1)),
         CustomButton(
             buttonType: ButtonType.ICON,
-            icon: AppSvgs.SEARCH,
+            icon: AppSvgs.SEARCH_OUTLINED,
             onPressed: () => carouselController.moveToPage(1))
       ]).paddingFromLTRB(
           left: AppConstants.SIDE_PADDING,
@@ -48,33 +48,14 @@ class HomeCarousel extends ConsumerWidget {
         data: (show) {
           final currentShow = show[carouselState.carouselCurrentIndex];
 
-          Widget buildCarouselChild(int index) {
-            final voteAverage = show[index].voteAverage;
-            final adult = currentShow.adult;
-
-            return Stack(children: [
-              CustomImage(
-                  imageType: ImageType.REMOTE,
-                  event: () => context.push("/detail/${show[index].id}"),
-                  imageUrl: getImageUrl(show[index].posterPath),
-                  borderRadius: BorderRadius.circular(0.1 * carouselHeight)),
-              Row(mainAxisSize: MainAxisSize.min, children: [
-                if (voteAverage != null && voteAverage != "0.0")
-                  CustomTag(icon: AppSvgs.STAR, value: voteAverage),
-                SizedBox(width: 0.01 * carouselHeight),
-                if (adult != null && adult)
-                  CustomTag(
-                      value: "18+",
-                      backgroundColor: AppColors.black3.withAlpha(70))
-              ]).paddingAll(0.05 * carouselHeight)
-            ]);
-          }
-
           Widget buildCarousel() {
             return CarouselSlider.builder(
                 itemCount: show.length,
-                itemBuilder: (context, index, realIndex) =>
-                    buildCarouselChild(index),
+                itemBuilder: (context, index, realIndex) => CustomImage(
+                    imageType: ImageType.REMOTE,
+                    event: () => context.push("/detail/${show[index].id}"),
+                    imageUrl: getImageUrl(show[index].posterPath),
+                    borderRadius: BorderRadius.circular(0.1 * carouselHeight)),
                 options: CarouselOptions(
                     onPageChanged: (index, _) =>
                         carouselController.nextTo(index),

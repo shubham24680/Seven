@@ -36,9 +36,11 @@ class HomeScreen extends ConsumerWidget {
           const HomeCarousel(),
           SizedBox(height: 0.02.sh),
           Column(children: [
-            buildCollection("Top 20 Movies", topShowsProvider),
+            buildCollection("Top Movies", topShowsProvider),
             buildCollection("New Release", newReleaseShowsProvider),
             buildCollection("Upcoming", upcomingShowsProvider),
+            buildCollection("All time classic", allTimeClassicShowsProvider),
+            buildCollection("Popular in India", popularInIndiaShowsProvider),
           ])
         ]));
   }
