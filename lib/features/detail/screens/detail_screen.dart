@@ -19,12 +19,12 @@ class DetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final showDetail = ref.watch(showDetailProvider(id));
     final showCollection = ref.watch(showCollectionProvider(id));
-    final showCasts = ref.watch(showCastsProvider(id));
+    final showCredits = ref.watch(showCreditsProvider(id));
 
     return Scaffold(
       body: showDetail.when(
         data: (detail) =>
-            _buildContent(context, detail, showCollection, showCasts),
+            _buildContent(context, detail, showCollection, showCredits),
         loading: () => const Center(
           child: CircularProgressIndicator(color: AppColors.vividNightfall4),
         ),
@@ -36,7 +36,7 @@ class DetailScreen extends ConsumerWidget {
   }
 
   Widget _buildContent(BuildContext context, Result detail,
-      AsyncValue<Result> showCollection, AsyncValue<List<Cast>> showCasts) {
+      AsyncValue<Result> showCollection, AsyncValue<Credits> showCredits) {
     final width = 1.sw;
     final height = 1.5 * width;
 
@@ -49,7 +49,7 @@ class DetailScreen extends ConsumerWidget {
             _buildOverviewSection(context, detail),
           SizedBox(height: 0.02.sh),
           _buildCollection(context, showCollection, detail),
-          _buildCast(showCasts),
+          _buildCredits(context, showCredits),
           _buildProduction("Production Companies", detail.productionCompanies),
           _buildProduction("Production Countries", detail.productionCountries),
           _buildInformation(detail),
@@ -166,14 +166,6 @@ class DetailScreen extends ConsumerWidget {
     ]);
   }
 
-  Widget _buildHeader(String value) {
-    return CustomText(text: value, family: AppFonts.STAATLICHES, size: 0.03.sh)
-        .paddingFromLTRB(
-            left: _sidePadding,
-            right: _sidePadding,
-            bottom: 0.15 * _sidePadding);
-  }
-
   Widget _buildCollection(BuildContext context,
       AsyncValue<Result> collectionDetail, Result detail) {
     final collectionName =
@@ -200,59 +192,40 @@ class DetailScreen extends ConsumerWidget {
         error: (_, __) => const SizedBox.shrink());
   }
 
-  Widget _buildCast(AsyncValue<List<Cast>> showCasts) {
-    return showCasts.when(
-        data: (casts) {
+  Widget _buildCredits(BuildContext context, AsyncValue<Credits> showCredits) {
+    return showCredits.when(
+        data: (credits) {
+          final credit = [...credits.cast ?? [], ...credits.crew ?? []];
+          if (credit.isEmpty) return SizedBox.shrink();
+
           return Column(children: [
             CustomCollection(
-                    collectionName: "Casts", isLoading: false, onPressed: () {})
+                    collectionName: "Cast & Crew",
+                    isLoading: false,
+                    onPressed: () => context.push("/castCollection/$id"))
                 .buildText(),
             SizedBox(
-              height: 0.2.sw + 0.1.sh,
-              child: ListView.builder(
-                  itemCount: casts.length,
-                  scrollDirection: Axis.horizontal,
-                  physics: ClampingScrollPhysics(),
-                  padding: EdgeInsets.only(left: _sidePadding),
-                  itemBuilder: (context, index) {
-                    final cast = casts[index];
+                height: 0.2.sw + 0.11.sh,
+                child: ListView.builder(
+                    itemCount: credit.length,
+                    scrollDirection: Axis.horizontal,
+                    physics: ClampingScrollPhysics(),
+                    padding: EdgeInsets.only(left: _sidePadding),
+                    itemBuilder: (context, index) {
+                      final castOrCrew = credit[index];
 
-                    return SizedBox(
-                      width: 0.3.sw,
-                      child: Column(children: [
-                        CustomImage(
-                            imageType: ImageType.REMOTE,
-                            imageUrl: getImageUrl(cast.profilePath),
-                            height: 0.2.sw,
-                            width: 0.2.sw,
-                            borderRadius: BorderRadius.circular(1.sh)),
-                        SizedBox(height: 0.01.sh),
-                        CustomText(
-                            text: cast.name ?? "",
-                            size: 0.035.sw,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            align: TextAlign.center,
-                            weight: FontWeight.bold),
-                        SizedBox(height: 0.005.sh),
-                        CustomText(
-                            text: cast.character ?? "",
-                            color: AppColors.lightSteel1.withAlpha(150),
-                            size: 0.03.sw,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            align: TextAlign.center)
-                      ]).paddingFromLTRB(right: _sidePadding),
-                    );
-                  }),
-            ),
+                      return SizedBox(
+                          width: 0.3.sw,
+                          child: buildCastAndCrew(castOrCrew)
+                              .paddingFromLTRB(right: _sidePadding));
+                    })),
             SizedBox(height: 0.02.sh),
             const Divider(color: AppColors.black2)
                 .paddingSymmetric(horizontal: _sidePadding)
           ]);
         },
         loading: () => Column(children: [
-              CustomCollection(collectionName: "Cast").buildText(),
+              CustomCollection(collectionName: "Cast & Crew").buildText(),
               SizedBox(
                 height: 0.2.sw + 0.05.sh,
                 child: ListView.builder(
@@ -262,24 +235,9 @@ class DetailScreen extends ConsumerWidget {
                     padding: EdgeInsets.only(left: _sidePadding),
                     itemBuilder: (context, index) {
                       return SizedBox(
-                        width: 0.29.sw,
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              customShimmer(
-                                  height: 0.2.sw,
-                                  width: 0.2.sw,
-                                  borderRadius: 1.sh),
-                              customShimmer(
-                                  height: 0.015.sh,
-                                  width: 0.2.sw,
-                                  borderRadius: 0.01.sh),
-                              customShimmer(
-                                  height: 0.015.sh,
-                                  width: 0.2.sw,
-                                  borderRadius: 0.01.sh)
-                            ]).paddingFromLTRB(right: _sidePadding),
-                      );
+                          width: 0.29.sw,
+                          child: buildCastAndCrewLoading()
+                              .paddingFromLTRB(right: _sidePadding));
                     }),
               ),
               SizedBox(height: 0.05.sh),
@@ -302,7 +260,7 @@ class DetailScreen extends ConsumerWidget {
     final revenue = getCurrencyFormat(detail.revenue, detail.originalLanguage);
 
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      _buildHeader("Information"),
+      buildHeader("Information"),
       GridView(
           shrinkWrap: true,
           padding: const EdgeInsets.all(0),
@@ -358,7 +316,7 @@ class DetailScreen extends ConsumerWidget {
     if (validItems.isEmpty) return const SizedBox.shrink();
 
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      _buildHeader(prodName),
+      buildHeader(prodName),
       SizedBox(
           height: 0.04.sh,
           child: ListView.builder(

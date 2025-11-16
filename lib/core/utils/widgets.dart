@@ -37,7 +37,6 @@ dynamic getDateFormat(dynamic date, {FormatType formatType = FormatType.Y}) {
 }
 
 String? getCurrencyFormat(int? currency, String? locale) {
-  log("Currency -> $currency");
   if (currency == null || currency <= 0) return null;
 
   return NumberFormat.currency(locale: "en_US", symbol: "\$ ", decimalDigits: 0)

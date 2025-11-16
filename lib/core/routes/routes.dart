@@ -44,6 +44,12 @@ final GoRouter routes = GoRouter(
             final id = state.pathParameters['id'] ?? "";
             return FadeTransistionPage(child: GenreCollectionScreen(id));
           }),
+      GoRoute(
+          path: "/castCollection/:id",
+          pageBuilder: (context, state) {
+            final id = state.pathParameters['id'] ?? "";
+            return FadeTransistionPage(child: CastCollectionScreen(id));
+          }),
       ...List.generate(
         AppConstants.APP_ROUTES.length,
         (index) => GoRoute(

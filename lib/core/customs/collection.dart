@@ -68,7 +68,7 @@ class CustomCollection extends StatelessWidget {
         physics: ClampingScrollPhysics(),
         padding: EdgeInsets.symmetric(
             horizontal: AppConstants.SIDE_PADDING,
-            vertical: isVertical ? 0.13.sh : 0),
+            vertical: isVertical ? 0.1.sh : 0),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: crossAxisCount,
             crossAxisSpacing: 0.5 * AppConstants.SIDE_PADDING,

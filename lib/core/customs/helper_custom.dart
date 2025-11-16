@@ -43,7 +43,7 @@ AppBar customAppBar(void Function()? onPressed, String appBarTitle) {
     leading: leading,
     title: title,
     flexibleSpace:
-        blurEffect(20.0, Container(color: AppColors.black3.withAlpha(150))),
+        blurEffect(20.0, Container(color: AppColors.black3.withAlpha(200))),
   );
 }
 

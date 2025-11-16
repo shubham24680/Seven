@@ -24,6 +24,8 @@ export 'profile/screens/notification_settings_screen.dart';
 // DETAIL
 export 'collections/screens/collection_screen.dart';
 export 'detail/screens/detail_screen.dart';
+export 'collections/screens/cast_collection_screen.dart';
+export 'detail/widgets/cast.dart';
 
 // NOTIFICATION
 export 'notification/screens/notification_screen.dart';

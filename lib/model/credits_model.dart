@@ -1,27 +1,27 @@
 class Credits {
   final int? id;
-  final List<Cast>? cast;
+  final List<CastAndCrew>? cast;
+  final List<CastAndCrew>? crew;
 
-  Credits({
-    this.id,
-    this.cast,
-  });
+  Credits({this.id, this.cast, this.crew});
 
   factory Credits.fromJson(Map<String, dynamic> json) => Credits(
       id: json["id"],
-      cast: json["cast"] == null
-          ? []
-          : (json["cast"] as List<dynamic>?)
-              ?.map((x) => Cast.fromJson(x as Map<String, dynamic>))
-              .toList());
+      cast: (json["cast"] as List<dynamic>?)
+          ?.map((x) => CastAndCrew.fromJson(x as Map<String, dynamic>))
+          .toList(),
+      crew: (json["crew"] as List<dynamic>?)
+          ?.map((x) => CastAndCrew.fromJson(x as Map<String, dynamic>))
+          .toList());
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "cast": cast == null ? [] : cast?.map((x) => x.toJson()).toList()
+        "cast": cast?.map((x) => x.toJson()).toList(),
+        "crew": crew?.map((x) => x.toJson()).toList()
       };
 }
 
-class Cast {
+class CastAndCrew {
   final bool? adult;
   final int? gender;
   final int? id;
@@ -34,23 +34,26 @@ class Cast {
   final String? character;
   final String? creditId;
   final int? order;
+  final String? department;
+  final String? job;
 
-  Cast({
-    this.adult,
-    this.gender,
-    this.id,
-    this.knownForDepartment,
-    this.name,
-    this.originalName,
-    this.popularity,
-    this.profilePath,
-    this.castId,
-    this.character,
-    this.creditId,
-    this.order,
-  });
+  CastAndCrew(
+      {this.adult,
+      this.gender,
+      this.id,
+      this.knownForDepartment,
+      this.name,
+      this.originalName,
+      this.popularity,
+      this.profilePath,
+      this.castId,
+      this.character,
+      this.creditId,
+      this.order,
+      this.department,
+      this.job});
 
-  factory Cast.fromJson(Map<String, dynamic> json) => Cast(
+  factory CastAndCrew.fromJson(Map<String, dynamic> json) => CastAndCrew(
       adult: json["adult"],
       gender: json["gender"],
       id: json["id"],
@@ -62,7 +65,9 @@ class Cast {
       castId: json["cast_id"],
       character: json["character"],
       creditId: json["credit_id"],
-      order: json["order"]);
+      order: json["order"],
+      department: json["department"],
+      job: json["job"]);
 
   Map<String, dynamic> toJson() => {
         "adult": adult,
@@ -76,6 +81,8 @@ class Cast {
         "cast_id": castId,
         "character": character,
         "credit_id": creditId,
-        "order": order
+        "order": order,
+        "department": department,
+        "job": job
       };
 }

@@ -12,17 +12,18 @@ abstract class ResultNotifier extends FamilyAsyncNotifier<Result, String> {
   }
 }
 
+// Detail
 class ShowDetailNotifier extends ResultNotifier {
   @override
   Future<Result> fetchResult(String showId) =>
       ShowsServices.instance.fetchShowDetail(showId);
 }
 
-// Detail
 final showDetailProvider =
     AsyncNotifierProviderFamily<ShowDetailNotifier, Result, String>(
         ShowDetailNotifier.new);
 
+//Detail collection
 class ShowCollectionDetailNotifier extends ResultNotifier {
   @override
   Future<Result> fetchResult(String collectionId) =>
@@ -43,17 +44,17 @@ class ShowCollectionNotifier extends ResultNotifier {
   }
 }
 
-//Detail collection
 final showCollectionProvider =
     AsyncNotifierProviderFamily<ShowCollectionNotifier, Result, String>(
         ShowCollectionNotifier.new);
 
-class CreditsNotifier extends FamilyAsyncNotifier<List<Cast>, String> {
+// Credit collection
+class CreditsNotifier extends FamilyAsyncNotifier<Credits, String> {
   @override
-  Future<List<Cast>> build(String id) async {
+  Future<Credits> build(String id) async {
     final service = CreditsServices.instance;
     final credit = await service.fetchCasts(id);
-    return credit.cast ?? [];
+    return credit;
   }
 
   Future<void> refresh() async {
@@ -62,6 +63,6 @@ class CreditsNotifier extends FamilyAsyncNotifier<List<Cast>, String> {
   }
 }
 
-final showCastsProvider =
-    AsyncNotifierProviderFamily<CreditsNotifier, List<Cast>, String>(
+final showCreditsProvider =
+    AsyncNotifierProviderFamily<CreditsNotifier, Credits, String>(
         CreditsNotifier.new);
