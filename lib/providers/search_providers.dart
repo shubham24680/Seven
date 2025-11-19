@@ -111,8 +111,7 @@ class SearchProvider extends StateNotifier<SearchState> {
     final position = state.scrollController.position;
     final maxScroll = position.maxScrollExtent;
     final currentScroll = position.pixels;
-    final crossFadeState =
-        position.userScrollDirection == ScrollDirection.reverse;
+    final crossFadeState = (currentScroll / maxScroll) >= 0.1;
 
     state = state.copyWith(crossFadeState: crossFadeState);
     return currentScroll >= (maxScroll * 0.8);
@@ -124,6 +123,12 @@ class SearchProvider extends StateNotifier<SearchState> {
       await ref.read(searchProvider.notifier).loadMore();
       state = state.copyWith(isLoading: false);
     }
+  }
+
+  Future<void> animateToTop() async {
+    final onTop = state.scrollController.position.minScrollExtent;
+    state.scrollController.animateTo(onTop,
+        duration: Duration(milliseconds: 300), curve: Curves.easeOut);
   }
 }
 

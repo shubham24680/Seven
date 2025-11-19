@@ -22,7 +22,7 @@ class HomeCarousel extends ConsumerWidget {
             imageUrl: AppImages.AVATARS[profileIndex],
             height: 0.048.sh,
             borderRadius: BorderRadius.circular(1.sh),
-            event: () => carouselController
+            onClick: () => carouselController
                 .moveToPage(AppAssets.BOTTOM_NAVIGATION_ICONS.length - 1)),
         CustomButton(
             buttonType: ButtonType.ICON,
@@ -53,7 +53,7 @@ class HomeCarousel extends ConsumerWidget {
                 itemCount: show.length,
                 itemBuilder: (context, index, realIndex) => CustomImage(
                     imageType: ImageType.REMOTE,
-                    event: () => context.push("/detail/${show[index].id}"),
+                    onClick: () => context.push("/detail/${show[index].id}"),
                     imageUrl: getImageUrl(show[index].posterPath),
                     borderRadius: BorderRadius.circular(0.1 * carouselHeight)),
                 options: CarouselOptions(

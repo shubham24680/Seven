@@ -24,7 +24,7 @@ class EditProfileScreen extends ConsumerWidget {
             return Stack(children: [
               CustomImage(
                   imageType: ImageType.LOCAL,
-                  event: () => profileController.setProfileIndexTo(index),
+                  onClick: () => profileController.setProfileIndexTo(index),
                   imageUrl: AppImages.AVATARS[index],
                   borderRadius: BorderRadius.circular(1.sh)),
               if (index == profileState.profilePicIndex)

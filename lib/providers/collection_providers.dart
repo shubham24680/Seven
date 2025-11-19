@@ -3,15 +3,23 @@ import 'package:seven/app/app.dart';
 class CollectionState {
   ScrollController scrollController;
   bool isLoading;
+  bool crossFadeState;
 
-  CollectionState({required this.scrollController, required this.isLoading});
+  CollectionState(
+      {required this.scrollController,
+      required this.isLoading,
+      required this.crossFadeState});
 
-  factory CollectionState.initial() =>
-      CollectionState(scrollController: ScrollController(), isLoading: false);
+  factory CollectionState.initial() => CollectionState(
+      scrollController: ScrollController(),
+      isLoading: false,
+      crossFadeState: false);
 
-  CollectionState copyWith({bool? isLoading}) => CollectionState(
-      scrollController: scrollController,
-      isLoading: isLoading ?? this.isLoading);
+  CollectionState copyWith({bool? isLoading, bool? crossFadeState}) =>
+      CollectionState(
+          scrollController: scrollController,
+          isLoading: isLoading ?? this.isLoading,
+          crossFadeState: crossFadeState ?? this.crossFadeState);
 }
 
 class CollectionNotifier extends StateNotifier<CollectionState> {
@@ -28,6 +36,9 @@ class CollectionNotifier extends StateNotifier<CollectionState> {
 
     final maxScroll = state.scrollController.position.maxScrollExtent;
     final currentScroll = state.scrollController.position.pixels;
+    final crossFadeState = (currentScroll / maxScroll) >= 0.1;
+
+    state = state.copyWith(crossFadeState: crossFadeState);
     return currentScroll >= (maxScroll * 0.8);
   }
 
@@ -37,6 +48,12 @@ class CollectionNotifier extends StateNotifier<CollectionState> {
       await ref.read(collectionProvider.notifier).loadMore();
       state = state.copyWith(isLoading: false);
     }
+  }
+
+  Future<void> animateToTop() async {
+    final onTop = state.scrollController.position.minScrollExtent;
+    state.scrollController.animateTo(onTop,
+        duration: Duration(milliseconds: 300), curve: Curves.easeOut);
   }
 }
 

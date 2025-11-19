@@ -286,7 +286,7 @@ class DetailScreen extends ConsumerWidget {
               imageType: ImageType.SVG_LOCAL,
               imageUrl: AppSvgs.LINK,
               color: AppColors.lightSteel1.withAlpha(70),
-              event: () => customUrlLauncher(homepage))
+              onClick: () => customUrlLauncher(homepage))
         ]).paddingSymmetric(horizontal: _sidePadding),
     ]);
   }

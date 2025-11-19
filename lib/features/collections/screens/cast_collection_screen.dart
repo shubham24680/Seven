@@ -10,6 +10,7 @@ class CastCollectionScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final showCredits = ref.watch(showCreditsProvider(id));
     final Map<String, List<CastAndCrew>> departments = {};
+    final verticalPadding = MediaQuery.of(context).padding.top + 56;
 
     void setDepartment(List<CastAndCrew> crew) {
       for (CastAndCrew people in crew) {
@@ -28,7 +29,8 @@ class CastCollectionScreen extends ConsumerWidget {
               setDepartment(data.crew ?? []);
               return SingleChildScrollView(
                 padding: EdgeInsets.symmetric(
-                    horizontal: AppConstants.SIDE_PADDING, vertical: 0.1.sh),
+                    horizontal: AppConstants.SIDE_PADDING,
+                    vertical: verticalPadding),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

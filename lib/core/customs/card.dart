@@ -107,7 +107,7 @@ class CustomCard extends StatelessWidget {
       CustomImage(
           imageType: imageType,
           imageUrl: imageUrl,
-          event: event,
+          onClick: event,
           borderRadius: BorderRadius.circular(borderRadius),
           height: size.height,
           width: size.width),

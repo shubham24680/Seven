@@ -24,7 +24,7 @@ class SearchCollectionScreen extends ConsumerWidget {
                   imageType: ImageType.SVG_LOCAL,
                   imageUrl: AppSvgs.ARROW_LEFT,
                   color: AppColors.lightSteel1.withAlpha(40),
-                  event: () => context.pop()))),
+                  onClick: () => context.pop()))),
       if (searchState.searchValueExist) ...[
         SizedBox(width: 0.02.sw),
         Expanded(
@@ -38,42 +38,62 @@ class SearchCollectionScreen extends ConsumerWidget {
       ],
     ]).paddingSymmetric(vertical: AppConstants.SIDE_PADDING);
 
-    final borderRadius =
-        BorderRadius.vertical(bottom: Radius.circular(0.015.sh));
-    final appbar = SliverAppBar(
-        automaticallyImplyLeading: false,
-        title: firstChild,
-        floating: true,
-        snap: true,
-        toolbarHeight: 0.095.sh,
-        shape: RoundedRectangleBorder(borderRadius: borderRadius),
-        flexibleSpace: blurEffect(
-            20.0, Container(color: AppColors.black3.withAlpha(200)),
-            borderRadius: borderRadius));
+    // final borderRadius =
+    //     BorderRadius.vertical(bottom: Radius.circular(0.015.sh));
+    // final appbar = SliverAppBar(
+    //     automaticallyImplyLeading: false,
+    //     title: firstChild,
+    //     floating: true,
+    //     snap: true,
+    //     toolbarHeight: 0.095.sh,
+    //     shape: RoundedRectangleBorder(borderRadius: borderRadius),
+    //     flexibleSpace: blurEffect(
+    //         20.0, Container(color: AppColors.black3.withAlpha(200)),
+    //         borderRadius: borderRadius));
 
     return Scaffold(
-        body: CustomScrollView(physics: ClampingScrollPhysics(), slivers: [
-      appbar,
-      SliverToBoxAdapter(
-          child: Flexible(
-              child: search.when(
-                  data: (data) => CustomCollection(
-                      scrollController: searchState.scrollController,
-                      scrollDirection: Axis.vertical,
-                      orientation: CardOrientation.POTRAIT,
-                      isSafeHeight: true,
-                      isLoading: searchState.isLoading,
-                      crossAxisCount: 2,
-                      loadingItemCount: 2,
-                      results: data),
-                  loading: () => CustomCollection(
-                      scrollDirection: Axis.vertical,
-                      orientation: CardOrientation.POTRAIT,
-                      isSafeHeight: true,
-                      crossAxisCount: 2,
-                      loadingItemCount: 2),
-                  error: (error, stackTrace) =>
-                      Center(child: CustomText(text: "No Result")))))
-    ]).onTap(event: () => FocusScope.of(context).unfocus()));
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+            automaticallyImplyLeading: false,
+            toolbarHeight: 0.1.sh,
+            title: firstChild,
+            flexibleSpace: blurEffect(
+                20.0, Container(color: AppColors.black3.withAlpha(200)))),
+        body: search
+            .when(
+                data: (data) => CustomCollection(
+                    scrollController: searchState.scrollController,
+                    scrollDirection: Axis.vertical,
+                    orientation: CardOrientation.POTRAIT,
+                    isSafeHeight: true,
+                    isLoading: searchState.isLoading,
+                    crossAxisCount: 2,
+                    loadingItemCount: 2,
+                    results: data),
+                loading: () => CustomCollection(
+                    scrollDirection: Axis.vertical,
+                    orientation: CardOrientation.POTRAIT,
+                    isSafeHeight: true,
+                    crossAxisCount: 2,
+                    loadingItemCount: 2),
+                error: (error, stackTrace) =>
+                    Center(child: CustomText(text: "No Result")))
+            .onTap(event: () => FocusScope.of(context).unfocus()),
+        floatingActionButton: AnimatedCrossFade(
+            firstChild: FloatingActionButton.small(
+                onPressed: () => searchController.animateToTop(),
+                backgroundColor: AppColors.vividNightfall4,
+                elevation: 3,
+                focusColor: Colors.black,
+                child: CustomImage(
+                    imageType: ImageType.SVG_LOCAL,
+                    imageUrl: AppSvgs.ARROW_UP,
+                    color: AppColors.lightSteel1,
+                    onClick: () => searchController.animateToTop())),
+            secondChild: const SizedBox.shrink(),
+            crossFadeState: searchState.crossFadeState
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
+            duration: Duration(milliseconds: 300)));
   }
 }

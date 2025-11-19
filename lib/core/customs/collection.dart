@@ -44,6 +44,7 @@ class CustomCollection extends StatelessWidget {
         (1.sw - (crossAxisCount + 1) * AppConstants.SIDE_PADDING) /
             crossAxisCount;
     final double borderRadius = (isPortrait ? 0.06 : 0.1) * height;
+    final double verticalPadding = MediaQuery.of(context).padding.top;
 
     Widget buildCard(int index) {
       if (index >= (results?.length ?? 0)) {
@@ -66,9 +67,12 @@ class CustomCollection extends StatelessWidget {
         itemCount: (results?.length ?? 0) + (isLoading ? loadingItemCount : 0),
         shrinkWrap: true,
         physics: ClampingScrollPhysics(),
-        padding: EdgeInsets.symmetric(
-            horizontal: AppConstants.SIDE_PADDING,
-            vertical: isVertical ? 0.1.sh : 0),
+        padding: EdgeInsets.only(
+          left: AppConstants.SIDE_PADDING,
+          right: AppConstants.SIDE_PADDING,
+          top: isVertical ? verticalPadding : 0,
+          bottom: isVertical ? AppConstants.SIDE_PADDING : 0,
+        ),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: crossAxisCount,
             crossAxisSpacing: 0.5 * AppConstants.SIDE_PADDING,

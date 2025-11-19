@@ -30,6 +30,7 @@ class AppImages {
 class AppSvgs {
   static const ARROW_LEFT = "assets/icons/outlined_icons/arrow_left.svg";
   static const ARROW_RIGHT = "assets/icons/outlined_icons/arrow_right.svg";
+  static const ARROW_UP = "assets/icons/outlined_icons/arrow_up.svg";
   static const ADD_TO_FAVOURITE = "assets/icons/outlined_icons/add.svg";
   static const CALENDAR = "assets/icons/outlined_icons/calendar.svg";
   static const FEMALE = "assets/icons/outlined_icons/female.svg";

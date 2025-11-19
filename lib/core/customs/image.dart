@@ -12,7 +12,7 @@ class CustomImage extends StatelessWidget {
       this.fit,
       this.height,
       this.width,
-      this.event,
+      this.onClick,
       this.color});
 
   final ImageType imageType;
@@ -22,7 +22,7 @@ class CustomImage extends StatelessWidget {
   final BoxFit? fit;
   final double? height;
   final double? width;
-  final void Function()? event;
+  final void Function()? onClick;
   final Color? color;
 
   @override
@@ -69,6 +69,6 @@ class CustomImage extends StatelessWidget {
     return ClipRRect(
       borderRadius: borderRadius,
       child: image,
-    ).onTap(event: event);
+    ).onTap(event: onClick);
   }
 }
