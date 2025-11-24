@@ -27,7 +27,7 @@ class HomeCarousel extends ConsumerWidget {
         CustomButton(
             buttonType: ButtonType.ICON,
             icon: AppSvgs.SEARCH_OUTLINED,
-            onPressed: () => carouselController.moveToPage(1))
+            onPressed: () => context.push("/searchCollection"))
       ]).paddingFromLTRB(
           left: AppConstants.SIDE_PADDING,
           top: 0.5 * AppConstants.SIDE_PADDING,

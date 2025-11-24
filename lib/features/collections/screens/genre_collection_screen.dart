@@ -22,18 +22,18 @@ class GenreCollectionScreen extends ConsumerWidget {
     }
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: customAppBar(() => context.pop(), getAppBarTitle()),
       body: genreState.when(
           data: (show) => CustomCollection(
-                scrollController: scrollState.scrollController,
-                scrollDirection: Axis.vertical,
-                orientation: CardOrientation.POTRAIT,
-                crossAxisCount: 2,
-                loadingItemCount: 2,
-                isSafeHeight: true,
-                isLoading: scrollState.isLoading,
-                results: show,
-              ),
+              scrollController: scrollState.scrollController,
+              scrollDirection: Axis.vertical,
+              orientation: CardOrientation.POTRAIT,
+              crossAxisCount: 2,
+              loadingItemCount: 2,
+              isSafeHeight: true,
+              isLoading: scrollState.isLoading,
+              results: show),
           loading: () => CustomCollection(
               scrollDirection: Axis.vertical,
               orientation: CardOrientation.POTRAIT,
