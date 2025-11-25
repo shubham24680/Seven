@@ -41,6 +41,7 @@ class AppSvgs {
   static const NOTIFICATION = "assets/icons/outlined_icons/notification.svg";
   static const NO_INTERNET = "assets/images/no_internet.svg";
   static const NO_CONNECTION = "assets/images/no_connection.svg";
+  static const NO_RESULT = "assets/images/no_result.svg";
   static const PROFILE = "assets/icons/filled_icons/profile.svg";
   static const PLAY = "assets/icons/outlined_icons/play.svg";
   static const REMOVE_TO_FAVOURITE = "assets/icons/filled_icons/remove.svg";

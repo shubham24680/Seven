@@ -9,14 +9,15 @@ class SearchCollectionScreen extends ConsumerWidget {
     final searchController = ref.read(searchProvider(searchWithTitle).notifier);
     final search = ref.watch(searchWithTitle);
     final controller = ref.read(searchWithTitle.notifier);
+    final options = AppConstants.GENRES;
 
-    final firstChild = Row(children: [
+    final title = Row(children: [
       Expanded(
           flex: 4,
           child: CustomTextField(
               controller: searchState.searchController,
               onChanged: (value) =>
-                  searchController.readyToSearch((value?.length ?? 0) > 1),
+                  searchController.readyToSearch(value?.isNotEmpty),
               filled: true,
               autofocus: true,
               hintText: "Search movies",
@@ -30,46 +31,81 @@ class SearchCollectionScreen extends ConsumerWidget {
         Expanded(
             child: CustomButton(
                 buttonType: ButtonType.ELEVATED,
-                onPressed: () =>
-                    controller.search(searchState.searchController.text),
-                height: 0.07.sh,
+                onPressed: () => controller.search(
+                    searchState.searchController.text,
+                    searchState.selectedGrenre),
+                height: 0.065.sh,
                 backgroundColor: AppColors.vividNightfall4,
                 child: CustomText(text: "Go", weight: FontWeight.w900)))
-      ],
-    ]).paddingSymmetric(vertical: AppConstants.SIDE_PADDING);
+      ]
+    ]);
+    final bottomOption = PreferredSize(
+        preferredSize: Size.fromHeight(0.06.sh),
+        child: SizedBox(
+            height: 0.06.sh,
+            child: ListView.builder(
+                itemCount: options.length,
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.only(left: AppConstants.SIDE_PADDING),
+                itemBuilder: (context, index) {
+                  final genre = options[index].title ?? "";
+                  final id = options[index].id ?? -1;
 
-    // final borderRadius =
-    //     BorderRadius.vertical(bottom: Radius.circular(0.015.sh));
-    // final appbar = SliverAppBar(
-    //     automaticallyImplyLeading: false,
-    //     title: firstChild,
-    //     floating: true,
-    //     snap: true,
-    //     toolbarHeight: 0.095.sh,
-    //     shape: RoundedRectangleBorder(borderRadius: borderRadius),
-    //     flexibleSpace: blurEffect(
-    //         20.0, Container(color: AppColors.black3.withAlpha(200)),
-    //         borderRadius: borderRadius));
+                  return ChoiceChip(
+                          label: CustomText(
+                              text: genre,
+                              size: 0.015.sh,
+                              color: AppColors.lightSteel1,
+                              weight: FontWeight.w900),
+                          onSelected: (selected) {
+                            if (selected) {
+                              searchController.addChoice(id);
+                            } else {
+                              searchController.removeChoice(id);
+                            }
+                          },
+                          selected: searchState.selectedGrenre.contains(id),
+                          showCheckmark: false,
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          backgroundColor: AppColors.transparent,
+                          selectedColor: AppColors.vividNightfall4,
+                          side: BorderSide(color: AppColors.vividNightfall4))
+                      .paddingFromLTRB(right: AppConstants.SIDE_PADDING);
+                })));
 
     return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
             automaticallyImplyLeading: false,
-            toolbarHeight: 0.1.sh,
-            title: firstChild,
+            toolbarHeight: 0.065.sh,
+            title: title,
+            bottom: bottomOption,
             flexibleSpace: blurEffect(
                 20.0, Container(color: AppColors.black3.withAlpha(200)))),
         body: search
             .when(
-                data: (data) => CustomCollection(
-                    scrollController: searchState.scrollController,
-                    scrollDirection: Axis.vertical,
-                    orientation: CardOrientation.POTRAIT,
-                    isSafeHeight: true,
-                    isLoading: searchState.isLoading,
-                    crossAxisCount: 2,
-                    loadingItemCount: 2,
-                    results: data),
+                data: (data) {
+                  if (data == null) return const SizedBox.shrink();
+                  if (data.isEmpty) {
+                    return ErrorScreen(
+                        type: Type.TYPE2,
+                        goBack: true,
+                        image: AppSvgs.NO_RESULT,
+                        heading: "Oops!",
+                        description: "No Results Found");
+                  }
+
+                  return CustomCollection(
+                      scrollController: searchState.scrollController,
+                      scrollDirection: Axis.vertical,
+                      orientation: CardOrientation.POTRAIT,
+                      isSafeHeight: true,
+                      isLoading: searchState.isLoading,
+                      crossAxisCount: 2,
+                      loadingItemCount: 2,
+                      results: data);
+                },
                 loading: () => CustomCollection(
                     scrollDirection: Axis.vertical,
                     orientation: CardOrientation.POTRAIT,
@@ -77,7 +113,7 @@ class SearchCollectionScreen extends ConsumerWidget {
                     crossAxisCount: 2,
                     loadingItemCount: 2),
                 error: (error, stackTrace) =>
-                    Center(child: CustomText(text: "No Result")))
+                    ErrorScreen(type: Type.TYPE2, goBack: true))
             .onTap(event: () => FocusScope.of(context).unfocus()),
         floatingActionButton: AnimatedCrossFade(
             firstChild: FloatingActionButton.small(
