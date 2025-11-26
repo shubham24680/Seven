@@ -102,11 +102,29 @@ class AppConstants {
     HelperModel(string1: "Female", string2: AppSvgs.FEMALE),
   ];
 
-  // ERROR
-  static HelperModel ERRORDATA = HelperModel(
+  // NETWORK ERROR (Default
+    static HelperModel ERRORDATA = HelperModel(
       string1: "OH NO!",
       string2: "No internet connection.\nCheck your network and try again.",
       string3: AppSvgs.NO_CONNECTION,
       string4: "Try again",
       string5: "Back");
 }
+
+  // NO DATA ERROR
+  static HelperModel NO_DATA_ERRORDATA = HelperModel(
+      string1: "NOTHING HERE!",
+      string2: "No data available at the moment.\nPlease check back later.",
+      string3: AppSvgs.NO_RESULT,
+      string4: "Refresh",
+      string5: "Back");
+
+  // SERVER ERROR
+  static HelperModel SERVER_ERRORDATA = HelperModel(
+      string1: "SERVER ERROR!",
+      string2: "Something went wrong on our end.\nPlease try again later.",
+      string3: AppSvgs.NO_CONNECTION,
+      string4: "Retry",
+      string5: "Back");
+}
+
