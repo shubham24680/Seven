@@ -2,6 +2,7 @@ import 'package:seven/app/app.dart';
 
 final ThemeData darkTheme = ThemeData(
     scaffoldBackgroundColor: AppColors.black3,
+    canvasColor: Colors.transparent,
     appBarTheme: AppBarTheme(
         backgroundColor: AppColors.transparent,
         surfaceTintColor: AppColors.transparent,
