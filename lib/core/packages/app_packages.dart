@@ -1,6 +1,4 @@
 export 'package:flutter/material.dart';
-export 'package:flutter_screenutil/flutter_screenutil.dart';
-export 'package:window_size/window_size.dart';
 
 // STATE MANAGEMENT
 export 'package:flutter_riverpod/flutter_riverpod.dart';

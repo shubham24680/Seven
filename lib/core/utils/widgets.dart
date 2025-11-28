@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:intl/intl.dart';
 import 'package:seven/app/app.dart';
 
+// IMAGE
 String? getImageUrl(String? endPoint) {
   if (endPoint == null || endPoint.isEmpty) return null;
 
@@ -10,6 +9,7 @@ String? getImageUrl(String? endPoint) {
   return imageUrl;
 }
 
+// RUNTIME
 String? getRuntime(int? runtime) {
   if (runtime == null || runtime <= 0) return null;
   final hours = runtime ~/ 60;
@@ -17,6 +17,7 @@ String? getRuntime(int? runtime) {
   return [if (hours > 0) "$hours h", if (minutes > 0) "$minutes min"].join(" ");
 }
 
+// DATE
 enum FormatType { YMMMD, Y, DATE }
 
 dynamic getDateFormat(dynamic date, {FormatType formatType = FormatType.Y}) {
@@ -36,6 +37,7 @@ dynamic getDateFormat(dynamic date, {FormatType formatType = FormatType.Y}) {
   return dateFormat.format(date);
 }
 
+// CURRENCY
 String? getCurrencyFormat(int? currency, String? locale) {
   if (currency == null || currency <= 0) return null;
 

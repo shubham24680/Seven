@@ -27,6 +27,7 @@ export 'theme/dark_theme.dart';
 // UTILS
 export 'utils/colors.dart';
 export 'utils/widgets.dart';
+export 'utils/dimension.dart';
 
 // CUSTOM
 export 'customs/extension.dart';

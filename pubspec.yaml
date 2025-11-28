@@ -64,7 +64,6 @@ dependencies:
   carousel_slider: ^5.1.1
 
   # Utility
-  flutter_screenutil: ^5.9.3
   intl: ^0.20.2
   smooth_page_indicator: ^1.2.1
   url_launcher: ^6.3.2

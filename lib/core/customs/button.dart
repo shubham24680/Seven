@@ -1,11 +1,13 @@
 import 'package:seven/app/app.dart';
 
 enum ButtonType { ELEVATED, ICON, TEXT }
+enum ButtonNature {UNBOUND, BOUND}
 
 class CustomButton extends StatelessWidget {
   const CustomButton(
       {super.key,
       this.buttonType = ButtonType.ELEVATED,
+      this.buttonNature = ButtonNature.UNBOUND,
       this.blurValue = 3.0,
       this.onPressed,
       this.borderRadius,
@@ -17,6 +19,7 @@ class CustomButton extends StatelessWidget {
       this.icon});
 
   final ButtonType buttonType;
+  final ButtonNature buttonNature;
   final double blurValue;
   final double? height;
   final double? width;
@@ -32,7 +35,7 @@ class CustomButton extends StatelessWidget {
     final widgetBackgroundColor =
         backgroundColor ?? AppColors.lightSteel1.withAlpha(20);
     final widgetBorderRadius = BorderRadius.circular(
-        borderRadius ?? (buttonType == ButtonType.ICON ? 1.sh : 0.015.sh));
+        borderRadius ?? (buttonType == ButtonType.ICON ? 1000.r : 12.r));
 
     Size? getSize() {
       if (height != null && width != null) {
@@ -73,7 +76,8 @@ class CustomButton extends StatelessWidget {
             onPressed: onPressed,
             style: ElevatedButton.styleFrom(
                 backgroundColor: widgetBackgroundColor,
-                minimumSize: getSize(),
+                fixedSize: (buttonNature == ButtonNature.BOUND) ? getSize() : null,
+                minimumSize: (buttonNature == ButtonNature.UNBOUND) ? getSize() : null,
                 shape: RoundedRectangleBorder(
                     side: BorderSide(
                         color: onPressed == null
