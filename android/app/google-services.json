@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "852324756828",
+    "project_id": "seven-47ee8",
+    "storage_bucket": "seven-47ee8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:852324756828:android:ab54a09d8f2093622da599",
+        "android_client_info": {
+          "package_name": "com.example.seven"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_SLtQGqUOoLqLIcIFuo_CSrcZNVJam5U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:852324756828:android:f1dbf4e1012fcd342da599",
+        "android_client_info": {
+          "package_name": "com.example.seven.debug"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_SLtQGqUOoLqLIcIFuo_CSrcZNVJam5U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

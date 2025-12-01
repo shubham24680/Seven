@@ -1,4 +1,3 @@
-import 'package:flutter/rendering.dart';
 import 'package:seven/app/app.dart';
 
 abstract class SearchNotifier extends AutoDisposeAsyncNotifier<List<Result>?> {

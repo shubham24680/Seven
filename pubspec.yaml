@@ -68,6 +68,10 @@ dependencies:
   intl: ^0.20.2
   smooth_page_indicator: ^1.2.1
   url_launcher: ^6.3.2
+
+  # Firebase
+  firebase_core: ^4.2.1
+  firebase_remote_config: ^6.1.2
   
 dev_dependencies:
   flutter_test:
