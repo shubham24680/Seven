@@ -1,6 +1,6 @@
 # Seven 🎬
 
-**Version 1.0.0**
+**Version 1.1.0**
 
 A beautiful and modern Flutter application for discovering and exploring movies and TV shows, powered by The Movie Database (TMDB) API. Seven provides an immersive dark-themed experience with smooth animations, comprehensive movie details, and an intuitive user interface.
 
@@ -29,11 +29,13 @@ A beautiful and modern Flutter application for discovering and exploring movies 
   - New releases section
   - Upcoming movies preview
   - Smooth horizontal and vertical scrolling
+  - Quick search access
 
 - **🎬 Movie Details**
   - Comprehensive movie information
   - High-quality poster and backdrop images
   - Genre tags and ratings
+  - Cast and crew information
   - Production companies and countries
   - Runtime, budget, and revenue information
   - Related movies in collections
@@ -41,9 +43,17 @@ A beautiful and modern Flutter application for discovering and exploring movies 
 
 - **📚 Collections**
   - Browse movies by category
+  - Genre-based collections
+  - Cast-specific movie collections
+  - Search within collections
+  - Detailed collection views
   - Grid and list view support
   - Portrait and landscape card orientations
-  - Quick navigation to full collections
+
+- **🔍 Search**
+  - Real-time movie search
+  - Search results with movie cards
+  - Quick navigation to movie details
 
 - **👤 User Profile**
   - Customizable profile with avatar selection
@@ -54,8 +64,9 @@ A beautiful and modern Flutter application for discovering and exploring movies 
 - **⚡ Performance**
   - Optimized image loading with caching
   - Smooth animations and transitions
-  - Efficient state management
+  - Efficient state management with Riverpod
   - Responsive design for all screen sizes
+  - Error handling with custom error screens
 
 ---
 
@@ -73,7 +84,6 @@ A beautiful and modern Flutter application for discovering and exploring movies 
 
 ### Networking
 - **HTTP** 1.2.2 - HTTP client for API requests
-- **JSON Annotation** 4.8.1 - JSON serialization
 
 ### Storage
 - **Shared Preferences** 2.2.2 - Local data persistence
@@ -85,6 +95,7 @@ A beautiful and modern Flutter application for discovering and exploring movies 
 - **Shimmer** 3.0.0 - Loading skeleton effects
 - **Carousel Slider** 5.1.1 - Carousel components
 - **Smooth Page Indicator** 1.2.1 - Page indicators
+- **Flutter Native Splash** 2.4.4 - Native splash screen
 
 ### Media
 - **Video Player** 2.8.2 - Video playback support
@@ -93,7 +104,6 @@ A beautiful and modern Flutter application for discovering and exploring movies 
 ### Utilities
 - **Intl** 0.20.2 - Internationalization and formatting
 - **URL Launcher** 6.3.2 - Launch external URLs
-- **Window Size** - Desktop window management
 
 ---
 
@@ -110,42 +120,9 @@ Seven uses The Movie Database (TMDB) API to fetch movie data. You need to config
 
 2. **Configure API Credentials**
 
-   Open `lib/core/constants/api_constants.dart` and update:
+   Open `lib/core/constants/api_constants.dart` and update with `documents/api_constant_document.md`
 
-   ```dart
-   class ApiConstants {
-    static const String API_KEY = "YOUR_API_KEY_HERE";
-    static const String BEARER_TOKEN = "Bearer YOUR_BEARER_TOKEN_HERE";
-     
-    // BASE URLs
-    static const String BASE_URL = "https://api.themoviedb.org/";
-    static const String VERSION_3 = "3/";
-    static const String IMAGE_PATH = "https://image.tmdb.org/t/p/";
-    static const String PIXEL_500 = "w500";
 
-    // Timeouts
-    static const Duration CONNECTION_TIMEOUT = Duration(seconds: 30);
-    static const Duration RECEIVE_TIMEOUT = Duration(seconds: 30); //Not used yet.
-
-    // Default params
-    static const String DEFAULT_LANGUAGE = 'en-US';
-
-    // ENDPOINTS
-    static const String TRENDING = "trending/all/day";
-    static const String TRENDING_MOVIES = "trending/movie/day";
-    static const String TRENDING_TV = "trending/tv/day";
-
-    static const String MOVIES = "discover/movie";
-    static const String TOP_RATED = "movie/top_rated";
-    static const String NOW_PLAYING = "movie/now_playing";
-    static const String UPCOMING = "movie/upcoming";
-
-    static const String MOVIE_DETAIL = "movie/";
-    static const String COLLECTION_DETAIL = "collection/";
-
-    static const String SEARCH = "search/movie";
-    static const String GENRES = "genre/movie/list";
-   }
 
 ### Build Configuration
 
@@ -165,20 +142,66 @@ Seven uses The Movie Database (TMDB) API to fetch movie data. You need to config
 
 ## 🎨 Architecture
 
+Seven follows a clean, modular architecture with clear separation of concerns:
+
+### Project Structure
+
+```
+lib/
+├── app/                    # Application setup and configuration
+│   ├── native/            # Native platform bridge
+│   └── app.dart           # Main app widget
+├── core/                   # Core functionality and utilities
+│   ├── constants/         # API, app, storage constants
+│   ├── customs/           # Custom reusable widgets
+│   ├── packages/          # Package exports
+│   ├── routes/            # GoRouter configuration
+│   ├── services/          # API services and networking
+│   ├── storage/           # Local storage management
+│   ├── theme/             # App theming
+│   └── utils/             # Utility functions and widgets
+├── features/              # Feature modules
+│   ├── collections/       # Collection screens and widgets
+│   ├── detail/            # Movie detail screens
+│   ├── error/             # Error handling screens
+│   ├── movies/            # Home, search, profile screens
+│   ├── notification/      # Notification feature
+│   ├── onboarding/        # Onboarding flow
+│   └── profile/           # Profile management
+├── model/                 # Data models
+│   ├── credits_model.dart
+│   ├── shows_model.dart
+│   └── helper_model.dart
+├── providers/             # Riverpod state providers
+│   ├── shows_provider.dart
+│   ├── show_detail_provider.dart
+│   ├── collection_providers.dart
+│   ├── genre_collection_providers.dart
+│   ├── search_providers.dart
+│   ├── profile_provider.dart
+│   ├── onboarding_providers.dart
+│   └── helper_providers.dart
+└── main.dart              # Application entry point
+```
+
 ### State Management
 
 Seven uses **Flutter Riverpod** for state management with the following patterns:
 
-- **AsyncNotifierProvider**: For async data fetching (movies, details)
-- **StateNotifierProvider**: For UI state management (navigation, profile)
-- **Family Providers**: For parameterized providers (details by ID)
+- **AsyncNotifierProvider**: For async data fetching (movies, details, collections)
+- **StateNotifierProvider**: For UI state management (navigation, profile, onboarding)
+- **Family Providers**: For parameterized providers (details by ID, genre collections)
 - **Provider.autoDispose**: For temporary state that should be disposed
 
 ### Service Layer
 
-- **BaseService**: Core HTTP client with error handling
+- **BaseService**: Core HTTP client with error handling and timeout configuration
 - **ShowsServices**: Movie data fetching service
-- **SharedPreferencesData**: Persistent storage wrapper
+- **CreditsServices**: Cast and crew information service
+- **Network**: Network connectivity utilities
+- **ApiResult**: Result wrapper for API responses
+- **ApiException**: Custom exception handling
+- **SharedPreferencesData**: Persistent storage wrapper for user data
 
 ### Custom Widgets
 
@@ -186,11 +209,20 @@ All UI components are built with custom widgets for consistency:
 
 - `CustomButton` - Buttons with multiple types (elevated, icon, text)
 - `CustomText` - Styled text with consistent typography
-- `CustomImage` - Image widget supporting multiple sources
-- `CustomCard` - Movie/show cards
+- `CustomImage` - Image widget supporting multiple sources (network, asset, SVG)
+- `CustomCard` - Movie/show cards with various layouts
 - `CustomCollection` - Collection display widgets
 - `CustomTextField` - Input fields with validation
-- `CustomTag` - Badge/tag widgets
+- `CustomTag` - Badge/tag widgets for genres and categories
+- `HelperCustom` - Helper widgets for common UI patterns
+
+### Routing
+
+Seven uses **GoRouter** for declarative, type-safe navigation with:
+- Named routes for all screens
+- Deep linking support
+- Route guards and redirects
+- Nested navigation support
 
 ## 📝 Documentation
 

@@ -1,6 +1,6 @@
 # Seven 🎬
 
-**Version 1.0.0**
+**Version 1.1.0**
 
 A beautiful and modern Flutter application for discovering and exploring movies and TV shows, powered by The Movie Database (TMDB) API. Seven provides an immersive dark-themed experience with smooth animations, comprehensive movie details, and an intuitive user interface.
 
@@ -25,21 +25,44 @@ A beautiful and modern Flutter application for discovering and exploring movies 
   - New releases section
   - Upcoming movies preview
   - Smooth horizontal and vertical scrolling
+  - Quick access to search
 
 - **🎬 Movie Details**
   - Comprehensive movie information
   - High-quality poster and backdrop images
   - Genre tags and ratings
+  - Cast and crew information with profile pictures
   - Production companies and countries
   - Runtime, budget, and revenue information
   - Related movies in collections
   - Expandable overview section
+  - Navigate to full cast & crew screen
 
 - **📚 Collections**
   - Browse movies by category
+  - Genre-based collections
+  - Cast-specific movie collections
+  - Infinite scroll with pagination
   - Grid and list view support
   - Portrait and landscape card orientations
   - Quick navigation to full collections
+  - Floating action button to scroll to top
+
+- **🔍 Search & Discovery**
+  - Browse movies by genre
+  - Advanced search with text input
+  - Multi-genre filtering with chips
+  - Real-time search results
+  - Infinite scroll pagination
+  - Empty state handling
+  - Genre cards with custom artwork
+
+- **👥 Cast & Crew**
+  - Detailed cast information
+  - Crew organized by department
+  - Profile pictures and character names
+  - Job titles and roles
+  - Grid layout for easy browsing
 
 - **👤 User Profile**
   - Customizable profile with avatar selection
@@ -50,8 +73,10 @@ A beautiful and modern Flutter application for discovering and exploring movies 
 - **⚡ Performance**
   - Optimized image loading with caching
   - Smooth animations and transitions
-  - Efficient state management
+  - Efficient state management with Riverpod
   - Responsive design for all screen sizes
+  - Infinite scroll with smart pagination
+  - Error handling with custom error screens
 
 ---
 
@@ -81,6 +106,7 @@ A beautiful and modern Flutter application for discovering and exploring movies 
 - **Shimmer** 3.0.0 - Loading skeleton effects
 - **Carousel Slider** 5.1.1 - Carousel components
 - **Smooth Page Indicator** 1.2.1 - Page indicators
+- **Flutter Native Splash** 2.4.4 - Native splash screen
 
 ### Media
 - **Video Player** 2.8.2 - Video playback support
@@ -106,7 +132,7 @@ A beautiful and modern Flutter application for discovering and exploring movies 
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/seven.git
+git clone https://github.com/shubham24680/seven.git
 cd seven
 ```
 
@@ -189,9 +215,10 @@ Seven uses The Movie Database (TMDB) API to fetch movie data. You need to config
 
 ```
 lib/
-├── app/
+├── app/                         # Application setup
+│   ├── native/                  # Native platform bridge
 │   └── app.dart                 # Central export file
-├── core/
+├── core/                        # Core functionality
 │   ├── constants/               # App constants (API, assets, etc.)
 │   ├── customs/                 # Custom reusable widgets
 │   ├── packages/                # Package exports
@@ -201,21 +228,28 @@ lib/
 │   ├── theme/                   # App theming
 │   └── utils/                   # Utility functions
 ├── features/                    # Feature modules
-│   ├── collections/             # Collection screens
+│   ├── collections/             # Collection screens (genre, search, cast)
 │   ├── detail/                  # Movie detail screens
 │   ├── error/                   # Error handling screens
-│   ├── movies/                  # Main movie screens
-│   ├── notification/           # Notification screens
+│   ├── movies/                  # Main movie screens (home, search, profile)
+│   ├── notification/            # Notification screens
 │   ├── onboarding/              # Onboarding flow
 │   └── profile/                 # Profile management
 ├── model/                       # Data models
-│   ├── helper_model.dart
-│   ├── models.dart
-│   └── shows_model.dart
+│   ├── credits_model.dart       # Cast and crew models
+│   ├── helper_model.dart        # Helper data classes
+│   ├── models.dart              # Model exports
+│   └── shows_model.dart         # Movie/show models
 ├── providers/                   # Riverpod providers
-│   ├── providers.dart
-│   ├── show_detail_provider.dart
-│   └── shows_provider.dart
+│   ├── collection_providers.dart      # Collection scroll state
+│   ├── genre_collection_providers.dart # Genre collections
+│   ├── helper_providers.dart          # Navigation and home state
+│   ├── onboarding_providers.dart      # Onboarding state
+│   ├── profile_provider.dart          # Profile state
+│   ├── providers.dart                 # Provider exports
+│   ├── search_providers.dart          # Search functionality
+│   ├── show_detail_provider.dart      # Movie details and credits
+│   └── shows_provider.dart            # Movie collections
 └── main.dart                    # App entry point
 ```
 
@@ -227,16 +261,21 @@ lib/
 
 Seven uses **Flutter Riverpod** for state management with the following patterns:
 
-- **AsyncNotifierProvider**: For async data fetching (movies, details)
-- **StateNotifierProvider**: For UI state management (navigation, profile)
-- **Family Providers**: For parameterized providers (details by ID)
+- **AsyncNotifierProvider**: For async data fetching (movies, details, collections, search)
+- **StateNotifierProvider**: For UI state management (navigation, profile, onboarding, scroll)
+- **Family Providers**: For parameterized providers (details by ID, genre collections, search)
 - **Provider.autoDispose**: For temporary state that should be disposed
+- **StateProvider**: For simple state like navigation index
 
 ### Service Layer
 
-- **BaseService**: Core HTTP client with error handling
-- **ShowsServices**: Movie data fetching service
-- **SharedPreferencesData**: Persistent storage wrapper
+- **BaseService**: Core HTTP client with error handling and timeout configuration
+- **ShowsServices**: Movie and TV show data fetching service
+- **CreditsServices**: Cast and crew information service
+- **Network**: Network connectivity utilities
+- **ApiResult**: Result wrapper for API responses
+- **ApiException**: Custom exception handling
+- **SharedPreferencesData**: Persistent storage wrapper for user data
 
 ### Custom Widgets
 
@@ -244,11 +283,21 @@ All UI components are built with custom widgets for consistency:
 
 - `CustomButton` - Buttons with multiple types (elevated, icon, text)
 - `CustomText` - Styled text with consistent typography
-- `CustomImage` - Image widget supporting multiple sources
-- `CustomCard` - Movie/show cards
-- `CustomCollection` - Collection display widgets
-- `CustomTextField` - Input fields with validation
-- `CustomTag` - Badge/tag widgets
+- `CustomImage` - Image widget supporting multiple sources (network, asset, SVG)
+- `CustomCard` - Movie/show cards with various layouts
+- `CustomCollection` - Collection display widgets with grid/list support
+- `CustomTextField` - Input fields with validation and dropdown support
+- `CustomTag` - Badge/tag widgets for genres and categories
+- `HelperCustom` - Helper widgets (blur effects, shimmer, app bar, bottom sheet)
+
+### Routing
+
+Seven uses **GoRouter** for declarative, type-safe navigation with:
+- Named routes for all screens
+- Deep linking support
+- Route guards and redirects (first-time visit check)
+- Nested navigation support
+- Fade transition animations
 
 ### Data Flow
 
@@ -282,18 +331,35 @@ UI (Display)
    - Swipe through trending carousel on home
    - Scroll through collections horizontally
    - Tap "See all" for full collection view
+   - Browse by genre from search tab
 
-2. **View Details**
+2. **Search Movies**
+   - Navigate to Search tab
+   - Tap search field to open advanced search
+   - Type movie title and tap "Go"
+   - Filter by multiple genres using chips
+   - Scroll to load more results
+
+3. **View Details**
    - Tap any movie card
    - Scroll to see complete information
+   - View cast and crew with profile pictures
+   - Tap "See all" on cast to view full cast & crew
    - View related movies in collection
-   - Read full overview
+   - Read full overview in bottom sheet
 
-3. **Manage Profile**
+4. **Explore Cast & Crew**
+   - From detail screen, tap cast section
+   - View actors with character names
+   - Browse crew organized by department
+   - See profile pictures and job titles
+
+5. **Manage Profile**
    - Navigate to Profile tab
    - Tap "Edit profile" to modify
    - Select avatar, name, gender, and DOB
    - Save changes
+   - Access help and notification settings
 
 ---
 
@@ -378,9 +444,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 👤 Author
 
-**Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
+**Shubham Patel**
+- GitHub: [@shubham24680](https://github.com/shubham24680)
+- Email: subhampatel8092@gmail.com
 
 ---
 
@@ -394,7 +460,20 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 📊 Version History
 
-### v1.0.0 (Current)
+### v1.1.0 (Current)
+- Advanced search with genre filtering
+- Cast and crew information screens
+- Genre-based collections
+- Infinite scroll pagination
+- Floating action buttons for navigation
+- Enhanced error handling
+- Search collection screen
+- Cast collection screen
+- Genre collection screen
+- Detail collection screen
+- Improved state management
+
+### v1.0.0
 - Initial release
 - Onboarding flow
 - Movie browsing and discovery
@@ -408,21 +487,22 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 🔮 Future Enhancements
 
-- [ ] Search functionality
 - [ ] Favorites/watchlist
 - [ ] Movie trailers playback
 - [ ] User reviews and ratings
 - [ ] Social features
 - [ ] Offline mode
-- [ ] Push notifications
+- [ ] Push notifications implementation
 - [ ] Multiple language support
 - [ ] Advanced filtering and sorting
+- [ ] TV show support
+- [ ] Personalized recommendations
 
 ---
 
 ## 📞 Support
 
-For support, email your.email@example.com or open an issue on GitHub.
+For support, email subhampatel8092@gmail.com or open an issue on GitHub.
 
 ---
 

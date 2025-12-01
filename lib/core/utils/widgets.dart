@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:intl/intl.dart';
 import 'package:seven/app/app.dart';
 

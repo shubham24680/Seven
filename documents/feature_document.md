@@ -109,14 +109,26 @@ This document provides a comprehensive overview of all screens in the Seven app,
 ---
 
 ### SearchScreen (`features/movies/screens/search_screen.dart`)
-**Purpose**: Movie search functionality (currently commented out).
+**Purpose**: Genre browsing and search entry point.
 
-**Status**: Not currently active in the app. Code exists but is commented out.
+**Key Features**:
+- Search text field (read-only) that navigates to full search screen
+- Genre grid display (2 columns)
+- Displays all available movie genres as cards
+- Tapping search field navigates to `/searchCollection`
+- Tapping genre card navigates to `/genreCollection/:id`
 
-**Intended Features** (based on commented code):
-- Search text field with "Go" button
-- Search results displayed in portrait grid (2 columns)
-- Search functionality via `showsProvider`
+**Data Sources**:
+- Uses `AppConstants.GENRES` for genre list
+
+**User Interactions**:
+- Tap search field → Navigate to `SearchCollectionScreen`
+- Tap genre card → Navigate to `GenreCollectionScreen` with genre ID
+
+**Layout**:
+- Safe area with padding
+- Search field at top
+- Scrollable genre grid below
 
 ---
 
@@ -182,12 +194,19 @@ This document provides a comprehensive overview of all screens in the Seven app,
 - Portrait orientation cards
 - Custom app bar with collection name and back button
 - Handles loading and error states
+- Infinite scroll with pagination
+- Floating action button to scroll to top (appears after scrolling down)
 - Uses `collectionProvider` with collection ID
 
 **Collections Supported**:
 - `top_20_movies` - Top rated movies
 - `new_release` - Now playing movies
 - `upcoming` - Upcoming movies
+
+**State Management**:
+- Uses `provider` (collection provider) for scroll state
+- Automatically loads more movies when scrolling near bottom
+- Tracks scroll position for FAB visibility
 
 **Layout**:
 - Vertical scrollable grid
@@ -197,6 +216,138 @@ This document provides a comprehensive overview of all screens in the Seven app,
 **Navigation**:
 - Back button returns to previous screen
 - Tapping a movie card navigates to `DetailScreen`
+- FAB scrolls to top of list
+
+---
+
+### SearchCollectionScreen (`features/collections/screens/search_collection_screen.dart`)
+**Purpose**: Advanced movie search with genre filtering.
+
+**Key Features**:
+- **Search Bar**:
+  - Text input with autofocus
+  - Back button (arrow left icon)
+  - "Go" button appears when text is entered
+  - Blur effect background
+
+- **Genre Filter Chips**:
+  - Horizontal scrollable list of genre chips
+  - Multiple selection support
+  - Selected chips highlighted in purple
+  - Filters search results by selected genres
+
+- **Search Results**:
+  - Grid layout with 2 columns
+  - Portrait orientation cards
+  - Infinite scroll with pagination
+  - Loading states with shimmer
+  - Empty state with "No Results Found" message
+  - Floating action button to scroll to top
+
+- **Smart Filtering**:
+  - Real-time genre filtering
+  - Combines text search with genre filters
+  - Results update when genres are selected/deselected
+
+**State Management**:
+- Uses `searchProvider` and `searchWithTitle` providers
+- Manages search text, selected genres, scroll position
+- Handles pagination and loading states
+
+**User Interactions**:
+- Type search query and tap "Go" to search
+- Select/deselect genre chips to filter results
+- Scroll to load more results
+- Tap FAB to scroll to top
+- Tap anywhere to dismiss keyboard
+- Tap movie card to view details
+
+---
+
+### GenreCollectionScreen (`features/collections/screens/genre_collection_screen.dart`)
+**Purpose**: Display all movies in a specific genre.
+
+**Key Features**:
+- Grid layout with 2 columns
+- Portrait orientation cards
+- Custom app bar with genre name and back button
+- Infinite scroll with pagination
+- Loading states with shimmer
+- Error handling with retry option
+- Uses `genreCollectionProvider` with genre ID
+
+**Data Loading**:
+- Fetches movies by genre ID from TMDB API
+- Automatically loads more movies when scrolling
+- Genre name displayed in app bar (from `AppConstants.GENRES`)
+
+**State Management**:
+- Uses `genreCollectionProvider(id)` for movie data
+- Uses `genreProvider` for scroll state management
+- Handles loading, error, and success states
+
+**Navigation**:
+- Back button returns to previous screen
+- Tapping a movie card navigates to `DetailScreen`
+
+---
+
+### CastCollectionScreen (`features/collections/screens/cast_collection_screen.dart`)
+**Purpose**: Display cast and crew information for a movie.
+
+**Key Features**:
+- **Cast Section**:
+  - Grid layout with 3 columns
+  - Actor profile pictures (circular)
+  - Actor names
+  - Character names
+
+- **Crew Sections**:
+  - Organized by department (e.g., Directing, Writing, Production)
+  - Grid layout with 3 columns per department
+  - Crew member profile pictures
+  - Crew member names
+  - Job titles
+
+- **Department Organization**:
+  - Acting department shown first
+  - Other departments grouped and displayed
+  - Dividers between departments
+  - Department headers with custom styling
+
+**Data Loading**:
+- Uses `showCreditsProvider(id)` to fetch cast and crew
+- Automatically organizes crew by department
+- Handles missing profile images gracefully
+
+**Layout**:
+- Scrollable vertical layout
+- Custom app bar with "Cast & Crew" title
+- Proper padding and spacing
+- Responsive grid sizing
+
+**Navigation**:
+- Back button returns to `DetailScreen`
+
+---
+
+### DetailCollectionScreen (`features/collections/screens/detail_collection_screen.dart`)
+**Purpose**: Display movies from a collection (e.g., Marvel Cinematic Universe).
+
+**Key Features**:
+- Grid layout with 2 columns
+- Portrait orientation cards
+- Custom app bar with collection name
+- Displays pre-loaded collection data (no API call)
+- Used when navigating from movie detail page
+
+**Data Source**:
+- Receives collection data as parameter
+- No loading states (data already loaded)
+
+**Navigation**:
+- Back button returns to `DetailScreen`
+- Tapping a movie card navigates to that movie's `DetailScreen`
 
 ---
 
@@ -350,6 +501,14 @@ This document provides a comprehensive overview of all screens in the Seven app,
 - `topShowsProvider`, `newReleaseShowsProvider`, `upcomingShowsProvider`: Movie collections
 - `showDetailProvider`: Movie details
 - `showCollectionProvider`: Collection data
+- `showCreditsProvider`: Cast and crew data
+- `searchWithTitle`: Search functionality
+- `searchProvider`: Search UI state
+- `genreCollectionProvider`: Genre-based collections
+- `genreProvider`: Genre collection scroll state
+- `provider`: Collection scroll state
+- `navigationProvider`: Bottom navigation state
+- `homeProvider`: Home screen scroll state
 
 ### Shared Components
 - `CustomButton`: All action buttons

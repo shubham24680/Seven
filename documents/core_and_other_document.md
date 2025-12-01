@@ -147,6 +147,7 @@ The core folder contains reusable utilities, services, constants, and custom wid
 - Methods for fetching different movie categories
 - Search functionality
 - Detail and collection fetching
+- Genre-based collection fetching
 - Error logging
 
 **Methods**:
@@ -157,13 +158,32 @@ The core folder contains reusable utilities, services, constants, and custom wid
 - `fetchShowDetail(id)`: Fetch movie details
 - `fetchCollectionDetail(id)`: Fetch collection details
 - `fetchGenres()`: Fetch movie genres
-- `search(query)`: Search movies by query
+- `searchWithTitle(page, title)`: Search movies by title
+- `fetchGenreCollection(page, genreId)`: Fetch movies by genre ID
 - `_fetchShows()`: Internal method for fetching show lists
 - `_fetchResult()`: Internal method for fetching single results
 
 **Error Handling**: Catches and logs errors, rethrows as `ApiException`.
 
 **Usage**: Called by Riverpod providers to fetch movie data.
+
+---
+
+#### `services/credits_services.dart`
+**Purpose**: Cast and crew data service layer.
+
+**Key Features**:
+- Singleton pattern
+- Fetches cast and crew information for movies
+- Error logging
+
+**Methods**:
+- `fetchCasts(id)`: Fetch cast and crew for a movie by ID
+- `_fetchCredits()`: Internal method for fetching credits data
+
+**Error Handling**: Catches and logs errors, rethrows as `ApiException`.
+
+**Usage**: Called by providers to fetch cast and crew information for movie detail screens.
 
 ---
 
@@ -575,6 +595,23 @@ The core folder contains reusable utilities, services, constants, and custom wid
 
 ---
 
+### `credits_model.dart`
+**Purpose**: Data models for cast and crew information from TMDB API.
+
+**Classes**:
+- `Credits`: Container for cast and crew data
+  - Properties: `id`, `cast`, `crew`
+  - JSON serialization/deserialization
+- `CastAndCrew`: Individual cast or crew member data
+  - Properties: `adult`, `gender`, `id`, `knownForDepartment`, `name`, `originalName`, `popularity`, `profilePath`
+  - Cast-specific: `castId`, `character`, `order`
+  - Crew-specific: `department`, `job`
+  - JSON serialization/deserialization
+
+**Usage**: Used by credits services and providers to parse cast/crew API responses.
+
+---
+
 ### `helper_model.dart`
 **Purpose**: Helper data classes for UI and navigation.
 
@@ -659,7 +696,105 @@ The core folder contains reusable utilities, services, constants, and custom wid
      - First gets movie detail, then fetches collection
    - `showCollectionProvider`: Family provider
 
-**Usage**: Used by `DetailScreen` to fetch movie and collection data.
+4. **Credits Provider**:
+   - `ShowCreditsNotifier`: Fetches cast and crew by movie ID
+   - `showCreditsProvider`: Family provider for cast/crew data
+
+**Usage**: Used by `DetailScreen` and `CastCollectionScreen` to fetch movie, collection, and cast/crew data.
+
+---
+
+### `search_providers.dart`
+**Purpose**: Riverpod providers for movie search functionality.
+
+**Providers**:
+
+1. **Search Notifiers** (Abstract base):
+   - `SearchNotifier`: Abstract base for search with pagination and filtering
+   - Methods: `search()`, `loadMore()`, `applyFilter()`
+   - Supports genre-based filtering
+   - `SearchWithTitleNotifier`: Concrete implementation for title search
+
+2. **Search State**:
+   - `SearchState`: Search UI state
+     - Properties: `searchController`, `scrollController`, `selectedGrenre`, `crossFadeState`, `searchValueExist`, `isLoading`
+   - `SearchProvider`: Manages search state
+     - Methods: `readyToSearch()`, `addChoice()`, `removeChoice()`, `animateToTop()`, `_onScroll()`
+     - Handles infinite scroll pagination
+     - Manages genre filter chips
+
+3. **Search Providers**:
+   - `searchWithTitle`: AsyncNotifierProvider for title-based search
+   - `searchProvider`: StateNotifierProvider for search UI state
+
+**Usage**: Used by `SearchCollectionScreen` for movie search with genre filtering.
+
+---
+
+### `genre_collection_providers.dart`
+**Purpose**: Riverpod providers for genre-based movie collections.
+
+**Providers**:
+
+1. **Genre Notifiers** (Abstract base):
+   - `GenreNotifier`: Abstract base for genre collection with pagination
+   - Methods: `build()`, `refresh()`, `loadMore()`
+   - `GenreCollectionNotifier`: Concrete implementation
+
+2. **Genre State**:
+   - `GenreState`: Genre collection scroll state
+     - Properties: `scrollController`, `isLoading`
+   - `GenreCollectionProvider`: Manages genre collection state
+     - Methods: `_onScroll()`
+     - Handles infinite scroll pagination
+
+3. **Genre Providers**:
+   - `genreCollectionProvider`: Family provider for genre collections by ID
+   - `genreProvider`: StateNotifierProvider for genre collection scroll state
+
+**Usage**: Used by `GenreCollectionScreen` to display movies filtered by genre.
+
+---
+
+### `collection_providers.dart`
+**Purpose**: Riverpod providers for collection screen scroll management.
+
+**Providers**:
+
+1. **Collection State**:
+   - `CollectionState`: Collection scroll state
+     - Properties: `scrollController`, `isLoading`, `crossFadeState`
+   - `CollectionNotifier`: Manages collection scroll state
+     - Methods: `_onScroll()`, `animateToTop()`
+     - Handles infinite scroll pagination
+     - Manages floating action button visibility
+
+2. **Collection Provider**:
+   - `provider`: StateNotifierProvider for collection scroll state
+
+**Usage**: Used by `CollectionScreen` for scroll management and pagination.
+
+---
+
+### `helper_providers.dart`
+**Purpose**: Helper providers for UI state management.
+
+**Providers**:
+
+1. **Navigation Provider**:
+   - `navigationProvider`: StateProvider for bottom navigation index
+
+2. **Home State**:
+   - `HomeState`: Home screen scroll state
+     - Properties: `scrollController`, `crossFadeState`
+   - `HomeNotifier`: Manages home scroll state
+     - Methods: `_onScroll()`
+     - Tracks scroll direction for UI animations
+
+3. **Home Provider**:
+   - `homeProvider`: StateNotifierProvider for home screen state
+
+**Usage**: Used by `Shows` and `HomeScreen` for navigation and scroll management.
 
 ---
 
