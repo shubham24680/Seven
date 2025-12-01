@@ -10,7 +10,13 @@ A beautiful and modern Flutter application for discovering and exploring movies 
 ---
 ## 📺 Screens
 
-<img width="330" height="717" alt="onboarding" src="https://github.com/user-attachments/assets/b64258a2-ca22-437b-97eb-aaac7ef3920c" />     <img width="330" height="717" alt="home" src="https://github.com/user-attachments/assets/0459849b-21cd-4fb4-8b38-5971e61e82dc" />     <img width="330" height="717" alt="detail" src="https://github.com/user-attachments/assets/8adb99d5-4eec-40cd-a4bd-90e6508943b1" />     <img width="330" height="717" alt="profile" src="https://github.com/user-attachments/assets/24c107b0-d58f-4eb8-b1c0-94aa650ef564" />
+<div align="center">
+  <!-- Replace IMAGE_URL_1, IMAGE_URL_2, and IMAGE_URL_3 with your actual image URLs or paths -->
+  <img src="https://github.com/user-attachments/assets/b64258a2-ca22-437b-97eb-aaac7ef3920c" alt="onboarding" width="32%">
+  <img src="https://github.com/user-attachments/assets/0459849b-21cd-4fb4-8b38-5971e61e82dc" alt="home" width="32%">
+  <img src="https://github.com/user-attachments/assets/8adb99d5-4eec-40cd-a4bd-90e6508943b1" alt="detail" width="32%">
+</div>
+<img width="32%" alt="profile" src="https://github.com/user-attachments/assets/24c107b0-d58f-4eb8-b1c0-94aa650ef564" />
 
 ---
 
