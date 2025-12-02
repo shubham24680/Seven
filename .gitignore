@@ -46,4 +46,4 @@ app.*.map.json
 
 # Lib related
 lib/core/constants/api_constants.dart
-lib/firebase_options.dart
+/lib/firebase_options.dart
