@@ -3,7 +3,7 @@ import 'package:seven/app/app.dart';
 class AppConstants {
   static const SIDE_PADDING = 15.0;
   static const CARD_RATIO_LANDSCAPE = 1.78;
-  static const CARD_RATIO_PORTRAIT = 0.67;
+  static const CARD_RATIO_PORTRAIT = 0.56;
 
   // ROUTES
   static final List<ScreenRoutes> APP_ROUTES = [

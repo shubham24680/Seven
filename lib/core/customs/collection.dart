@@ -39,7 +39,7 @@ class CustomCollection extends StatelessWidget {
     final double aspectRatio = isPortrait
         ? AppConstants.CARD_RATIO_PORTRAIT
         : AppConstants.CARD_RATIO_LANDSCAPE;
-    final double height = isPortrait ? 0.32.sh : 0.17.sh;
+    final double height = isPortrait ? 0.32.sh : 150.w;
     final double width =
         (1.sw - (crossAxisCount + 1) * AppConstants.SIDE_PADDING) /
             crossAxisCount;
