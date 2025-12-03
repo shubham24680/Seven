@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProviderScope(
       child: DimensionUtilInit(
+        scaleType: ScaleType.WIDTH,
         child: MaterialApp.router(
           debugShowCheckedModeBanner: false,
           title: "Seven",

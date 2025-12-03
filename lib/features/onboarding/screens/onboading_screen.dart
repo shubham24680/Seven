@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:seven/app/app.dart';
 
 class OnboadingScreen extends ConsumerWidget {
@@ -12,16 +10,11 @@ class OnboadingScreen extends ConsumerWidget {
     final onboarding = AppConstants.ONBOARDING;
     bool isLastIndex = pageState.currentIndex != onboarding.length - 1;
 
-    log("deviceWidth - ${DimensionUtil().deviceWidth}\n"
-        "deviceHeight - ${DimensionUtil().deviceHeight}\n "
-        "scaleWidth - ${DimensionUtil().scaleWidth}\n"
-        "scaleHeight - ${DimensionUtil().scaleHeight}\n"
-        "scaleMin - ${DimensionUtil().scaleMin}\n"
-        "isFoldable - ${DimensionUtil().isFoldable}\n"
-        "isLandscape - ${DimensionUtil().isLandscape}\n");
-
     Widget buildButton(int index) {
-      final buttonNature = (DimensionUtil().isLandscape || DimensionUtil().isFoldable) ? ButtonNature.BOUND : ButtonNature.UNBOUND;
+      final buttonNature =
+          (DimensionUtil().deviceSize == DeviceSize.SMALL)
+              ? ButtonNature.UNBOUND
+              : ButtonNature.BOUND;
 
       return CustomButton(
           buttonType: ButtonType.ELEVATED,
@@ -34,7 +27,7 @@ class OnboadingScreen extends ConsumerWidget {
               context.go('/');
             }
           },
-          height: 50.h,
+          height: 50.w,
           child: Row(mainAxisSize: MainAxisSize.min, children: [
             CustomText(
                 text: isLastIndex ? "Next" : "Get the vibe",
@@ -51,8 +44,7 @@ class OnboadingScreen extends ConsumerWidget {
     buildChild(int index) {
       return SingleChildScrollView(
         reverse: true,
-        padding: EdgeInsets.symmetric(
-            horizontal: 15.w, vertical: 50.h),
+        padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 70.w),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -65,7 +57,7 @@ class OnboadingScreen extends ConsumerWidget {
                 size: 32.sp,
                 weight: FontWeight.w900,
                 height: 1.3),
-            SizedBox(height: 15.h),
+            SizedBox(height: 15.w),
 
             // DESCRIPTION
             CustomText(
@@ -73,7 +65,7 @@ class OnboadingScreen extends ConsumerWidget {
                 align: TextAlign.end,
                 color: AppColors.lightSteel1.withAlpha(150),
                 size: 12.sp),
-            SizedBox(height: 15.h),
+            SizedBox(height: 15.w),
 
             // NEXT BUTTON
             buildButton(index)
@@ -87,6 +79,7 @@ class OnboadingScreen extends ConsumerWidget {
             controller: pageState.pageController,
             itemCount: onboarding.length,
             onPageChanged: (index) => pageController.moveToPage(index),
+            physics: const ClampingScrollPhysics(),
             itemBuilder: (context, index) => Container(
                 decoration: BoxDecoration(
                     image: DecorationImage(

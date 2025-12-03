@@ -12,16 +12,18 @@ class HomeCarousel extends ConsumerWidget {
 
     final viewportFraction = 0.7;
     final width = 1.sw;
-    final height = 1.5 * width;
+    final height = (DimensionUtil().deviceSize == DeviceSize.SMALL ? 1.5 : 0.57) * width;
     final carouselHeight = viewportFraction * height;
 
     Widget buildAppBar() {
-      return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
         CustomImage(
             imageType: ImageType.LOCAL,
             imageUrl: AppImages.AVATARS[profileIndex],
-            height: 0.048.sh,
-            borderRadius: BorderRadius.circular(1.sh),
+            height: 36.w,
+            borderRadius: BorderRadius.circular(1.sw),
             onClick: () => carouselController
                 .moveToPage(AppAssets.BOTTOM_NAVIGATION_ICONS.length - 1)),
         CustomButton(
@@ -51,11 +53,17 @@ class HomeCarousel extends ConsumerWidget {
           Widget buildCarousel() {
             return CarouselSlider.builder(
                 itemCount: show.length,
-                itemBuilder: (context, index, realIndex) => CustomImage(
-                    imageType: ImageType.REMOTE,
-                    onClick: () => context.push("/detail/${show[index].id}"),
-                    imageUrl: getImageUrl(show[index].posterPath),
-                    borderRadius: BorderRadius.circular(0.1 * carouselHeight)),
+                itemBuilder: (context, index, realIndex) {
+                  final image = DimensionUtil().deviceSize == DeviceSize.SMALL
+                      ? show[index].posterPath
+                      : show[index].backdropPath;
+
+                  return CustomImage(
+                      imageType: ImageType.REMOTE,
+                      onClick: () => context.push("/detail/${show[index].id}"),
+                      imageUrl: getImageUrl(image),
+                      borderRadius: BorderRadius.circular(0.1 * carouselHeight));
+                },
                 options: CarouselOptions(
                     onPageChanged: (index, _) =>
                         carouselController.nextTo(index),
@@ -81,38 +89,41 @@ class HomeCarousel extends ConsumerWidget {
             ];
             final overview = currentShow.overview ?? "";
             final child = Container(
-                height: height,
+              height: height + DimensionUtil().statusBarHeight,
                 width: width,
                 decoration: decoration,
-                child: SafeArea(
-                    child: Column(children: [
-                  buildAppBar(),
-                  const Spacer(),
-                  buildCarousel(),
-                  const Spacer(),
-                  CustomText(
+                child: SafeArea(child: Column(
+                    children: [
+                      buildAppBar(),
+                      Spacer(),
+                      buildCarousel(),
+                      Spacer(),
+                      CustomText(
                           text: item.join(" • "),
-                          size: 0.025 * height,
                           weight: FontWeight.w900)
-                      .paddingSymmetric(horizontal: AppConstants.SIDE_PADDING),
-                  SizedBox(height: 0.01 * height),
-                  CustomText(
+                          .paddingSymmetric(horizontal: AppConstants.SIDE_PADDING),
+                      SizedBox(height: 0.01 * height),
+                      CustomText(
                           text: overview,
-                          size: 0.02 * height,
+                          size: 12.sp,
                           align: TextAlign.center,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis)
-                      .paddingSymmetric(horizontal: AppConstants.SIDE_PADDING)
-                ])));
+                          .paddingSymmetric(horizontal: AppConstants.SIDE_PADDING)
+                    ])));
 
             return blurEffect(6.0, child);
           }
 
-          return Stack(alignment: Alignment.center, children: [
+          final bgImage = DimensionUtil().deviceSize == DeviceSize.SMALL
+              ? currentShow.posterPath
+              : currentShow.backdropPath;
+
+          return Stack(alignment: Alignment.topCenter, children: [
             CustomImage(
-                height: height,
+                width: width,
                 imageType: ImageType.REMOTE,
-                imageUrl: getImageUrl(currentShow.posterPath)),
+                imageUrl: getImageUrl(bgImage)),
             buildMainWidget(),
           ]);
         },
