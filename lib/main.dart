@@ -13,11 +13,16 @@ class MyApp extends StatelessWidget {
     return ProviderScope(
       child: DimensionUtilInit(
         scaleType: ScaleType.WIDTH,
-        child: MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          title: "Seven",
-          routerConfig: routes,
-          theme: darkTheme,
-        )));
+          builder: (context, child) {
+            final screenWidth = MediaQuery.of(context).size.width;
+            return MaterialApp.router(
+              key: ValueKey('app_router_$screenWidth'),
+              debugShowCheckedModeBanner: false,
+              title: "Seven",
+              routerConfig: routes,
+              theme: darkTheme,
+            );
+          },
+        child: SizedBox.shrink()));
   }
 }

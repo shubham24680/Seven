@@ -6,7 +6,7 @@ enum ScaleType { WIDTH, HEIGHT, MIN, MAX, AVG }
 enum DeviceSize {
   SMALL(550, 1.0),
   MEDIUM(1100, 0.5),
-  LARGE(6000, 0.3);
+  LARGE(10000, 0.3);
 
   final double minWidth, reductionPercentage;
   const DeviceSize(this.minWidth, this.reductionPercentage);
@@ -68,15 +68,19 @@ class DimensionUtil {
   double setSp(num fontSize) => fontSize * scale;
 }
 
+typedef DimensionUtilInitBuilder = Widget Function(BuildContext context, Widget? child);
+
 class DimensionUtilInit extends StatelessWidget {
   const DimensionUtilInit(
       {super.key,
       required this.child,
       this.designSize = DimensionUtil._defaultSize,
+      this.builder,
       this.scaleType = ScaleType.MIN});
 
   final Size designSize;
   final ScaleType scaleType;
+  final DimensionUtilInitBuilder? builder;
   final Widget child;
 
   @override
@@ -94,6 +98,10 @@ class DimensionUtilInit extends StatelessWidget {
               "scaleMin - ${DimensionUtil().scaleMin}\n"
               "isLandscape - ${DimensionUtil().isLandscape}\n");
         });
+
+        if(builder != null) {
+          return builder!(context, child);
+        }
 
         return child;
       },
