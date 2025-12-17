@@ -20,3 +20,7 @@ export 'package:carousel_slider/carousel_slider.dart';
 
 // STORAGE
 export 'package:shared_preferences/shared_preferences.dart';
+
+// FIREBASE
+export 'package:firebase_core/firebase_core.dart';
+export 'package:firebase_storage/firebase_storage.dart';

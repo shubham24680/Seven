@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:seven/app/app.dart';
 
-enum ResponseType { GET, POST, PUT, DELETE }
+enum ResponseType { GET, POST, PUT, DELETE, FIREBASE_STORAGE }
 
 class BaseService {
   static BaseService? _instance;
@@ -41,6 +41,8 @@ class BaseService {
           return await _put(uri, body: body);
         case ResponseType.DELETE:
           return await _delete(uri);
+        case ResponseType.FIREBASE_STORAGE:
+          return await _firebaseStorage(uri);
       }
     } on SocketException catch (e) {
       log('Network Error: $e', name: 'BaseService');
@@ -102,6 +104,15 @@ class BaseService {
     });
 
     return _processResponse(response);
+  }
+
+  // Firebase Storage
+  Future<Map<String, dynamic>> _firebaseStorage(Uri uri) async {
+    final ref = FirebaseStorage.instance.ref("screens/screens.json");
+    final data = await ref.getData();
+    final jsonStr = utf8.decode(data!);
+
+    return jsonDecode(jsonStr);
   }
 
   Uri _buildUri(

@@ -4,19 +4,24 @@ export 'error/error_screen.dart';
 // ONBOARDING
 export 'onboarding/screens/onboading_screen.dart';
 
-// SHOWS
-export 'movies/screens/shows.dart';
-export 'movies/screens/home_screen.dart';
+// MAIN
+export 'main/screens/main_screen.dart';
+export 'main/services/main_services.dart';
+export 'main/providers/main_provider.dart';
+export 'main/models/main_model.dart';
+export 'main/constants/main_constants.dart';
 
-export 'movies/widgets/home_carousel.dart';
+// HOME
+export 'home/screens/home_screen.dart';
+export 'home/widgets/home_carousel.dart';
 
 //SEARCH
-export 'movies/screens/search_screen.dart';
+export 'search/screens/search_screen.dart';
 export 'collections/screens/search_collection_screen.dart';
 export 'collections/screens/genre_collection_screen.dart';
 
 // PROFILE
-export 'movies/screens/profile_screen.dart';
+export 'profile/screens/profile_screen.dart';
 export 'profile/screens/edit_profile_screen.dart';
 export 'profile/screens/help_screen.dart';
 export 'profile/screens/notification_settings_screen.dart';

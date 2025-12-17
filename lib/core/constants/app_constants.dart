@@ -7,7 +7,7 @@ class AppConstants {
 
   // ROUTES
   static final List<ScreenRoutes> APP_ROUTES = [
-    ScreenRoutes(path: "/", child: const Shows()),
+    ScreenRoutes(path: "/", child: const MainScreen()),
     ScreenRoutes(path: "/onboarding", child: const OnboadingScreen()),
     ScreenRoutes(path: "/notification", child: const NotificationScreen()),
     ScreenRoutes(path: "/editProfile", child: const EditProfileScreen()),

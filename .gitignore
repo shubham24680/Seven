@@ -46,3 +46,5 @@ app.*.map.json
 
 # Lib related
 lib/core/constants/api_constants.dart
+lib/firebase_options.dart
+android/app/google-services.json
