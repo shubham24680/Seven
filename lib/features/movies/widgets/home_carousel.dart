@@ -32,7 +32,7 @@ class HomeCarousel extends ConsumerWidget {
             onPressed: () => context.push("/searchCollection"))
       ]).paddingFromLTRB(
           left: AppConstants.SIDE_PADDING,
-          top: 0.5 * AppConstants.SIDE_PADDING,
+          top: DimensionUtil().statusBarHeight,
           right: AppConstants.SIDE_PADDING);
     }
 
@@ -89,28 +89,25 @@ class HomeCarousel extends ConsumerWidget {
             ];
             final overview = currentShow.overview ?? "";
             final child = Container(
-              height: height + DimensionUtil().statusBarHeight,
+                height: height,
                 width: width,
                 decoration: decoration,
-                child: SafeArea(child: Column(
-                    children: [
-                      buildAppBar(),
-                      Spacer(),
-                      buildCarousel(),
-                      Spacer(),
-                      CustomText(
-                          text: item.join(" • "),
-                          weight: FontWeight.w900)
-                          .paddingSymmetric(horizontal: AppConstants.SIDE_PADDING),
-                      SizedBox(height: 0.01 * height),
-                      CustomText(
+                child: Column(children: [
+                  buildAppBar(),
+                  Spacer(),
+                  buildCarousel(),
+                  Spacer(),
+                  CustomText(text: item.join(" • "), weight: FontWeight.w900)
+                      .paddingSymmetric(horizontal: AppConstants.SIDE_PADDING),
+                  SizedBox(height: 0.01 * height),
+                  CustomText(
                           text: overview,
                           size: 12.sp,
                           align: TextAlign.center,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis)
-                          .paddingSymmetric(horizontal: AppConstants.SIDE_PADDING)
-                    ])));
+                      .paddingSymmetric(horizontal: AppConstants.SIDE_PADDING)
+                ]));
 
             return blurEffect(6.0, child);
           }
@@ -121,16 +118,14 @@ class HomeCarousel extends ConsumerWidget {
 
           return Stack(alignment: Alignment.topCenter, children: [
             CustomImage(
-                width: width,
+                height: height,
                 imageType: ImageType.REMOTE,
                 imageUrl: getImageUrl(bgImage)),
             buildMainWidget(),
           ]);
         },
-        loading: () => Stack(children: [
-              customShimmer(height: height),
-              SafeArea(child: buildAppBar())
-            ]),
+        loading: () =>
+            Stack(children: [customShimmer(height: height), buildAppBar()]),
         error: (error, stackTrace) => SafeArea(child: buildAppBar()));
   }
 }
