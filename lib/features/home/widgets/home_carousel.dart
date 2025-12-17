@@ -23,7 +23,7 @@ class HomeCarousel extends ConsumerWidget {
             height: 0.048.sh,
             borderRadius: BorderRadius.circular(1.sh),
             onClick: () => carouselController
-                .moveToPage(AppAssets.BOTTOM_NAVIGATION_ICONS.length - 1)),
+                .moveToPage(2)),
         CustomButton(
             buttonType: ButtonType.ICON,
             icon: AppSvgs.SEARCH_OUTLINED,

@@ -1,6 +1,5 @@
 export 'package:flutter/material.dart';
 export 'package:flutter_screenutil/flutter_screenutil.dart';
-export 'package:window_size/window_size.dart';
 
 // STATE MANAGEMENT
 export 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,3 +24,4 @@ export 'package:shared_preferences/shared_preferences.dart';
 
 // FIREBASE
 export 'package:firebase_core/firebase_core.dart';
+export 'package:firebase_storage/firebase_storage.dart';

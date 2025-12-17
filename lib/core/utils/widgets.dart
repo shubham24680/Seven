@@ -1,13 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:seven/app/app.dart';
 
-String? getImageUrl(String? endPoint) {
-  if (endPoint == null || endPoint.isEmpty) return null;
-
-  final imageUrl = ApiConstants.IMAGE_PATH + ApiConstants.PIXEL_500 + endPoint;
-  return imageUrl;
-}
-
 String? getRuntime(int? runtime) {
   if (runtime == null || runtime <= 0) return null;
   final hours = runtime ~/ 60;
@@ -39,4 +32,21 @@ String? getCurrencyFormat(int? currency, String? locale) {
 
   return NumberFormat.currency(locale: "en_US", symbol: "\$ ", decimalDigits: 0)
       .format(currency);
+}
+
+Color parseColor(String? baseColor,
+    {Color defaultColor = AppColors.lightSteel1}) {
+  String color = baseColor ?? "";
+  switch (color.length) {
+    case 9:
+      color = color.replaceFirst("#", "0x");
+      break;
+    case 7:
+      color = color.replaceFirst("#", "0xFF");
+      break;
+    default:
+      return defaultColor;
+  }
+
+  return Color(int.parse(color));
 }

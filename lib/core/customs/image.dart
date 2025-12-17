@@ -72,3 +72,36 @@ class CustomImage extends StatelessWidget {
     ).onTap(event: onClick);
   }
 }
+
+enum ImagePath {
+  FIREBASE("firebase"),
+  TMDB("tmdb");
+
+  final String imagePath;
+  const ImagePath(this.imagePath);
+}
+
+extension ImageUrlPath on String {
+  ImagePath getImageType() {
+    return ImagePath.values.firstWhere(
+        (path) => path.imagePath == trim().toLowerCase(),
+        orElse: () => ImagePath.TMDB);
+  }
+}
+
+String? getImageUrl(String? endPoint,
+    {String? imagePath, String imageQuality = ApiConstants.PIXEL_500}) {
+  if (endPoint == null || endPoint.isEmpty) return null;
+
+  final type = imagePath?.getImageType() ?? ImagePath.TMDB;
+  String imageUrl;
+  switch (type) {
+    case ImagePath.FIREBASE:
+      imageUrl = ApiConstants.STORAGE_IMAGE_PATH + endPoint.trim();
+      break;
+    default:
+      imageUrl = ApiConstants.IMAGE_PATH + imageQuality + endPoint.trim();
+  }
+
+  return imageUrl;
+}

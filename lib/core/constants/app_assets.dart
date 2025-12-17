@@ -1,13 +1,3 @@
-import 'package:seven/app/app.dart';
-
-class AppAssets {
-  static final List<BottomNavigation> BOTTOM_NAVIGATION_ICONS = [
-    BottomNavigation(icon: AppSvgs.HOME, screen: HomeScreen()),
-    BottomNavigation(icon: AppSvgs.SEARCH, screen: const SearchScreen()),
-    BottomNavigation(icon: AppSvgs.PROFILE, screen: const ProfileScreen()),
-  ];
-}
-
 class AppImages {
   static final AVATARS =
       List.generate(10, (index) => "assets/avatars/avatar (${index + 1}).jpeg");

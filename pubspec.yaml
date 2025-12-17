@@ -72,6 +72,7 @@ dependencies:
   # Firebase
   firebase_core: ^4.2.1
   firebase_remote_config: ^6.1.2
+  firebase_storage: ^13.0.4
   
 dev_dependencies:
   flutter_test:
