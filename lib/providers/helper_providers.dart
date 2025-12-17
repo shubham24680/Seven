@@ -1,5 +1,5 @@
 import 'package:flutter/rendering.dart';
-import 'package:seven/core/packages/app_packages.dart';
+import '../app/app.dart';
 
 final navigationProvider = StateProvider.autoDispose<int>((ref) => 0);
 

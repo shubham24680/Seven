@@ -15,4 +15,7 @@ class StorageConstants {
   static const ALL_TIME_CLASSIC = 'all_time_classic';
   static const POPULAR_IN_INDIA = 'popular_in_india';
   static const GENRES = 'genres';
+
+  // Widgets
+  static const SCREENS = 'screens';
 }

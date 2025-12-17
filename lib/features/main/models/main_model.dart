@@ -29,7 +29,7 @@ class MainModel {
         "type": type,
         "show_selected_labels": showSelectedLabels,
         "show_unselected_labels": showUnselectedLabels,
-        "widgets": widgets?.map((w) => w.toJson()),
+        "widgets": widgets?.map((w) => w.toJson()).toList(),
         "style": style?.toJson()
       };
 }

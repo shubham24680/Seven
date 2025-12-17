@@ -23,8 +23,24 @@ class MainProvider extends StateNotifier<MainState> {
   }
 
   Future<void> _loadData() async {
-    final screens = await MainServices.instance.fetchMainScreenData();
-    state = state.copyWith(screens: screens);
+    final storage = await SPD.getInstance();
+    try {
+      final cache = storage.getShows(StorageConstants.SCREENS);
+      log("CACHE - $cache");
+      if (cache != null) {
+        log("Loaded screens from storage");
+        state = state.copyWith(screens: MainModel.fromJson(cache));
+      }
+
+      final screens = await MainServices.instance.fetchMainScreenData();
+      state = state.copyWith(screens: screens);
+
+      final check =
+          await storage.setShows(StorageConstants.SCREENS, screens.toJson());
+      log("CHECK - $check");
+    } on ApiException catch (e) {
+      log(" [MainProvider] Exception -> $e");
+    }
   }
 
   // Update navigation index with validation
