@@ -5,7 +5,9 @@ import 'package:seven/app/app.dart';
 abstract class ShowNotifier extends AsyncNotifier<List<Result>> {
   int _currentPage = 1;
   bool _hasMorePages = true;
+
   Future<ShowsModel> fetchShows(int page);
+
   String key;
 
   ShowNotifier(this.key);
@@ -14,7 +16,7 @@ abstract class ShowNotifier extends AsyncNotifier<List<Result>> {
   Future<List<Result>> build() async {
     final storage = await SPD.getInstance();
     try {
-      final cache = storage.getShows(key);
+      final cache = storage.getCache(key);
       if (cache != null) {
         final cacheData = ShowsModel.fromJson(cache);
         AsyncData(cacheData);
@@ -24,10 +26,10 @@ abstract class ShowNotifier extends AsyncNotifier<List<Result>> {
       final totalPages = response.totalPages?.toInt();
       if (totalPages != null) _hasMorePages = _currentPage < totalPages;
 
-      await storage.setShows(key, response.toJson());
+      await storage.setCache(key, response.toJson());
       return response.results ?? [];
     } on ApiException catch (_) {
-      final cache = storage.getShows(key);
+      final cache = storage.getCache(key);
       if (cache != null) {
         final cacheData = ShowsModel.fromJson(cache);
         return cacheData.results ?? [];
@@ -67,7 +69,7 @@ class TrendingShowNotifier extends ShowNotifier {
 
   @override
   Future<ShowsModel> fetchShows(int page) async {
-    final service = ShowsServices.instance;
+    final service = HomeServices.instance;
     return service.fetchTrendingShows(page: page);
   }
 }
@@ -82,7 +84,7 @@ class TopShowNotifier extends ShowNotifier {
 
   @override
   Future<ShowsModel> fetchShows(int page) async {
-    final service = ShowsServices.instance;
+    final service = HomeServices.instance;
     return service.fetchTopShows(page: page);
   }
 }
@@ -96,7 +98,7 @@ class NewReleaseShowsNotifier extends ShowNotifier {
 
   @override
   Future<ShowsModel> fetchShows(int page) async {
-    final service = ShowsServices.instance;
+    final service = HomeServices.instance;
     return service.fetchNewReleaseShows(page: page);
   }
 }
@@ -111,7 +113,7 @@ class UpcomingShowsNotifier extends ShowNotifier {
 
   @override
   Future<ShowsModel> fetchShows(int page) async {
-    final service = ShowsServices.instance;
+    final service = HomeServices.instance;
     return service.fetchUpcomingShows(page: page);
   }
 }
@@ -126,7 +128,7 @@ class AllTimeClassicShowsNotifier extends ShowNotifier {
 
   @override
   Future<ShowsModel> fetchShows(int page) async {
-    final service = ShowsServices.instance;
+    final service = HomeServices.instance;
     return service.fetchAllTimeClassicShows(page: page);
   }
 }
@@ -141,7 +143,7 @@ class PopularInIndiaShowsNotifier extends ShowNotifier {
 
   @override
   Future<ShowsModel> fetchShows(int page) async {
-    final service = ShowsServices.instance;
+    final service = HomeServices.instance;
     return service.fetchPopularInIndiaShows(page: page);
   }
 }
@@ -153,14 +155,14 @@ final popularInIndiaShowsProvider =
 
 // STATE
 class ShowsState {
-  final int navigationCurrentIndex;
+  final Model screens;
   final int carouselCurrentIndex;
   final Result? genres;
   final ScrollController scrollController;
   final bool crossFadeState;
 
   const ShowsState(
-      {required this.navigationCurrentIndex,
+      {required this.screens,
       required this.carouselCurrentIndex,
       this.genres,
       required this.scrollController,
@@ -168,20 +170,20 @@ class ShowsState {
 
   factory ShowsState.initial() {
     return ShowsState(
-        navigationCurrentIndex: 0,
+        screens: Model(),
         carouselCurrentIndex: 0,
         scrollController: ScrollController(),
         crossFadeState: false);
   }
 
   ShowsState copyWith(
-      {int? navigationCurrentIndex,
+      {Model? screens,
+      int? navigationCurrentIndex,
       int? carouselCurrentIndex,
       Result? genres,
       bool? crossFadeState}) {
     return ShowsState(
-        navigationCurrentIndex:
-            navigationCurrentIndex ?? this.navigationCurrentIndex,
+        screens: screens ?? this.screens,
         carouselCurrentIndex: carouselCurrentIndex ?? this.carouselCurrentIndex,
         genres: genres ?? this.genres,
         scrollController: scrollController,
@@ -192,46 +194,75 @@ class ShowsState {
 class ShowsProvider extends StateNotifier<ShowsState> {
   ShowsProvider() : super(ShowsState.initial()) {
     _loadData();
-    _getNative();
     state.scrollController.addListener(_onScroll);
   }
 
+  double? _lastPixels;
+  double _accumulatedDelta = 0.0;
+  static const double _scrollThreshold = 90.0;
+
+
   Future<void> _loadData() async {
     final storage = await SPD.getInstance();
-
     try {
-      final key = StorageConstants.GENRES;
-      final cache = storage.getShows(key);
+      final cache = storage.getCache(StorageConstants.HOME);
       if (cache != null) {
-        final cacheData = Result.fromJson(cache);
-        state = state.copyWith(genres: cacheData);
+        state = state.copyWith(screens: Model.fromJson(cache));
       }
 
-      final service = ShowsServices.instance;
-      final genres = await service.fetchGenres();
-      await storage.setShows(key, genres.toJson());
-      state = state.copyWith(genres: genres);
+      final screens = await HomeServices.instance.fetchHomeScreenData();
+      state = state.copyWith(screens: screens);
+
+      await storage.setCache(StorageConstants.HOME, screens.toJson());
     } on ApiException catch (e) {
-      log("Genre Exception -> $e");
-    } catch (e) {
-      log("Genre Error -> $e");
+      log(" [HomeProvider] Exception -> $e");
     }
   }
 
-  Future<void> _getNative() async {
-    try {
-      final deviceName = await NativeBridge.getDeviceName();
-      log("Device name -> $deviceName");
-    } catch (e) {
-      log("Native Exception -> $e");
-    }
-  }
+  // Future<void> _loadData() async {
+  //   final storage = await SPD.getInstance();
+  //
+  //   try {
+  //     final key = StorageConstants.GENRES;
+  //     final cache = storage.getCache(key);
+  //     if (cache != null) {
+  //       final cacheData = Result.fromJson(cache);
+  //       state = state.copyWith(genres: cacheData);
+  //     }
+  //
+  //     final service = HomeServices.instance;
+  //     final genres = await service.fetchGenres();
+  //     await storage.setShows(key, genres.toJson());
+  //     state = state.copyWith(genres: genres);
+  //   } on ApiException catch (e) {
+  //     log("Genre Exception -> $e");
+  //   } catch (e) {
+  //     log("Genre Error -> $e");
+  //   }
+  // }
 
   void _onScroll() {
-    final crossFadeState =
-        state.scrollController.position.userScrollDirection ==
-            ScrollDirection.reverse;
-    state = state.copyWith(crossFadeState: crossFadeState);
+    if (!state.scrollController.hasClients) return;
+
+    final position =  state.scrollController.position;
+    final currentPixel = position.pixels;
+    final delta = currentPixel - (_lastPixels ?? currentPixel);
+    _lastPixels = currentPixel;
+    log("CHANGE - $delta");
+    if(delta.abs() < 2.0) return;
+
+    if ((_accumulatedDelta > 0 && delta < 0) ||
+        (_accumulatedDelta < 0 && delta > 0)) {
+      _accumulatedDelta = 0;
+    }
+
+    _accumulatedDelta += delta;
+    if ((_accumulatedDelta > _scrollThreshold) && !state.crossFadeState) {
+      state = state.copyWith(crossFadeState: true);
+    }
+    if ((_accumulatedDelta < -(_scrollThreshold * 2.0)) && state.crossFadeState) {
+      state = state.copyWith(crossFadeState: false);
+    }
   }
 
   // Update navigation index with validation

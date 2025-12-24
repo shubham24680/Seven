@@ -4,7 +4,7 @@ class MainModel {
   final bool? showSelectedLabels;
   final bool? showUnselectedLabels;
   final Style? style;
-  final List<AppModel>? widgets;
+  final List<Model>? widgets;
 
   MainModel(
       {this.id,
@@ -20,7 +20,7 @@ class MainModel {
       showSelectedLabels: json["show_selected_labels"],
       showUnselectedLabels: json["show_unselected_labels"],
       widgets: (json["widgets"] as List<dynamic>?)
-          ?.map((w) => AppModel.fromJson(w))
+          ?.map((w) => Model.fromJson(w))
           .toList(),
       style: json["style"] != null ? Style.fromJson(json["style"]) : null);
 
@@ -53,15 +53,15 @@ class Style {
       };
 }
 
-class AppModel {
+class Model {
   final String? id;
   final String? type;
   final String? iconUrl;
 
-  AppModel({this.id, this.type, this.iconUrl});
+  Model({this.id, this.type, this.iconUrl});
 
-  factory AppModel.fromJson(Map<String, dynamic> json) =>
-      AppModel(id: json["id"], type: json["type"], iconUrl: json["url"]);
+  factory Model.fromJson(Map<String, dynamic> json) =>
+      Model(id: json["id"], type: json["type"], iconUrl: json["url"]);
 
   Map<String, dynamic> toJson() => {"id": id, "type": type, "url": iconUrl};
 }

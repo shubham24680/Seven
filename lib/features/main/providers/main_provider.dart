@@ -25,7 +25,7 @@ class MainProvider extends StateNotifier<MainState> {
   Future<void> _loadData() async {
     final storage = await SPD.getInstance();
     try {
-      final cache = storage.getShows(StorageConstants.SCREENS);
+      final cache = storage.getCache(StorageConstants.SCREENS);
       log("CACHE - $cache");
       if (cache != null) {
         log("Loaded screens from storage");
@@ -36,7 +36,7 @@ class MainProvider extends StateNotifier<MainState> {
       state = state.copyWith(screens: screens);
 
       final check =
-          await storage.setShows(StorageConstants.SCREENS, screens.toJson());
+          await storage.setCache(StorageConstants.SCREENS, screens.toJson());
       log("CHECK - $check");
     } on ApiException catch (e) {
       log(" [MainProvider] Exception -> $e");

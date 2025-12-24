@@ -45,7 +45,7 @@ class SPD {
   }
 
   //SHOWS: GET
-  Map<String, dynamic>? getShows(String key) {
+  Map<String, dynamic>? getCache(String key) {
     final data = _prefs?.getString(key);
     if (data != null) {
       return jsonDecode(data);
@@ -55,7 +55,7 @@ class SPD {
   }
 
   //SET
-  Future<bool> setShows(String key, Map<String, dynamic> value) async {
+  Future<bool> setCache(String key, Map<String, dynamic> value) async {
     final data = jsonEncode(value);
     return await _prefs?.setString(key, data) ?? false;
   }

@@ -47,7 +47,7 @@ abstract class GenreNotifier extends FamilyAsyncNotifier<List<Result>, String> {
 class GenreCollectionNotifier extends GenreNotifier {
   @override
   Future<ShowsModel> loadGenreCollection(int page, String genreId) async {
-    final service = ShowsServices.instance;
+    final service = HomeServices.instance;
     return service.fetchGenreCollection(page: page, genreId: genreId);
   }
 }

@@ -16,7 +16,7 @@ abstract class ResultNotifier extends FamilyAsyncNotifier<Result, String> {
 class ShowDetailNotifier extends ResultNotifier {
   @override
   Future<Result> fetchResult(String showId) =>
-      ShowsServices.instance.fetchShowDetail(showId);
+      HomeServices.instance.fetchShowDetail(showId);
 }
 
 final showDetailProvider =
@@ -27,7 +27,7 @@ final showDetailProvider =
 class ShowCollectionDetailNotifier extends ResultNotifier {
   @override
   Future<Result> fetchResult(String collectionId) =>
-      ShowsServices.instance.fetchCollectionDetail(collectionId);
+      HomeServices.instance.fetchCollectionDetail(collectionId);
 }
 
 final showCollectionDetailProvider =

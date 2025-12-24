@@ -18,4 +18,5 @@ class StorageConstants {
 
   // Widgets
   static const SCREENS = 'screens';
+  static const HOME = 'home';
 }

@@ -11,7 +11,7 @@ class MainScreen extends ConsumerWidget {
     final bottomIcon = screens.widgets;
     final style = screens.style;
 
-    buildIcon(AppModel? model, int index) {
+    buildIcon(Model? model, int index) {
       final shimmer =
           customShimmer(height: 20.w, width: 20.w, borderRadius: 6.r);
       final color = (index == screensStates.navigationCurrentIndex)

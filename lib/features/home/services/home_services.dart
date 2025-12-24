@@ -3,10 +3,10 @@ import 'package:seven/app/app.dart';
 
 final now = DateTime.now();
 
-class ShowsServices {
-  static ShowsServices? _instance;
-  ShowsServices._();
-  static ShowsServices get instance => _instance ??= ShowsServices._();
+class HomeServices {
+  static HomeServices? _instance;
+  HomeServices._();
+  static HomeServices get instance => _instance ??= HomeServices._();
 
   Future<ShowsModel> searchWithTitle({int page = 1, String title = ""}) async {
     final queryParams = {
@@ -145,5 +145,16 @@ class ShowsServices {
           name: 'ShowsService', error: e, stackTrace: stackTrace);
       throw ApiException(message: 'Failed to fetch result', error: e);
     }
+  }
+
+  Future<Model> fetchHomeScreenData() async {
+    // final response = await BaseService.instance.fetchData(
+    //     apiHost: ApiConstants.STORAGE,
+    //     endPoint: ApiConstants.HOME,
+    //     version: "",
+    //     responseType: ResponseType.FIREBASE_STORAGE);
+    final response = homeSample;
+
+    return Model.fromJson(response);
   }
 }

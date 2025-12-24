@@ -65,7 +65,7 @@ abstract class SearchNotifier extends AutoDisposeAsyncNotifier<List<Result>?> {
 class SearchWithTitleNotifier extends SearchNotifier {
   @override
   Future<ShowsModel> searchData(int page, String query) {
-    final service = ShowsServices.instance;
+    final service = HomeServices.instance;
     return service.searchWithTitle(page: page, title: query);
   }
 }

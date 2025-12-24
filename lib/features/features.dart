@@ -14,6 +14,11 @@ export 'main/constants/main_constants.dart';
 // HOME
 export 'home/screens/home_screen.dart';
 export 'home/widgets/home_carousel.dart';
+export 'home/models/home_model.dart';
+export 'home/widgets/generate_widgets.dart';
+export 'home/widgets/home_sample.dart';
+export 'home/providers/home_provider.dart';
+export 'home/services/home_services.dart';
 
 //SEARCH
 export 'search/screens/search_screen.dart';
