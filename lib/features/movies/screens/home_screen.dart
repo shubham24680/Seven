@@ -34,7 +34,7 @@ class HomeScreen extends ConsumerWidget {
         physics: ClampingScrollPhysics(),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const HomeCarousel(),
-          SizedBox(height: 0.02.sh),
+          SizedBox(height: 20.w),
           Column(children: [
             buildCollection("Top Movies", topShowsProvider),
             buildCollection("New Release", newReleaseShowsProvider),

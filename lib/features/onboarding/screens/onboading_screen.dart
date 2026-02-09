@@ -10,67 +10,77 @@ class OnboadingScreen extends ConsumerWidget {
     final onboarding = AppConstants.ONBOARDING;
     bool isLastIndex = pageState.currentIndex != onboarding.length - 1;
 
-    // MARK: Child
+    Widget buildButton(int index) {
+      final buttonNature =
+          (DimensionUtil().deviceSize == DeviceSize.SMALL)
+              ? ButtonNature.UNBOUND
+              : ButtonNature.BOUND;
+
+      return CustomButton(
+          buttonType: ButtonType.ELEVATED,
+          buttonNature: buttonNature,
+          onPressed: () {
+            if (index + 1 < onboarding.length) {
+              pageController.jumpToPage(pageState.currentIndex + 1);
+            } else {
+              pageController.changeFirstTimeVisitStatus();
+              context.go('/');
+            }
+          },
+          height: 50.w,
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            CustomText(
+                text: isLastIndex ? "Next" : "Get the vibe",
+                weight: FontWeight.w900),
+            SizedBox(width: 15.w),
+            CustomImage(
+                imageType: ImageType.SVG_LOCAL,
+                imageUrl: AppSvgs.ARROW_RIGHT,
+                height: 16.sp,
+                color: AppColors.lightSteel1)
+          ]));
+    }
+
     buildChild(int index) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          // HEADING
-          CustomText(
-              text: onboarding[index].string2 ?? "",
-              align: TextAlign.end,
-              family: AppFonts.STAATLICHES,
-              size: 32.sp,
-              weight: FontWeight.w900,
-              height: 1.3),
-          SizedBox(height: 0.02.sh),
+      return SingleChildScrollView(
+        reverse: true,
+        padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 70.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            // HEADING
+            CustomText(
+                text: onboarding[index].string2 ?? "",
+                align: TextAlign.end,
+                family: AppFonts.STAATLICHES,
+                size: 32.sp,
+                weight: FontWeight.w900,
+                height: 1.3),
+            SizedBox(height: 15.w),
 
-          // DESCRIPTION
-          CustomText(
-              text: onboarding[index].string3 ?? "",
-              align: TextAlign.end,
-              color: AppColors.lightSteel1.withAlpha(150),
-              size: 12.sp),
-          SizedBox(height: 0.02.sh),
+            // DESCRIPTION
+            CustomText(
+                text: onboarding[index].string3 ?? "",
+                align: TextAlign.end,
+                color: AppColors.lightSteel1.withAlpha(150),
+                size: 12.sp),
+            SizedBox(height: 15.w),
 
-          // NEXT BUTTON
-          CustomButton(
-              buttonType: ButtonType.ELEVATED,
-              onPressed: () {
-                if (index + 1 < onboarding.length) {
-                  pageController.jumpToPage(pageState.currentIndex + 1);
-                } else {
-                  pageController.changeFirstTimeVisitStatus();
-                  context.go('/');
-                }
-              },
-              height: 0.065.sh,
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                CustomText(
-                    text: isLastIndex ? "Next" : "Get the vibe",
-                    weight: FontWeight.w900),
-                SizedBox(width: 0.02.sw),
-                CustomImage(
-                    imageType: ImageType.SVG_LOCAL,
-                    imageUrl: AppSvgs.ARROW_RIGHT,
-                    height: 0.02.sh,
-                    color: AppColors.lightSteel1)
-              ]))
-        ],
+            // NEXT BUTTON
+            buildButton(index)
+          ],
+        ),
       );
     }
 
-    // MARK: Scaffold
     return Scaffold(
         body: PageView.builder(
             controller: pageState.pageController,
             itemCount: onboarding.length,
             onPageChanged: (index) => pageController.moveToPage(index),
+            physics: const ClampingScrollPhysics(),
             itemBuilder: (context, index) => Container(
-                width: 1.sw,
-                padding: EdgeInsets.symmetric(
-                    horizontal: AppConstants.SIDE_PADDING, vertical: 0.1.sh),
                 decoration: BoxDecoration(
                     image: DecorationImage(
                         image: AssetImage(onboarding[index].string1 ?? ""),
