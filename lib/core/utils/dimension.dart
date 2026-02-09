@@ -90,13 +90,13 @@ class DimensionUtilInit extends StatelessWidget {
         DimensionUtil.init(context, designSize, scaleType);
 
         Future.microtask(() {
-          developer.log("deviceWidth - ${DimensionUtil().deviceWidth}\n"
+          developer.log("\ndeviceWidth - ${DimensionUtil().deviceWidth}\n"
               "deviceHeight - ${DimensionUtil().deviceHeight}\n"
               "deviceSize - ${DimensionUtil().deviceSize}\n"
               "scaleWidth - ${DimensionUtil().scaleWidth}\n"
               "scaleHeight - ${DimensionUtil().scaleHeight}\n"
               "scaleMin - ${DimensionUtil().scaleMin}\n"
-              "isLandscape - ${DimensionUtil().isLandscape}\n");
+              "isLandscape - ${DimensionUtil().isLandscape}\n", name: "Dimension");
         });
 
         if(builder != null) {
