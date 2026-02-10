@@ -1,34 +1,53 @@
+import 'dart:developer';
+
 import 'package:flutter/rendering.dart';
 import 'package:seven/core/packages/app_packages.dart';
 
-final navigationProvider = StateProvider.autoDispose<int>((ref) => 0);
+final bottomNavigationProvider = StateProvider<int>((ref) => 0);
 
-class HomeState {
+class ScrollState {
   final ScrollController scrollController;
   final bool crossFadeState;
 
-  HomeState({required this.scrollController, required this.crossFadeState});
+  ScrollState({required this.scrollController, required this.crossFadeState});
 
-  factory HomeState.initial() =>
-      HomeState(scrollController: ScrollController(), crossFadeState: false);
+  factory ScrollState.initial() =>
+      ScrollState(scrollController: ScrollController(), crossFadeState: false);
 
-  HomeState copyWith({bool? crossFadeState}) => HomeState(
+  ScrollState copyWith({bool? crossFadeState}) => ScrollState(
       scrollController: scrollController,
       crossFadeState: crossFadeState ?? this.crossFadeState);
 }
 
-class HomeNotifier extends StateNotifier<HomeState> {
-  HomeNotifier() : super(HomeState.initial()) {
+class ScrollNotifier extends StateNotifier<ScrollState> {
+  double _lastScroll = 0.0;
+  double _totalScroll = 0.0;
+  static const double _scrollThreshold = -200;
+
+  ScrollNotifier() : super(ScrollState.initial()) {
     state.scrollController.addListener(_onScroll);
   }
 
   void _onScroll() {
-    final crossFadeState =
-        state.scrollController.position.userScrollDirection ==
-            ScrollDirection.reverse;
-    state = state.copyWith(crossFadeState: crossFadeState);
+    if(!state.scrollController.hasClients) return;
+    final pixels = state.scrollController.position.pixels;
+    final delta = pixels - _lastScroll;
+
+    if (delta.abs() < 2) return;
+    _totalScroll = (delta >= 0) ? 0 : _totalScroll + delta;
+
+    if (_totalScroll >= 0) {
+      state = state.copyWith(crossFadeState: true);
+      _totalScroll = 0;
+    } else if (_totalScroll <= _scrollThreshold) {
+      state = state.copyWith(crossFadeState: false);
+    }
+
+    _lastScroll = pixels;
+    log("Curr drag - $delta, $_totalScroll");
   }
 }
 
-final homeProvider =
-    StateNotifierProvider<HomeNotifier, HomeState>((ref) => HomeNotifier());
+final scrollProvider =
+    StateNotifierProvider.family<ScrollNotifier, ScrollState, int>(
+        (ref, index) => ScrollNotifier());

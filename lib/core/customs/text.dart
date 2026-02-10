@@ -44,7 +44,7 @@ class CustomText extends StatelessWidget {
     return TextStyle(
       fontFamily: family ?? AppFonts.POPPINS,
       color: color,
-      fontSize: size ?? 16.sp,
+      fontSize: size ?? 16.w,
       fontWeight: weight,
       height: height,
     );

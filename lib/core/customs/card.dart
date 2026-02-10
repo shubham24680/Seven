@@ -126,7 +126,7 @@ class CustomCard extends StatelessWidget {
       return Size(width, h);
     }
 
-    h = height ?? (isPortrait ? 0.32.sh : 0.17.sh);
+    h = height ?? (isPortrait ? 56.w : 150.w);
     w = h * aspectRatio;
     return Size(w, h);
   }

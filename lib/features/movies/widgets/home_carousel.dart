@@ -5,36 +5,15 @@ class HomeCarousel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profileIndex = ref.watch(profileProvider).profilePicIndex;
     final carouselState = ref.watch(showsProvider);
     final carouselController = ref.read(showsProvider.notifier);
     final trending = ref.watch(trendingShowProvider);
 
     final viewportFraction = 0.7;
     final width = 1.sw;
-    final height = (DimensionUtil().deviceSize == DeviceSize.SMALL ? 1.5 : 0.57) * width;
+    final height =
+        (DimensionUtil().deviceSize == DeviceSize.SMALL ? 1.5 : 0.57) * width;
     final carouselHeight = viewportFraction * height;
-
-    Widget buildAppBar() {
-      return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-        CustomImage(
-            imageType: ImageType.LOCAL,
-            imageUrl: AppImages.AVATARS[profileIndex],
-            height: 36.w,
-            borderRadius: BorderRadius.circular(1.sw),
-            onClick: () => carouselController
-                .moveToPage(AppAssets.BOTTOM_NAVIGATION_ICONS.length - 1)),
-        CustomButton(
-            buttonType: ButtonType.ICON,
-            icon: AppSvgs.SEARCH_OUTLINED,
-            onPressed: () => context.push("/searchCollection"))
-      ]).paddingFromLTRB(
-          left: AppConstants.SIDE_PADDING,
-          top: 0.5 * AppConstants.SIDE_PADDING,
-          right: AppConstants.SIDE_PADDING);
-    }
 
     String? getGenre(int genreId) {
       final allGenre = carouselState.genres?.genres;
@@ -49,6 +28,9 @@ class HomeCarousel extends ConsumerWidget {
     return trending.when(
         data: (show) {
           final currentShow = show[carouselState.carouselCurrentIndex];
+          final bgImage = DimensionUtil().deviceSize == DeviceSize.SMALL
+              ? currentShow.posterPath
+              : currentShow.backdropPath;
 
           Widget buildCarousel() {
             return CarouselSlider.builder(
@@ -62,7 +44,8 @@ class HomeCarousel extends ConsumerWidget {
                       imageType: ImageType.REMOTE,
                       onClick: () => context.push("/detail/${show[index].id}"),
                       imageUrl: getImageUrl(image),
-                      borderRadius: BorderRadius.circular(0.1 * carouselHeight));
+                      borderRadius:
+                          BorderRadius.circular(0.1 * carouselHeight));
                 },
                 options: CarouselOptions(
                     onPageChanged: (index, _) =>
@@ -89,48 +72,38 @@ class HomeCarousel extends ConsumerWidget {
             ];
             final overview = currentShow.overview ?? "";
             final child = Container(
-              height: height + DimensionUtil().statusBarHeight,
+                height: height,
                 width: width,
                 decoration: decoration,
-                child: SafeArea(child: Column(
-                    children: [
-                      buildAppBar(),
-                      Spacer(),
-                      buildCarousel(),
-                      Spacer(),
-                      CustomText(
-                          text: item.join(" • "),
-                          weight: FontWeight.w900)
-                          .paddingSymmetric(horizontal: AppConstants.SIDE_PADDING),
-                      SizedBox(height: 0.01 * height),
-                      CustomText(
+                child: Column(children: [
+                  const HomeAppBar(),
+                  Spacer(),
+                  buildCarousel(),
+                  Spacer(),
+                  CustomText(text: item.join(" • "), weight: FontWeight.w900)
+                      .paddingSymmetric(horizontal: AppConstants.SIDE_PADDING),
+                  SizedBox(height: 0.01 * height),
+                  CustomText(
                           text: overview,
-                          size: 12.sp,
+                          size: 12.w,
                           align: TextAlign.center,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis)
-                          .paddingSymmetric(horizontal: AppConstants.SIDE_PADDING)
-                    ])));
+                      .paddingSymmetric(horizontal: AppConstants.SIDE_PADDING)
+                ]));
 
             return blurEffect(6.0, child);
           }
 
-          final bgImage = DimensionUtil().deviceSize == DeviceSize.SMALL
-              ? currentShow.posterPath
-              : currentShow.backdropPath;
-
           return Stack(alignment: Alignment.topCenter, children: [
             CustomImage(
-                width: width,
+                height: height,
                 imageType: ImageType.REMOTE,
                 imageUrl: getImageUrl(bgImage)),
             buildMainWidget(),
           ]);
         },
-        loading: () => Stack(children: [
-              customShimmer(height: height),
-              SafeArea(child: buildAppBar())
-            ]),
-        error: (error, stackTrace) => SafeArea(child: buildAppBar()));
+        loading: () => customShimmer(height: height),
+        error: (error, stackTrace) => const SizedBox.shrink());
   }
 }

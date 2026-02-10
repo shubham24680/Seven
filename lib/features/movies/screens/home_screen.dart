@@ -5,7 +5,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scrollController = ref.watch(showsProvider).scrollController;
+    final scrollController = ref.watch(scrollProvider(0)).scrollController;
 
     buildCollection(String collectionName,
         AsyncNotifierProvider<ShowNotifier, List<Result>> provider) {
@@ -29,19 +29,20 @@ class HomeScreen extends ConsumerWidget {
           error: (_, __) => const SizedBox.shrink());
     }
 
-    return SingleChildScrollView(
+    final items = [
+      const HomeCarousel().paddingFromLTRB(bottom: AppConstants.SIDE_PADDING),
+      buildCollection("Top Movies", topShowsProvider),
+      buildCollection("New Release", newReleaseShowsProvider),
+      buildCollection("Upcoming", upcomingShowsProvider),
+      buildCollection("All time classic", allTimeClassicShowsProvider),
+      buildCollection("Popular in India", popularInIndiaShowsProvider)
+    ];
+
+    return ListView.builder(
+        itemCount: items.length,
         controller: scrollController,
+        padding: EdgeInsets.zero,
         physics: ClampingScrollPhysics(),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const HomeCarousel(),
-          SizedBox(height: 20.w),
-          Column(children: [
-            buildCollection("Top Movies", topShowsProvider),
-            buildCollection("New Release", newReleaseShowsProvider),
-            buildCollection("Upcoming", upcomingShowsProvider),
-            buildCollection("All time classic", allTimeClassicShowsProvider),
-            buildCollection("Popular in India", popularInIndiaShowsProvider),
-          ])
-        ]));
+        itemBuilder: (context, index) => items[index]);
   }
 }

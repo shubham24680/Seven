@@ -5,28 +5,19 @@ class Shows extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final navigationState = ref.watch(showsProvider);
-    final navigationController = ref.read(showsProvider.notifier);
+    final bottomIcon = AppConstants.BOTTOM_NAVIGATION;
+    final currentIndex = ref.watch(bottomNavigationProvider);
+    final scroll = ref.watch(scrollProvider(currentIndex));
 
-    buildIcon(String icon, int index) {
-      return SvgPicture.asset(icon,
-          colorFilter: ColorFilter.mode(
-              (index == navigationState.navigationCurrentIndex)
-                  ? AppColors.vividNightfall4
-                  : AppColors.black1,
-              BlendMode.srcIn));
-    }
-
-    final bottomIcon = AppAssets.BOTTOM_NAVIGATION_ICONS;
     final items = List.generate(
         bottomIcon.length,
         (index) => BottomNavigationBarItem(
-            label: "Item$index",
-            icon: buildIcon(bottomIcon[index].icon, index)));
+            label: "Item_$index",
+            icon: buildIcon(bottomIcon[index].icon, currentIndex == index)));
 
     final bottomNavigationBar = BottomNavigationBar(
-        onTap: (index) => navigationController.moveToPage(index),
-        currentIndex: navigationState.navigationCurrentIndex,
+        onTap: (index) => ref.read(bottomNavigationProvider.notifier).state = index,
+        currentIndex: currentIndex,
         backgroundColor: AppColors.black4,
         showSelectedLabels: false,
         showUnselectedLabels: false,
@@ -34,20 +25,22 @@ class Shows extends ConsumerWidget {
         items: items);
 
     return Scaffold(
-        body: bottomIcon[navigationState.navigationCurrentIndex].screen,
+        body: IndexedStack(
+            index: currentIndex,
+            children: bottomIcon.map((w) => w.screen).toList()),
         bottomNavigationBar: AnimatedCrossFade(
             firstChild: bottomNavigationBar,
             secondChild: const SizedBox.shrink(),
-            crossFadeState: navigationState.crossFadeState
+            crossFadeState: scroll.crossFadeState
                 ? CrossFadeState.showSecond
                 : CrossFadeState.showFirst,
             duration: Duration(milliseconds: 300)));
   }
-}
 
-// (showsState.navigationCurrentIndex !=
-//                   AppAssets.BOTTOM_NAVIGATION_ICONS.length - 1 &&
-//               showsState.status.isError)
-//           ? ErrorScreen(
-//               onPressed: () => showsController.refresh(), isHomePage: true)
-//           :
+  Widget buildIcon(String icon, bool isSelected) {
+    return SvgPicture.asset(icon,
+        colorFilter: ColorFilter.mode(
+            isSelected ? AppColors.vividNightfall4 : AppColors.black1,
+            BlendMode.srcIn));
+  }
+}
