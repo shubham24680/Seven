@@ -22,43 +22,45 @@ class DetailScreen extends ConsumerWidget {
     final showCredits = ref.watch(showCreditsProvider(id));
 
     return Scaffold(
-      body: showDetail.when(
-        data: (detail) =>
-            _buildContent(context, detail, showCollection, showCredits),
-        loading: () => const Center(
-          child: CircularProgressIndicator(color: AppColors.vividNightfall4),
-        ),
-        error: (error, stackTrace) => ErrorScreen(
-          onPressed: () => ref.read(showDetailProvider(id).notifier).refresh(),
-        ),
-      ),
-    );
+        body: showDetail.when(
+            data: (detail) =>
+                _buildContent(context, detail, showCollection, showCredits),
+            loading: () => const Center(
+                child: CircularProgressIndicator(
+                    color: AppColors.vividNightfall4)),
+            error: (error, stackTrace) => ErrorScreen(
+                onPressed: () =>
+                    ref.read(showDetailProvider(id).notifier).refresh())));
   }
 
   Widget _buildContent(BuildContext context, Result detail,
       AsyncValue<Result> showCollection, AsyncValue<Credits> showCredits) {
-    final width = 1.sw;
-    final height = 1.5 * width;
-
     return SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          _buildHeroSection(context, detail, width, height),
-          SizedBox(height: 0.02.sh),
+          _buildHeroSection(context, detail),
+          SizedBox(height: 16.w),
           if (detail.overview?.isNotEmpty ?? false)
             _buildOverviewSection(context, detail),
-          SizedBox(height: 0.02.sh),
+          SizedBox(height: 16.w),
           _buildCollection(context, showCollection, detail),
           _buildCredits(context, showCredits),
           _buildProduction("Production Companies", detail.productionCompanies),
           _buildProduction("Production Countries", detail.productionCountries),
           _buildInformation(detail),
-          SizedBox(height: 0.05.sh)
+          SizedBox(height: 40.w)
         ]));
   }
 
-  Widget _buildHeroSection(
-      BuildContext context, Result detail, double width, double height) {
+  Widget _buildHeroSection(BuildContext context, Result detail) {
+    final width = 1.sw;
+    final height = width /
+        (DimensionUtil().deviceSize == DeviceSize.SMALL
+            ? AppConstants.CARD_RATIO_PORTRAIT
+            : AppConstants.CARD_RATIO_LANDSCAPE);
+    final imageUrl = DimensionUtil().deviceSize == DeviceSize.SMALL
+        ? detail.posterPath
+        : detail.backdropPath;
     final status = detail.status;
     final year = getDateFormat(detail.releaseDate);
     final runtime = getRuntime(detail.runtime);
@@ -70,12 +72,12 @@ class DetailScreen extends ConsumerWidget {
     final voteAverage = detail.voteAverage;
     final adult = detail.adult;
 
-    return Stack(alignment: Alignment.center, children: [
+    return Stack(children: [
       CustomImage(
-        imageType: ImageType.REMOTE,
-        imageUrl: getImageUrl(detail.posterPath),
-        height: height,
-      ),
+          imageType: ImageType.REMOTE,
+          imageUrl: getImageUrl(imageUrl),
+          height: height,
+          width: width),
       Container(
           height: height,
           width: width,
@@ -100,13 +102,13 @@ class DetailScreen extends ConsumerWidget {
                           CustomTag(
                               value: "18+",
                               backgroundColor: AppColors.red1.withAlpha(150)),
-                        SizedBox(width: 0.01.sw),
+                        SizedBox(width: 4.w),
                         if (voteAverage != null && voteAverage != "0.0")
                           CustomTag(icon: AppSvgs.STAR, value: voteAverage),
                       ],
                     ).paddingSymmetric(horizontal: _sidePadding),
                     if (detail.genres?.isNotEmpty != null) ...[
-                      SizedBox(height: 0.01.sh),
+                      SizedBox(height: 8.w),
                       _buildGenresList(detail.genres, height)
                     ]
                   ])))
@@ -144,7 +146,7 @@ class DetailScreen extends ConsumerWidget {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       CustomText(
               text: overview,
-              size: 0.015.sh,
+              size: 12.w,
               color: AppColors.lightSteel1.withAlpha(150),
               maxLines: 3,
               overflow: TextOverflow.ellipsis)
@@ -158,7 +160,7 @@ class DetailScreen extends ConsumerWidget {
                   "Overview",
                   CustomText(
                       text: overview,
-                      size: 0.015.sh,
+                      size: 12.w,
                       weight: FontWeight.w900,
                       align: TextAlign.center),
                   backgroundColor: AppColors.black3.withAlpha(150)))
@@ -205,7 +207,7 @@ class DetailScreen extends ConsumerWidget {
                     onPressed: () => context.push("/castCollection/$id"))
                 .buildText(),
             SizedBox(
-                height: 0.2.sw + 0.11.sh,
+                height: 160.w,
                 child: ListView.builder(
                     itemCount: credit.length,
                     scrollDirection: Axis.horizontal,
@@ -215,11 +217,9 @@ class DetailScreen extends ConsumerWidget {
                       final castOrCrew = credit[index];
 
                       return SizedBox(
-                          width: 0.3.sw,
-                          child: buildCastAndCrew(castOrCrew)
-                              .paddingFromLTRB(right: _sidePadding));
+                          width: 100.w, child: buildCastAndCrew(castOrCrew));
                     })),
-            SizedBox(height: 0.02.sh),
+            SizedBox(height: 16.w),
             const Divider(color: AppColors.black2)
                 .paddingSymmetric(horizontal: _sidePadding)
           ]);
@@ -227,7 +227,7 @@ class DetailScreen extends ConsumerWidget {
         loading: () => Column(children: [
               CustomCollection(collectionName: "Cast & Crew").buildText(),
               SizedBox(
-                height: 0.2.sw + 0.05.sh,
+                height: 120.w,
                 child: ListView.builder(
                     itemCount: 5,
                     scrollDirection: Axis.horizontal,
@@ -235,12 +235,13 @@ class DetailScreen extends ConsumerWidget {
                     padding: EdgeInsets.only(left: _sidePadding),
                     itemBuilder: (context, index) {
                       return SizedBox(
-                          width: 0.29.sw,
-                          child: buildCastAndCrewLoading()
-                              .paddingFromLTRB(right: _sidePadding));
+                        width: 100.w,
+                        child: buildCastAndCrewLoading()
+                            .paddingFromLTRB(top: _sidePadding),
+                      );
                     }),
               ),
-              SizedBox(height: 0.05.sh),
+              SizedBox(height: 16.w),
               const Divider(color: AppColors.black2)
                   .paddingSymmetric(horizontal: _sidePadding)
             ]),
@@ -258,15 +259,16 @@ class DetailScreen extends ConsumerWidget {
     final runtime = getRuntime(detail.runtime);
     final budget = getCurrencyFormat(detail.budget, detail.originalLanguage);
     final revenue = getCurrencyFormat(detail.revenue, detail.originalLanguage);
+    final childAspectRatio = DimensionUtil().isPortrait ? 3.5 : 0.285;
 
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       buildHeader("Information"),
       GridView(
           shrinkWrap: true,
-          padding: const EdgeInsets.all(0),
+          padding: EdgeInsets.zero,
           physics: NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, childAspectRatio: 3.5),
+              crossAxisCount: 2, childAspectRatio: childAspectRatio),
           children: [
             if (detail.status != null && date != null)
               _buildInformationRow(detail.status, date),

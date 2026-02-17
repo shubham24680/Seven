@@ -18,6 +18,7 @@ class HomeScreen extends ConsumerWidget {
                   collectionName: collectionName,
                   isLoading: false,
                   results: show,
+                  orientation: CardOrientation.POTRAIT,
                   onPressed: () => context.push("/collection/$collectionName",
                       extra: provider)),
               Divider(

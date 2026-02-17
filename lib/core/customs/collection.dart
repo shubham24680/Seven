@@ -35,14 +35,14 @@ class CustomCollection extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isPortrait = orientation == CardOrientation.POTRAIT;
     final bool isVertical = scrollDirection == Axis.vertical;
-
+    final incresedCount = DimensionUtil().deviceSize == DeviceSize.SMALL ? 1 : 2;
     final double aspectRatio = isPortrait
         ? AppConstants.CARD_RATIO_PORTRAIT
         : AppConstants.CARD_RATIO_LANDSCAPE;
-    final double height = isPortrait ? 56.w : 150.w;
+    final double height = isPortrait ? 250.w : 150.w;
     final double width =
-        (1.sw - (crossAxisCount + 1) * AppConstants.SIDE_PADDING) /
-            crossAxisCount;
+        (1.sw - (incresedCount * crossAxisCount + 1) * AppConstants.SIDE_PADDING) /
+            (incresedCount * crossAxisCount);
     final double borderRadius = (isPortrait ? 0.06 : 0.1) * height;
     final double verticalPadding = MediaQuery.of(context).padding.top;
 
@@ -64,22 +64,22 @@ class CustomCollection extends StatelessWidget {
     final itemCount =
         (results?.length ?? 0) + (isLoading ? loadingItemCount : 0);
     final collectionItems = GridView.builder(
-            controller: scrollController,
-            scrollDirection: scrollDirection,
-            itemCount: itemCount,
-            shrinkWrap: true,
-            physics: ClampingScrollPhysics(),
-            padding: EdgeInsets.only(
-              left: AppConstants.SIDE_PADDING,
-              right: AppConstants.SIDE_PADDING,
-              top: isVertical ? verticalPadding : 0,
-              bottom: isVertical ? AppConstants.SIDE_PADDING : 0),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount,
-                crossAxisSpacing: 0.5 * AppConstants.SIDE_PADDING,
-                mainAxisSpacing: 0.5 * AppConstants.SIDE_PADDING,
-                childAspectRatio: isVertical ? aspectRatio : 1 / aspectRatio),
-            itemBuilder: (context, index) => buildCard(index));
+        controller: scrollController,
+        scrollDirection: scrollDirection,
+        itemCount: itemCount,
+        shrinkWrap: true,
+        physics: ClampingScrollPhysics(),
+        padding: EdgeInsets.only(
+            left: AppConstants.SIDE_PADDING,
+            right: AppConstants.SIDE_PADDING,
+            top: isVertical ? verticalPadding : 0,
+            bottom: isVertical ? AppConstants.SIDE_PADDING : 0),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: incresedCount * crossAxisCount,
+            crossAxisSpacing: 0.5 * AppConstants.SIDE_PADDING,
+            mainAxisSpacing: 0.5 * AppConstants.SIDE_PADDING,
+            childAspectRatio: isVertical ? aspectRatio : 1 / aspectRatio),
+        itemBuilder: (context, index) => buildCard(index));
 
     return Column(
         mainAxisSize: MainAxisSize.min,
@@ -89,10 +89,10 @@ class CustomCollection extends StatelessWidget {
           isSafeHeight
               ? Flexible(child: collectionItems)
               : SizedBox(
-                  height: crossAxisCount * height +
-                      (crossAxisCount - 1) * AppConstants.SIDE_PADDING,
+                  height: incresedCount * crossAxisCount * height +
+                      (incresedCount * crossAxisCount - 1) * AppConstants.SIDE_PADDING,
                   child: collectionItems),
-          SizedBox(height: isSafeHeight ? 0 : 0.05.sh)
+          SizedBox(height: isSafeHeight ? 0 : 25.w)
         ]);
   }
 

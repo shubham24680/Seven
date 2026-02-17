@@ -77,24 +77,22 @@ class CustomCard extends StatelessWidget {
           if (voteAverage != null && voteAverage != "0.0")
             CustomTag(
                 tagSize: TagSize.SMALL, icon: AppSvgs.STAR, value: voteAverage),
-        ]).paddingAll(0.05 * size.height);
+        ]).paddingAll(0.5 * AppConstants.SIDE_PADDING);
         final textCard = blurEffect(
             blurValue,
             Container(
                 height: 0.2 * size.height,
-                width: width,
                 alignment: Alignment.center,
                 padding:
                     EdgeInsets.symmetric(horizontal: AppConstants.SIDE_PADDING),
                 decoration: decoration,
                 child: CustomText(
-                  text: results?.title ?? results?.originalTitle ?? "",
-                  size: textSize,
-                  weight: FontWeight.w900,
-                  maxLines: maxLines,
-                  align: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                )),
+                    text: results?.title ?? results?.originalTitle ?? "",
+                    size: textSize,
+                    weight: FontWeight.w900,
+                    maxLines: maxLines,
+                    align: TextAlign.center,
+                    overflow: TextOverflow.ellipsis)),
             borderRadius:
                 BorderRadius.vertical(bottom: Radius.circular(borderRadius)));
         cardChild = Column(
@@ -103,16 +101,17 @@ class CustomCard extends StatelessWidget {
         break;
     }
 
-    return Stack(alignment: Alignment.bottomCenter, children: [
-      CustomImage(
-          imageType: imageType,
-          imageUrl: imageUrl,
-          onClick: event,
-          borderRadius: BorderRadius.circular(borderRadius),
-          height: size.height,
-          width: size.width),
-      IgnorePointer(child: cardChild)
-    ]);
+    return Stack(
+        alignment: Alignment.bottomCenter,
+        fit: StackFit.expand,
+        children: [
+          CustomImage(
+              imageType: imageType,
+              imageUrl: imageUrl,
+              onClick: event,
+              borderRadius: BorderRadius.circular(borderRadius)),
+          IgnorePointer(child: cardChild)
+        ]);
   }
 
   Size getSize(bool isPortrait, double? height, double? width) {
@@ -126,7 +125,7 @@ class CustomCard extends StatelessWidget {
       return Size(width, h);
     }
 
-    h = height ?? (isPortrait ? 56.w : 150.w);
+    h = height ?? (isPortrait ? 260.w : 150.w);
     w = h * aspectRatio;
     return Size(w, h);
   }
