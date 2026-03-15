@@ -30,7 +30,7 @@ class AppConstants {
     HelperModel(
         string1: AppImages.ONBOARDING_2,
         string2:
-            "From the Ashes of Darkness,\nHope Ignites Again.\nBalance Lives\nWhere Heroes Dare to Dream.",
+            "From the Ashes\nof Darkness,\nHope Ignites Again.\nBalance Lives\nWhere Heroes\nDare to Dream.",
         string3:
             "Discover tales that transcend time —\nwhere legends fight not for victory,\nbut for the soul of the galaxy.")
   ];
