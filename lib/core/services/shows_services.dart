@@ -20,7 +20,7 @@ class ShowsServices {
   Future<ShowsModel> fetchTrendingShows({int page = 1}) async {
     final queryParams = {'page': page.toString()};
     return _fetchShows(
-        ApiConstants.TRENDING_MOVIES, queryParams, "fetchTrendingShows");
+        ApiConstants.TRENDING, queryParams, "fetchTrendingShows");
   }
 
   Future<ShowsModel> fetchTopShows({int page = 1}) async {
@@ -100,7 +100,7 @@ class ShowsServices {
       _fetchResult(ApiConstants.GENRES, "fetchGenres");
 
   Future<Result> fetchShowDetail(String id) async =>
-      _fetchResult(ApiConstants.MOVIE_DETAIL + id, "fetchShowDetail");
+      _fetchResult(id, "fetchShowDetail");
 
   Future<Result> fetchCollectionDetail(String id) async => _fetchResult(
       ApiConstants.COLLECTION_DETAIL + id, "fetchCollectionDetail");

@@ -1,7 +1,7 @@
 import 'package:seven/app/app.dart';
 
 class AppConstants {
-  static const SIDE_PADDING = 15.0;
+  static const SIDE_PADDING = 16.0;
   static const CARD_RATIO_LANDSCAPE = 1.78;
   static const CARD_RATIO_PORTRAIT = 0.67;
 
@@ -33,6 +33,12 @@ class AppConstants {
             "From the Ashes of Darkness,\nHope Ignites Again.\nBalance Lives\nWhere Heroes Dare to Dream.",
         string3:
             "Discover tales that transcend time —\nwhere legends fight not for victory,\nbut for the soul of the galaxy.")
+  ];
+
+  static final List<BottomNavigation> BOTTOM_NAVIGATION = [
+    BottomNavigation(icon: AppSvgs.HOME, screen: HomeScreen()),
+    BottomNavigation(icon: AppSvgs.SEARCH, screen: const SearchScreen()),
+    BottomNavigation(icon: AppSvgs.PROFILE, screen: const ProfileScreen()),
   ];
 
   static List<Result> GENRES = [

@@ -35,14 +35,15 @@ class CustomCollection extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isPortrait = orientation == CardOrientation.POTRAIT;
     final bool isVertical = scrollDirection == Axis.vertical;
-
+    final incresedCount =
+        DimensionUtil().deviceSize == DeviceSize.SMALL ? 1 : 2;
     final double aspectRatio = isPortrait
         ? AppConstants.CARD_RATIO_PORTRAIT
         : AppConstants.CARD_RATIO_LANDSCAPE;
-    final double height = isPortrait ? 0.32.sh : 0.17.sh;
-    final double width =
-        (1.sw - (crossAxisCount + 1) * AppConstants.SIDE_PADDING) /
-            crossAxisCount;
+    final double height = isPortrait ? 250.w : 150.w;
+    final double width = (1.sw -
+            (incresedCount * crossAxisCount + 1) * AppConstants.SIDE_PADDING) /
+        (incresedCount * crossAxisCount);
     final double borderRadius = (isPortrait ? 0.06 : 0.1) * height;
     final double verticalPadding = MediaQuery.of(context).padding.top;
 
@@ -58,23 +59,25 @@ class CustomCollection extends StatelessWidget {
           width: isVertical ? width : null,
           results: results?[index],
           blurValue: blurValue,
-          event: () => context.push("$screenPath${results?[index].id}"));
+          event: () => context.push("$screenPath${results?[index].id}",
+              extra: results?[index].mediaType.name.toLowerCase()));
     }
 
+    final itemCount =
+        (results?.length ?? 0) + (isLoading ? loadingItemCount : 0);
     final collectionItems = GridView.builder(
         controller: scrollController,
         scrollDirection: scrollDirection,
-        itemCount: (results?.length ?? 0) + (isLoading ? loadingItemCount : 0),
+        itemCount: itemCount,
         shrinkWrap: true,
         physics: ClampingScrollPhysics(),
         padding: EdgeInsets.only(
-          left: AppConstants.SIDE_PADDING,
-          right: AppConstants.SIDE_PADDING,
-          top: isVertical ? verticalPadding : 0,
-          bottom: isVertical ? AppConstants.SIDE_PADDING : 0,
-        ),
+            left: AppConstants.SIDE_PADDING,
+            right: AppConstants.SIDE_PADDING,
+            top: isVertical ? verticalPadding : 0,
+            bottom: isVertical ? AppConstants.SIDE_PADDING : 0),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
+            crossAxisCount: incresedCount * crossAxisCount,
             crossAxisSpacing: 0.5 * AppConstants.SIDE_PADDING,
             mainAxisSpacing: 0.5 * AppConstants.SIDE_PADDING,
             childAspectRatio: isVertical ? aspectRatio : 1 / aspectRatio),
@@ -88,39 +91,35 @@ class CustomCollection extends StatelessWidget {
           isSafeHeight
               ? Flexible(child: collectionItems)
               : SizedBox(
-                  height: crossAxisCount * height +
-                      (crossAxisCount - 1) * AppConstants.SIDE_PADDING,
+                  height: incresedCount * crossAxisCount * height +
+                      (incresedCount * crossAxisCount - 1) *
+                          AppConstants.SIDE_PADDING,
                   child: collectionItems),
-          SizedBox(height: isSafeHeight ? 0 : 0.05.sh)
+          SizedBox(height: isSafeHeight ? 0 : 24.w)
         ]);
   }
 
   Widget buildText() {
     if (collectionName == null) return SizedBox.shrink();
 
-    final textWidget = (isLoading)
-        ? customShimmer(height: 0.03.sh, width: 0.5.sw, borderRadius: 0.01.sh)
+    final textWidget = isLoading
+        ? customShimmer(height: 20.w, width: 200.w, borderRadius: 6.w)
         : Expanded(
             child: CustomText(
-              text: collectionName ?? "",
-              family: AppFonts.STAATLICHES,
-              size: 0.03.sh,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          );
+                text: collectionName ?? "",
+                family: AppFonts.STAATLICHES,
+                size: 24.w,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis));
 
-    final seeAll = (isLoading)
-        ? customShimmer(height: 0.03.sh, width: 0.1.sw, borderRadius: 0.01.sh)
+    final seeAll = isLoading
+        ? customShimmer(height: 20.w, width: 50.w, borderRadius: 6.w)
         : CustomButton(
-            buttonType: ButtonType.TEXT,
-            onPressed: onPressed,
-            icon: "See all",
-          );
+            buttonType: ButtonType.TEXT, onPressed: onPressed, icon: "See all");
 
     return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [textWidget, SizedBox(width: 0.02.sw), seeAll])
+            children: [textWidget, SizedBox(width: 20.w), seeAll])
         .paddingSymmetric(
             horizontal: AppConstants.SIDE_PADDING,
             vertical: AppConstants.SIDE_PADDING * 0.25);

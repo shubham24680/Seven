@@ -5,9 +5,9 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scrollController = ref.watch(showsProvider).scrollController;
+    final scrollController = ref.watch(scrollProvider(0)).scrollController;
 
-    buildCollection(String collectionName,
+    Widget buildCollection(String collectionName,
         AsyncNotifierProvider<ShowNotifier, List<Result>> provider) {
       final shows = ref.watch(provider);
 
@@ -18,6 +18,7 @@ class HomeScreen extends ConsumerWidget {
                   collectionName: collectionName,
                   isLoading: false,
                   results: show,
+                  orientation: CardOrientation.POTRAIT,
                   onPressed: () => context.push("/collection/$collectionName",
                       extra: provider)),
               Divider(
@@ -29,19 +30,20 @@ class HomeScreen extends ConsumerWidget {
           error: (_, __) => const SizedBox.shrink());
     }
 
-    return SingleChildScrollView(
+    final items = [
+      const HomeCarousel().paddingFromLTRB(bottom: AppConstants.SIDE_PADDING),
+      buildCollection("New Release", newReleaseShowsProvider),
+      buildCollection("Popular in India", popularInIndiaShowsProvider),
+      buildCollection("Upcoming", upcomingShowsProvider),
+      buildCollection("Top Movies", topShowsProvider),
+      buildCollection("All time classic", allTimeClassicShowsProvider)
+    ];
+
+    return ListView.builder(
+        itemCount: items.length,
         controller: scrollController,
+        padding: EdgeInsets.zero,
         physics: ClampingScrollPhysics(),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const HomeCarousel(),
-          SizedBox(height: 0.02.sh),
-          Column(children: [
-            buildCollection("Top Movies", topShowsProvider),
-            buildCollection("New Release", newReleaseShowsProvider),
-            buildCollection("Upcoming", upcomingShowsProvider),
-            buildCollection("All time classic", allTimeClassicShowsProvider),
-            buildCollection("Popular in India", popularInIndiaShowsProvider),
-          ])
-        ]));
+        itemBuilder: (context, index) => items[index]);
   }
 }

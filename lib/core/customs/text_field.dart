@@ -76,7 +76,8 @@ class CustomTextField extends StatelessWidget {
       case TextFieldType.DROPDOWN:
         field = DropdownButtonFormField(
             items: dropDownMenu,
-            initialValue: initialValue,
+            // initialValue: initialValue,
+            value: initialValue,
             onChanged: onChanged,
             decoration: decoration.copyWith(suffixIcon: suffixIcon),
             style: buildHint(AppColors.lightSteel1).getTextStyle(),

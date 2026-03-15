@@ -192,7 +192,7 @@ class ShowsState {
 class ShowsProvider extends StateNotifier<ShowsState> {
   ShowsProvider() : super(ShowsState.initial()) {
     _loadData();
-    _getNative();
+    // _getNative();
     state.scrollController.addListener(_onScroll);
   }
 
@@ -236,13 +236,12 @@ class ShowsProvider extends StateNotifier<ShowsState> {
 
   // Update navigation index with validation
   void moveToPage(int index) {
-    log("Moving to page: $index");
     if (index < 0) {
       log("Invalid navigation index: $index");
       return;
     }
     state = state.copyWith(navigationCurrentIndex: index);
-    log("Navigation index updated: $index");
+    log("Navigation to: $index", name: "Bottom Navigation");
   }
 
   // Update carousel index with validation

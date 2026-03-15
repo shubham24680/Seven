@@ -1,9 +1,10 @@
 import 'package:seven/app/app.dart';
 
 class DetailScreen extends ConsumerWidget {
-  const DetailScreen(this.id, {super.key});
+  const DetailScreen(this.id, this.type, {super.key});
 
   final String id;
+  final String type;
 
   static const _sidePadding = AppConstants.SIDE_PADDING;
   static const _gradientDecoration = BoxDecoration(
@@ -17,48 +18,55 @@ class DetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final showDetail = ref.watch(showDetailProvider(id));
-    final showCollection = ref.watch(showCollectionProvider(id));
-    final showCredits = ref.watch(showCreditsProvider(id));
+    final showPath = "$type/$id";
+    final showDetail = ref.watch(showDetailProvider(showPath));
+    final showCollection = ref.watch(showCollectionProvider(showPath));
+    final showCredits = ref.watch(showCreditsProvider(showPath));
 
     return Scaffold(
-      body: showDetail.when(
-        data: (detail) =>
-            _buildContent(context, detail, showCollection, showCredits),
-        loading: () => const Center(
-          child: CircularProgressIndicator(color: AppColors.vividNightfall4),
-        ),
-        error: (error, stackTrace) => ErrorScreen(
-          onPressed: () => ref.read(showDetailProvider(id).notifier).refresh(),
-        ),
-      ),
-    );
+        body: showDetail.when(
+            data: (detail) =>
+                _buildContent(context, detail, showCollection, showCredits),
+            loading: () => const Center(
+                child: CircularProgressIndicator(
+                    color: AppColors.vividNightfall4)),
+            error: (error, stackTrace) => ErrorScreen(
+                onPressed: () => ref
+                    .read(showDetailProvider(showPath).notifier)
+                    .refresh())));
   }
 
   Widget _buildContent(BuildContext context, Result detail,
       AsyncValue<Result> showCollection, AsyncValue<Credits> showCredits) {
-    final width = 1.sw;
-    final height = 1.5 * width;
-
     return SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          _buildHeroSection(context, detail, width, height),
-          SizedBox(height: 0.02.sh),
+          _buildHeroSection(context, detail),
+          SizedBox(height: 16.w),
           if (detail.overview?.isNotEmpty ?? false)
             _buildOverviewSection(context, detail),
-          SizedBox(height: 0.02.sh),
+          SizedBox(height: 16.w),
+          _buildLastEpisode(context, detail),
+          _buildSeasons(context, detail),
           _buildCollection(context, showCollection, detail),
           _buildCredits(context, showCredits),
           _buildProduction("Production Companies", detail.productionCompanies),
           _buildProduction("Production Countries", detail.productionCountries),
+          _buildProduction("Streaming On", detail.networks),
           _buildInformation(detail),
-          SizedBox(height: 0.05.sh)
+          SizedBox(height: 40.w)
         ]));
   }
 
-  Widget _buildHeroSection(
-      BuildContext context, Result detail, double width, double height) {
+  Widget _buildHeroSection(BuildContext context, Result detail) {
+    final width = 1.sw;
+    final height = width /
+        (DimensionUtil().deviceSize == DeviceSize.SMALL
+            ? AppConstants.CARD_RATIO_PORTRAIT
+            : AppConstants.CARD_RATIO_LANDSCAPE);
+    final imageUrl = DimensionUtil().deviceSize == DeviceSize.SMALL
+        ? detail.posterPath
+        : detail.backdropPath;
     final status = detail.status;
     final year = getDateFormat(detail.releaseDate);
     final runtime = getRuntime(detail.runtime);
@@ -68,14 +76,13 @@ class DetailScreen extends ConsumerWidget {
       if (runtime != null) runtime,
     ].join(" • ");
     final voteAverage = detail.voteAverage;
-    final adult = detail.adult;
 
-    return Stack(alignment: Alignment.center, children: [
+    return Stack(children: [
       CustomImage(
-        imageType: ImageType.REMOTE,
-        imageUrl: getImageUrl(detail.posterPath),
-        height: height,
-      ),
+          imageType: ImageType.REMOTE,
+          imageUrl: getImageUrl(imageUrl),
+          height: height,
+          width: width),
       Container(
           height: height,
           width: width,
@@ -96,17 +103,17 @@ class DetailScreen extends ConsumerWidget {
                       children: [
                         CustomText(text: metadataItems, size: 0.02 * height),
                         const Spacer(),
-                        if (adult != null && adult)
+                        if (detail.adult == true)
                           CustomTag(
                               value: "18+",
                               backgroundColor: AppColors.red1.withAlpha(150)),
-                        SizedBox(width: 0.01.sw),
+                        SizedBox(width: 4.w),
                         if (voteAverage != null && voteAverage != "0.0")
                           CustomTag(icon: AppSvgs.STAR, value: voteAverage),
                       ],
                     ).paddingSymmetric(horizontal: _sidePadding),
                     if (detail.genres?.isNotEmpty != null) ...[
-                      SizedBox(height: 0.01.sh),
+                      SizedBox(height: 8.w),
                       _buildGenresList(detail.genres, height)
                     ]
                   ])))
@@ -144,7 +151,7 @@ class DetailScreen extends ConsumerWidget {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       CustomText(
               text: overview,
-              size: 0.015.sh,
+              size: 12.w,
               color: AppColors.lightSteel1.withAlpha(150),
               maxLines: 3,
               overflow: TextOverflow.ellipsis)
@@ -158,7 +165,7 @@ class DetailScreen extends ConsumerWidget {
                   "Overview",
                   CustomText(
                       text: overview,
-                      size: 0.015.sh,
+                      size: 12.w,
                       weight: FontWeight.w900,
                       align: TextAlign.center),
                   backgroundColor: AppColors.black3.withAlpha(150)))
@@ -166,10 +173,153 @@ class DetailScreen extends ConsumerWidget {
     ]);
   }
 
+  Widget _buildLastEpisode(BuildContext context, Result detail) {
+    final lastEpisode = detail.lastEpisodeToAir;
+    if (lastEpisode == null) return SizedBox.shrink();
+
+    final height = 80.w;
+    final voteAverage = lastEpisode.voteAverage?.toStringAsFixed(1);
+    final year =
+        getDateFormat(lastEpisode.airDate, formatType: FormatType.YMMMD);
+    final runtime = getRuntime(lastEpisode.runtime);
+    final season = lastEpisode.seasonNumber;
+    final episode = lastEpisode.episodeNumber;
+    final seasonEpisode =
+        "${(season != null ? "S$season" : "")} ${episode != null ? "E$episode" : ""}";
+    final metadataItems = [
+      if (seasonEpisode.isNotEmpty) seasonEpisode,
+      if (year != null) year,
+      if (runtime != null) runtime,
+    ].join(" • ");
+
+    return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          buildHeader("Last Episode"),
+          Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: _sidePadding,
+              children: [
+                Stack(alignment: Alignment.topRight, children: [
+                  CustomImage(
+                      imageType: ImageType.REMOTE,
+                      imageUrl: getImageUrl(lastEpisode.stillPath),
+                      height: height,
+                      width: AppConstants.CARD_RATIO_LANDSCAPE * height,
+                      borderRadius: BorderRadius.circular(0.1 * height)),
+                  if (voteAverage != null && voteAverage != "0.0")
+                    CustomTag(
+                            tagSize: TagSize.SMALL,
+                            icon: AppSvgs.STAR,
+                            value: voteAverage)
+                        .paddingAll(0.3 * _sidePadding)
+                ]),
+                Expanded(
+                    child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomText(
+                        text: lastEpisode.name ?? "",
+                        size: 16.w,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        weight: FontWeight.w900),
+                    CustomText(text: metadataItems, size: 10.w)
+                  ],
+                ))
+              ]).paddingSymmetric(horizontal: _sidePadding),
+          SizedBox(height: 8.w),
+          CustomText(
+                  text: lastEpisode.overview ?? "",
+                  size: 10.w,
+                  color: AppColors.lightSteel1.withAlpha(150))
+              .paddingSymmetric(horizontal: _sidePadding),
+          SizedBox(height: 24.w),
+          const Divider(color: AppColors.black2)
+              .paddingSymmetric(horizontal: _sidePadding)
+        ]);
+  }
+
+  Widget _buildSeasons(BuildContext context, Result detail) {
+    final seasons = detail.seasons;
+    if (seasons == null || seasons.isEmpty) return SizedBox.shrink();
+
+    final height = 260.w;
+    int lastEpisode = 1;
+    final episodes = seasons.map((season) {
+      final currentEpisode = season.episodeCount?.toInt();
+      final seasonEpisode = [
+        lastEpisode,
+        if (currentEpisode != null) lastEpisode + currentEpisode - 1
+      ].join(" - ");
+      lastEpisode = lastEpisode + (currentEpisode ?? 0);
+      return seasonEpisode;
+    }).toList();
+
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      buildHeader("Seasons"),
+      SizedBox(
+          height: height + 102.w,
+          child: ListView.builder(
+              itemCount: seasons.length,
+              scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.only(
+                  left: _sidePadding, right: 0.5 * _sidePadding),
+              itemBuilder: (context, index) {
+                final currentSeason = seasons[index];
+                final seasonNumber = "Season ${currentSeason.seasonNumber}";
+                final title =
+                    "Season ${currentSeason.seasonNumber}${(seasonNumber != currentSeason.name) ? "\n${currentSeason.name}" : ""}";
+                final overview = seasons[index].overview;
+                final year = getDateFormat(currentSeason.airDate,
+                    formatType: FormatType.YMMMD);
+
+                return SizedBox(
+                    width: AppConstants.CARD_RATIO_PORTRAIT * height,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                            height: height,
+                            width: AppConstants.CARD_RATIO_PORTRAIT * height,
+                            child: CustomCard(
+                                orientation: CardOrientation.POTRAIT,
+                                title: title,
+                                imageUrl: currentSeason.posterPath,
+                                voteAverage: currentSeason.voteAverage
+                                    ?.toStringAsFixed(1),
+                                episodes: episodes[index])),
+                        if (overview != null && overview.isNotEmpty) ...[
+                          SizedBox(height: 8.w),
+                          CustomText(
+                                  text: overview,
+                                  size: 10.w,
+                                  maxLines: 5,
+                                  overflow: TextOverflow.ellipsis,
+                                  color: AppColors.lightSteel1.withAlpha(150))
+                              .paddingSymmetric(horizontal: _sidePadding),
+                        ],
+                        if (year != null) ...[
+                          SizedBox(height: 8.w),
+                          CustomText(text: year, size: 10.w)
+                              .paddingSymmetric(horizontal: _sidePadding),
+                        ]
+                      ],
+                    )).paddingFromLTRB(right: 0.5 * _sidePadding);
+              })),
+      SizedBox(height: 24.w),
+      const Divider(color: AppColors.black2)
+          .paddingSymmetric(horizontal: _sidePadding)
+    ]);
+  }
+
   Widget _buildCollection(BuildContext context,
       AsyncValue<Result> collectionDetail, Result detail) {
     final collectionName =
-        detail.belongsToCollection?.name ?? "More in the series";
+        detail.belongsToCollection?.title ?? "More in the series";
 
     return collectionDetail.when(
         data: (show) {
@@ -202,10 +352,11 @@ class DetailScreen extends ConsumerWidget {
             CustomCollection(
                     collectionName: "Cast & Crew",
                     isLoading: false,
-                    onPressed: () => context.push("/castCollection/$id"))
+                    onPressed: () =>
+                        context.push("/castCollection/$id", extra: type))
                 .buildText(),
             SizedBox(
-                height: 0.2.sw + 0.11.sh,
+                height: 160.w,
                 child: ListView.builder(
                     itemCount: credit.length,
                     scrollDirection: Axis.horizontal,
@@ -215,11 +366,9 @@ class DetailScreen extends ConsumerWidget {
                       final castOrCrew = credit[index];
 
                       return SizedBox(
-                          width: 0.3.sw,
-                          child: buildCastAndCrew(castOrCrew)
-                              .paddingFromLTRB(right: _sidePadding));
+                          width: 100.w, child: buildCastAndCrew(castOrCrew));
                     })),
-            SizedBox(height: 0.02.sh),
+            SizedBox(height: 16.w),
             const Divider(color: AppColors.black2)
                 .paddingSymmetric(horizontal: _sidePadding)
           ]);
@@ -227,7 +376,7 @@ class DetailScreen extends ConsumerWidget {
         loading: () => Column(children: [
               CustomCollection(collectionName: "Cast & Crew").buildText(),
               SizedBox(
-                height: 0.2.sw + 0.05.sh,
+                height: 120.w,
                 child: ListView.builder(
                     itemCount: 5,
                     scrollDirection: Axis.horizontal,
@@ -235,12 +384,13 @@ class DetailScreen extends ConsumerWidget {
                     padding: EdgeInsets.only(left: _sidePadding),
                     itemBuilder: (context, index) {
                       return SizedBox(
-                          width: 0.29.sw,
-                          child: buildCastAndCrewLoading()
-                              .paddingFromLTRB(right: _sidePadding));
+                        width: 100.w,
+                        child: buildCastAndCrewLoading()
+                            .paddingFromLTRB(top: _sidePadding),
+                      );
                     }),
               ),
-              SizedBox(height: 0.05.sh),
+              SizedBox(height: 16.w),
               const Divider(color: AppColors.black2)
                   .paddingSymmetric(horizontal: _sidePadding)
             ]),
@@ -258,15 +408,16 @@ class DetailScreen extends ConsumerWidget {
     final runtime = getRuntime(detail.runtime);
     final budget = getCurrencyFormat(detail.budget, detail.originalLanguage);
     final revenue = getCurrencyFormat(detail.revenue, detail.originalLanguage);
+    final childAspectRatio = DimensionUtil().isPortrait ? 3.5 : 0.285;
 
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       buildHeader("Information"),
       GridView(
           shrinkWrap: true,
-          padding: const EdgeInsets.all(0),
+          padding: EdgeInsets.zero,
           physics: NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, childAspectRatio: 3.5),
+              crossAxisCount: 2, childAspectRatio: childAspectRatio),
           children: [
             if (detail.status != null && date != null)
               _buildInformationRow(detail.status, date),

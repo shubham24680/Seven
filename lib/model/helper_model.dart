@@ -1,5 +1,12 @@
 import 'package:seven/app/app.dart';
 
+class BottomNavigation {
+  final String icon;
+  final Widget screen;
+
+  BottomNavigation({required this.icon, required this.screen});
+}
+
 class HelperModel {
   final String? string1, string2, string3, string4, string5;
   final Widget? widget1;
@@ -18,13 +25,6 @@ class ScreenRoutes {
   final Widget child;
 
   ScreenRoutes({required this.path, required this.child});
-}
-
-class BottomNavigation {
-  final String icon;
-  final Widget screen;
-
-  BottomNavigation({required this.icon, required this.screen});
 }
 
 class ErrorData {

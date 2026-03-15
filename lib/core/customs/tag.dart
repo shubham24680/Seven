@@ -26,18 +26,18 @@ class CustomTag extends StatelessWidget {
     double height;
     switch (tagSize) {
       case TagSize.LARGE:
-        height = 0.022.sh;
+        height = 16.w;
         break;
       case TagSize.SMALL:
-        height = 0.014.sh;
+        height = 10.w;
         break;
       default:
-        height = 0.018.sh;
+        height = 12.w;
         break;
     }
 
     final outlined = tagType == TagType.OUTLINED;
-    final borderRadius = BorderRadius.circular(height);
+    final borderRadius = BorderRadius.circular(1.2 * height);
     final decoration = BoxDecoration(
         color: outlined
             ? AppColors.transparent
@@ -52,7 +52,7 @@ class CustomTag extends StatelessWidget {
         color: color ?? AppColors.lightSteel1);
     final tagChild = Container(
         padding: EdgeInsets.symmetric(
-            horizontal: 0.5 * height, vertical: 0.2 * height),
+            horizontal: 0.6 * height, vertical: 0.2 * height),
         decoration: decoration,
         child: Row(mainAxisSize: MainAxisSize.min, children: [
           if (icon != null) image,

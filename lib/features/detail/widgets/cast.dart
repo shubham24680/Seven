@@ -12,22 +12,22 @@ Widget buildCastAndCrew(CastAndCrew castOrCrew) {
     CustomImage(
         imageType: ImageType.REMOTE,
         imageUrl: getImageUrl(castOrCrew.profilePath),
-        height: 0.2.sw,
-        width: 0.2.sw,
+        height: 75.w,
+        width: 75.w,
         borderRadius: BorderRadius.circular(1.sh)),
-    SizedBox(height: 0.01.sh),
+    SizedBox(height: 8.w),
     CustomText(
         text: castOrCrew.name ?? "",
-        size: 0.035.sw,
+        size: 12.w,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
         align: TextAlign.center,
         weight: FontWeight.bold),
-    SizedBox(height: 0.005.sh),
+    SizedBox(height: 4.w),
     CustomText(
         text: castOrCrew.character ?? castOrCrew.job ?? "",
         color: AppColors.lightSteel1.withAlpha(150),
-        size: 0.03.sw,
+        size: 10.w,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
         align: TextAlign.center)
@@ -35,9 +35,11 @@ Widget buildCastAndCrew(CastAndCrew castOrCrew) {
 }
 
 Widget buildCastAndCrewLoading() {
-  return Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-    customShimmer(height: 0.2.sw, width: 0.2.sw, borderRadius: 1.sh),
-    customShimmer(height: 0.015.sh, width: 0.2.sw, borderRadius: 0.01.sh),
-    customShimmer(height: 0.015.sh, width: 0.2.sw, borderRadius: 0.01.sh)
+  return Column(mainAxisSize: MainAxisSize.min, children: [
+    customShimmer(height: 75.w, width: 75.w, borderRadius: 1.sh),
+    SizedBox(height: 8.w),
+    customShimmer(height: 8.w, width: 75.w, borderRadius: 0.01.sh),
+    SizedBox(height: 4.w),
+    customShimmer(height: 8.w, width: 60.w, borderRadius: 0.01.sh)
   ]);
 }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:seven/app/app.dart';
 
 enum CardOrientation { POTRAIT, LANDSCAPE }
@@ -13,7 +15,11 @@ class CustomCard extends StatelessWidget {
       this.width,
       this.results,
       this.blurValue = 6.0,
-      this.event});
+      this.event,
+      this.imageUrl,
+      this.title,
+      this.voteAverage,
+      this.episodes});
 
   final CardType cardType;
   final CardOrientation orientation;
@@ -22,26 +28,32 @@ class CustomCard extends StatelessWidget {
   final Result? results;
   final double blurValue;
   final void Function()? event;
+  final String? imageUrl;
+  final String? title;
+  final String? voteAverage;
+  final String? episodes;
 
   @override
   Widget build(BuildContext context) {
     final bool isPortrait = orientation == CardOrientation.POTRAIT;
     final Size size = getSize(isPortrait, height, width);
     final double borderRadius = (isPortrait ? 0.06 : 0.1) * size.height;
-    final imagePath = isPortrait
-        ? (results?.posterPath ?? results?.backdropPath ?? "")
-        : (results?.backdropPath ?? results?.posterPath ?? "");
+    final imagePath = imageUrl ??
+        (isPortrait
+            ? (results?.posterPath ?? results?.backdropPath ?? "")
+            : (results?.backdropPath ?? results?.posterPath ?? ""));
     final double textSize = (isPortrait ? 0.05 : 0.11) * size.height;
     final int maxLines = isPortrait ? 2 : 1;
     final decoration = BoxDecoration(color: AppColors.black5.withAlpha(70));
+    final name = title ?? results?.title ?? results?.originalTitle ?? "";
 
     ImageType imageType;
-    String? imageUrl;
+    String? image;
     Widget cardChild;
     switch (cardType) {
       case CardType.GENRE:
         imageType = ImageType.LOCAL;
-        imageUrl = imagePath;
+        image = imagePath;
         cardChild = blurEffect(
             blurValue,
             Container(
@@ -53,7 +65,7 @@ class CustomCard extends StatelessWidget {
                     vertical: 0.5 * AppConstants.SIDE_PADDING),
                 decoration: decoration,
                 child: CustomText(
-                    text: results?.title ?? results?.originalTitle ?? "",
+                    text: name,
                     family: AppFonts.STAATLICHES,
                     size: 2 * textSize,
                     weight: FontWeight.w900,
@@ -63,38 +75,36 @@ class CustomCard extends StatelessWidget {
         break;
       default:
         imageType = ImageType.REMOTE;
-        imageUrl = getImageUrl(imagePath);
-        final adult = results?.adult == true;
-        final voteAverage = results?.voteAverage;
+        image = getImageUrl(imagePath);
+        final adult = (episodes != null) || (results?.adult == true);
+        final average = voteAverage ?? results?.voteAverage;
         final tags =
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           if (adult)
             CustomTag(
                 tagSize: TagSize.SMALL,
-                value: "18+",
+                value: episodes ?? "18+",
                 backgroundColor: AppColors.black3.withAlpha(70)),
           SizedBox(width: 0.01 * size.height),
-          if (voteAverage != null && voteAverage != "0.0")
+          if (average != null && average != "0.0")
             CustomTag(
-                tagSize: TagSize.SMALL, icon: AppSvgs.STAR, value: voteAverage),
-        ]).paddingAll(0.05 * size.height);
+                tagSize: TagSize.SMALL, icon: AppSvgs.STAR, value: average),
+        ]).paddingAll(0.5 * AppConstants.SIDE_PADDING);
         final textCard = blurEffect(
             blurValue,
             Container(
                 height: 0.2 * size.height,
-                width: width,
                 alignment: Alignment.center,
                 padding:
                     EdgeInsets.symmetric(horizontal: AppConstants.SIDE_PADDING),
                 decoration: decoration,
                 child: CustomText(
-                  text: results?.title ?? results?.originalTitle ?? "",
-                  size: textSize,
-                  weight: FontWeight.w900,
-                  maxLines: maxLines,
-                  align: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                )),
+                    text: name,
+                    size: textSize,
+                    weight: FontWeight.w900,
+                    maxLines: maxLines,
+                    align: TextAlign.center,
+                    overflow: TextOverflow.ellipsis)),
             borderRadius:
                 BorderRadius.vertical(bottom: Radius.circular(borderRadius)));
         cardChild = Column(
@@ -103,16 +113,31 @@ class CustomCard extends StatelessWidget {
         break;
     }
 
-    return Stack(alignment: Alignment.bottomCenter, children: [
-      CustomImage(
-          imageType: imageType,
-          imageUrl: imageUrl,
-          onClick: event,
-          borderRadius: BorderRadius.circular(borderRadius),
-          height: size.height,
-          width: size.width),
-      IgnorePointer(child: cardChild)
-    ]);
+    final errorWidget = name.isEmpty
+        ? null
+        : Container(
+            height: size.height,
+            width: size.width,
+            color: AppColors.black2,
+            alignment: Alignment.center,
+            child: CustomText(
+                family: AppFonts.STAATLICHES,
+                text: name.substring(0, 1),
+                size: 0.6 * size.height,
+                weight: FontWeight.w900));
+
+    return Stack(
+        alignment: Alignment.bottomCenter,
+        fit: StackFit.expand,
+        children: [
+          CustomImage(
+              imageType: imageType,
+              imageUrl: image,
+              onClick: event,
+              borderRadius: BorderRadius.circular(borderRadius),
+              errorWidget: errorWidget),
+          IgnorePointer(child: cardChild)
+        ]);
   }
 
   Size getSize(bool isPortrait, double? height, double? width) {
@@ -126,7 +151,7 @@ class CustomCard extends StatelessWidget {
       return Size(width, h);
     }
 
-    h = height ?? (isPortrait ? 0.32.sh : 0.17.sh);
+    h = height ?? (isPortrait ? 260.w : 150.w);
     w = h * aspectRatio;
     return Size(w, h);
   }

@@ -30,7 +30,7 @@ class BaseService {
       Map<String, String>? queryParams}) async {
     try {
       Uri uri = _buildUri(apiHost, version, endPoint, queryParams);
-      log('$responseType Request: $uri', name: 'BaseService');
+      log('${responseType.name} Request: $uri', name: 'BaseService');
 
       switch (responseType) {
         case ResponseType.GET:
@@ -123,7 +123,6 @@ class BaseService {
       case 201:
         try {
           final decodedData = jsonDecode(response.body);
-          log('Response Success', name: 'BaseService');
           return decodedData as Map<String, dynamic>;
         } catch (e) {
           throw ApiException(

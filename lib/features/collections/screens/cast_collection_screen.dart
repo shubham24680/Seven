@@ -2,13 +2,14 @@ import 'dart:developer';
 import 'package:seven/app/app.dart';
 
 class CastCollectionScreen extends ConsumerWidget {
-  const CastCollectionScreen(this.id, {super.key});
+  const CastCollectionScreen(this.id, this.type, {super.key});
 
   final String id;
+  final String type;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final showCredits = ref.watch(showCreditsProvider(id));
+    final showCredits = ref.watch(showCreditsProvider("$type/$id"));
     final Map<String, List<CastAndCrew>> departments = {};
     final verticalPadding = MediaQuery.of(context).padding.top + 56;
 
