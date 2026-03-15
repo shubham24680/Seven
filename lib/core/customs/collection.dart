@@ -35,14 +35,15 @@ class CustomCollection extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isPortrait = orientation == CardOrientation.POTRAIT;
     final bool isVertical = scrollDirection == Axis.vertical;
-    final incresedCount = DimensionUtil().deviceSize == DeviceSize.SMALL ? 1 : 2;
+    final incresedCount =
+        DimensionUtil().deviceSize == DeviceSize.SMALL ? 1 : 2;
     final double aspectRatio = isPortrait
         ? AppConstants.CARD_RATIO_PORTRAIT
         : AppConstants.CARD_RATIO_LANDSCAPE;
     final double height = isPortrait ? 250.w : 150.w;
-    final double width =
-        (1.sw - (incresedCount * crossAxisCount + 1) * AppConstants.SIDE_PADDING) /
-            (incresedCount * crossAxisCount);
+    final double width = (1.sw -
+            (incresedCount * crossAxisCount + 1) * AppConstants.SIDE_PADDING) /
+        (incresedCount * crossAxisCount);
     final double borderRadius = (isPortrait ? 0.06 : 0.1) * height;
     final double verticalPadding = MediaQuery.of(context).padding.top;
 
@@ -58,7 +59,8 @@ class CustomCollection extends StatelessWidget {
           width: isVertical ? width : null,
           results: results?[index],
           blurValue: blurValue,
-          event: () => context.push("$screenPath${results?[index].id}"));
+          event: () => context.push("$screenPath${results?[index].id}",
+              extra: results?[index].mediaType.name.toLowerCase()));
     }
 
     final itemCount =
@@ -90,9 +92,10 @@ class CustomCollection extends StatelessWidget {
               ? Flexible(child: collectionItems)
               : SizedBox(
                   height: incresedCount * crossAxisCount * height +
-                      (incresedCount * crossAxisCount - 1) * AppConstants.SIDE_PADDING,
+                      (incresedCount * crossAxisCount - 1) *
+                          AppConstants.SIDE_PADDING,
                   child: collectionItems),
-          SizedBox(height: isSafeHeight ? 0 : 25.w)
+          SizedBox(height: isSafeHeight ? 0 : 24.w)
         ]);
   }
 

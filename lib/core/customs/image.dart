@@ -9,6 +9,7 @@ class CustomImage extends StatelessWidget {
       this.imageUrl,
       this.borderRadius = BorderRadius.zero,
       this.placeholder,
+      this.errorWidget,
       this.fit,
       this.height,
       this.width,
@@ -19,6 +20,7 @@ class CustomImage extends StatelessWidget {
   final String? imageUrl;
   final BorderRadius borderRadius;
   final Widget? placeholder;
+  final Widget? errorWidget;
   final BoxFit? fit;
   final double? height;
   final double? width;
@@ -42,12 +44,14 @@ class CustomImage extends StatelessWidget {
             placeholder: (context, url) => (placeholder != null)
                 ? placeholder!
                 : customShimmer(height: height, width: width),
-            errorWidget: (context, url, error) => Image.asset(
-                  AppImages.PLACEHOLDER,
-                  fit: fit ?? BoxFit.cover,
-                  height: height,
-                  width: height,
-                ),
+            errorWidget: (context, url, error) => (errorWidget != null)
+                ? errorWidget!
+                : Image.asset(
+                    AppImages.PLACEHOLDER,
+                    fit: fit ?? BoxFit.cover,
+                    height: height,
+                    width: height,
+                  ),
             fit: fit ?? BoxFit.cover,
             height: height,
             width: width);

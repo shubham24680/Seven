@@ -1,5 +1,13 @@
 import 'package:seven/app/app.dart';
 
+enum MediaType {
+  MOVIE("Movie"),
+  TV("TV");
+
+  final String value;
+  const MediaType(this.value);
+}
+
 class ShowsModel extends Network<ShowsModel> {
   final Dates? dates;
   final int? page;
@@ -55,14 +63,24 @@ class Result extends Network<Result> {
   final String? backdropPath;
   final Result? belongsToCollection;
   final int? budget;
+  final List<CreatedBy>? createdBy;
+  final List<int>? episodeRunTime;
   final List<Genre>? genres;
   final List<dynamic>? genreIds;
   final String? homepage;
   final int? id;
   final String? imdbId;
+  final bool? inProduction;
+  final List<String>? languages;
+  final DateTime? lastAirDate;
+  final LastEpisodeToAir? lastEpisodeToAir;
+  final MediaType mediaType;
+  final List<ProductionCompany>? networks;
+  final int? numberOfEpisodes;
+  final int? numberOfSeasons;
+  final List<String>? originCountry;
   final String? originalLanguage;
   final String? originalTitle;
-  final String? originalName;
   final String? overview;
   final List<Result>? parts;
   final double? popularity;
@@ -74,13 +92,13 @@ class Result extends Network<Result> {
   final int? runtime;
   final List<SpokenLanguage>? spokenLanguages;
   final String? status;
+  final List<Season>? seasons;
   final String? tagline;
   final String? title;
+  final String? type;
   final bool? video;
   final String? voteAverage;
   final int? voteCount;
-  final String? mediaType;
-  final String? name;
 
   Result(
       {this.adult,
@@ -94,7 +112,6 @@ class Result extends Network<Result> {
       this.imdbId,
       this.originalLanguage,
       this.originalTitle,
-      this.originalName,
       this.overview,
       this.parts,
       this.popularity,
@@ -111,8 +128,19 @@ class Result extends Network<Result> {
       this.video,
       this.voteAverage,
       this.voteCount,
-      this.mediaType,
-      this.name});
+      this.mediaType = MediaType.MOVIE,
+      this.createdBy,
+      this.episodeRunTime,
+      this.lastEpisodeToAir,
+      this.networks,
+      this.numberOfEpisodes,
+      this.numberOfSeasons,
+      this.originCountry,
+      this.seasons,
+      this.type,
+      this.inProduction,
+      this.languages,
+      this.lastAirDate});
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
       adult: json["adult"],
@@ -130,8 +158,7 @@ class Result extends Network<Result> {
       id: json["id"],
       imdbId: json["imdb_id"],
       originalLanguage: json["original_language"],
-      originalTitle: json["original_title"],
-      originalName: json["original_name"],
+      originalTitle: json["original_title"] ?? json["original_name"],
       overview: json["overview"],
       parts: (json["parts"] as List<dynamic>?)
           ?.map((x) => Result.fromJson(x as Map<String, dynamic>))
@@ -144,7 +171,8 @@ class Result extends Network<Result> {
       productionCountries: (json["production_countries"] as List<dynamic>?)
           ?.map((x) => ProductionCountry.fromJson(x as Map<String, dynamic>))
           .toList(),
-      releaseDate: _parseDateTime(json["release_date"]),
+      releaseDate:
+          _parseDateTime(json["release_date"] ?? json["first_air_date"]),
       revenue: json["revenue"],
       runtime: json["runtime"],
       spokenLanguages: (json["spoken_languages"] as List<dynamic>?)
@@ -152,12 +180,41 @@ class Result extends Network<Result> {
           .toList(),
       status: json["status"],
       tagline: json["tagline"],
-      title: json["title"],
+      title: json["title"] ?? json["name"],
       video: json["video"],
       voteAverage: json["vote_average"]?.toStringAsFixed(1),
       voteCount: json["vote_count"],
-      mediaType: json["media_type"],
-      name: json["name"]);
+      mediaType: MediaType.values.firstWhere(
+        (type) => type.name.toLowerCase() == json["media_type"]?.toLowerCase(),
+        orElse: () => MediaType.MOVIE,
+      ),
+      inProduction: json["in_production"],
+      languages: (json["languages"] as List<dynamic>?)
+          ?.map((x) => x as String)
+          .toList(),
+      lastAirDate: _parseDateTime(json["last_air_date"]),
+      networks: (json["networks"] as List<dynamic>?)
+          ?.map((x) => ProductionCompany.fromJson(x as Map<String, dynamic>))
+          .toList(),
+      numberOfEpisodes: json["number_of_episodes"],
+      numberOfSeasons: json["number_of_seasons"],
+      originCountry: (json["origin_country"] as List<dynamic>?)
+          ?.map((x) => x as String)
+          .toList(),
+      seasons: (json["seasons"] as List<dynamic>?)
+          ?.map((x) => Season.fromJson(x as Map<String, dynamic>))
+          .toList(),
+      type: json["type"],
+      createdBy: (json["created_by"] as List<dynamic>?)
+          ?.map((x) => CreatedBy.fromJson(x as Map<String, dynamic>))
+          .toList(),
+      episodeRunTime: (json["episode_run_time"] as List<dynamic>?)
+          ?.map((x) => x as int)
+          .toList(),
+      lastEpisodeToAir: json["last_episode_to_air"] != null
+          ? LastEpisodeToAir.fromJson(
+              json["last_episode_to_air"] as Map<String, dynamic>)
+          : null);
 
   Map<String, dynamic> toJson() => {
         "adult": adult,
@@ -171,7 +228,7 @@ class Result extends Network<Result> {
         "imdb_id": imdbId,
         "original_language": originalLanguage,
         "original_title": originalTitle,
-        "original_name": originalName,
+        "original_name": originalTitle,
         "overview": overview,
         "parts": parts?.map((x) => x.toJson()),
         "popularity": popularity,
@@ -181,17 +238,30 @@ class Result extends Network<Result> {
         "production_countries":
             productionCountries?.map((x) => x.toJson()).toList(),
         "release_date": dateFormat(releaseDate),
+        "first_air_date": dateFormat(releaseDate),
         "revenue": revenue,
         "runtime": runtime,
         "spoken_languages": spokenLanguages?.map((x) => x.toJson()).toList(),
         "status": status,
         "tagline": tagline,
         "title": title,
+        "name": title,
         "video": video,
         "vote_average": double.parse(voteAverage ?? "0.0"),
         "vote_count": voteCount,
-        "media_type": mediaType,
-        "name": name
+        "media_type": mediaType.name.toLowerCase(),
+        "in_production": inProduction,
+        "languages": languages,
+        "last_air_date": dateFormat(lastAirDate),
+        "networks": networks?.map((x) => x.toJson()).toList(),
+        "number_of_episodes": numberOfEpisodes,
+        "number_of_seasons": numberOfSeasons,
+        "origin_country": originCountry,
+        "seasons": seasons?.map((x) => x.toJson()).toList(),
+        "type": type,
+        "created_by": createdBy?.map((x) => x.toJson()).toList(),
+        "episode_run_time": episodeRunTime,
+        "last_episode_to_air": lastEpisodeToAir?.toJson()
       };
 }
 
@@ -258,6 +328,147 @@ class SpokenLanguage {
 
   Map<String, dynamic> toJson() =>
       {"english_name": englishName, "iso_639_1": iso6391, "name": name};
+}
+
+class CreatedBy {
+  final int? id;
+  final String? creditId;
+  final String? name;
+  final int? gender;
+  final String? profilePath;
+
+  CreatedBy({
+    this.id,
+    this.creditId,
+    this.name,
+    this.gender,
+    this.profilePath,
+  });
+
+  factory CreatedBy.fromJson(Map<String, dynamic> json) => CreatedBy(
+        id: json["id"],
+        creditId: json["credit_id"],
+        name: json["name"],
+        gender: json["gender"],
+        profilePath: json["profile_path"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "credit_id": creditId,
+        "name": name,
+        "gender": gender,
+        "profile_path": profilePath,
+      };
+}
+
+class Season {
+  final DateTime? airDate;
+  final int? episodeCount;
+  final int? id;
+  final String? name;
+  final String? overview;
+  final String? posterPath;
+  final int? seasonNumber;
+  final double? voteAverage;
+
+  Season({
+    this.airDate,
+    this.episodeCount,
+    this.id,
+    this.name,
+    this.overview,
+    this.posterPath,
+    this.seasonNumber,
+    this.voteAverage,
+  });
+
+  factory Season.fromJson(Map<String, dynamic> json) => Season(
+        airDate:
+            json["air_date"] == null ? null : DateTime.parse(json["air_date"]),
+        episodeCount: json["episode_count"],
+        id: json["id"],
+        name: json["name"],
+        overview: json["overview"],
+        posterPath: json["poster_path"],
+        seasonNumber: json["season_number"],
+        voteAverage: json["vote_average"]?.toDouble(),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "air_date":
+            "${airDate!.year.toString().padLeft(4, '0')}-${airDate!.month.toString().padLeft(2, '0')}-${airDate!.day.toString().padLeft(2, '0')}",
+        "episode_count": episodeCount,
+        "id": id,
+        "name": name,
+        "overview": overview,
+        "poster_path": posterPath,
+        "season_number": seasonNumber,
+        "vote_average": voteAverage,
+      };
+}
+
+class LastEpisodeToAir {
+  final int? id;
+  final String? name;
+  final String? overview;
+  final double? voteAverage;
+  final int? voteCount;
+  final DateTime? airDate;
+  final int? episodeNumber;
+  final String? productionCode;
+  final int? runtime;
+  final int? seasonNumber;
+  final int? showId;
+  final String? stillPath;
+
+  LastEpisodeToAir({
+    this.id,
+    this.name,
+    this.overview,
+    this.voteAverage,
+    this.voteCount,
+    this.airDate,
+    this.episodeNumber,
+    this.productionCode,
+    this.runtime,
+    this.seasonNumber,
+    this.showId,
+    this.stillPath,
+  });
+
+  factory LastEpisodeToAir.fromJson(Map<String, dynamic> json) =>
+      LastEpisodeToAir(
+        id: json["id"],
+        name: json["name"],
+        overview: json["overview"],
+        voteAverage: json["vote_average"]?.toDouble(),
+        voteCount: json["vote_count"],
+        airDate:
+            json["air_date"] == null ? null : DateTime.parse(json["air_date"]),
+        episodeNumber: json["episode_number"],
+        productionCode: json["production_code"],
+        runtime: json["runtime"],
+        seasonNumber: json["season_number"],
+        showId: json["show_id"],
+        stillPath: json["still_path"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "overview": overview,
+        "vote_average": voteAverage,
+        "vote_count": voteCount,
+        "air_date":
+            "${airDate!.year.toString().padLeft(4, '0')}-${airDate!.month.toString().padLeft(2, '0')}-${airDate!.day.toString().padLeft(2, '0')}",
+        "episode_number": episodeNumber,
+        "production_code": productionCode,
+        "runtime": runtime,
+        "season_number": seasonNumber,
+        "show_id": showId,
+        "still_path": stillPath,
+      };
 }
 
 /// Safely parses a date string to DateTime

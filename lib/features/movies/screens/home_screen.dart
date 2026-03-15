@@ -7,7 +7,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = ref.watch(scrollProvider(0)).scrollController;
 
-    buildCollection(String collectionName,
+    Widget buildCollection(String collectionName,
         AsyncNotifierProvider<ShowNotifier, List<Result>> provider) {
       final shows = ref.watch(provider);
 
@@ -32,11 +32,11 @@ class HomeScreen extends ConsumerWidget {
 
     final items = [
       const HomeCarousel().paddingFromLTRB(bottom: AppConstants.SIDE_PADDING),
-      buildCollection("Top Movies", topShowsProvider),
       buildCollection("New Release", newReleaseShowsProvider),
+      buildCollection("Popular in India", popularInIndiaShowsProvider),
       buildCollection("Upcoming", upcomingShowsProvider),
-      buildCollection("All time classic", allTimeClassicShowsProvider),
-      buildCollection("Popular in India", popularInIndiaShowsProvider)
+      buildCollection("Top Movies", topShowsProvider),
+      buildCollection("All time classic", allTimeClassicShowsProvider)
     ];
 
     return ListView.builder(

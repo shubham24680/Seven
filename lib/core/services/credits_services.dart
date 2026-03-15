@@ -6,8 +6,8 @@ class CreditsServices {
   CreditsServices._();
   static CreditsServices get instance => _instance ??= CreditsServices._();
 
-  Future<Credits> fetchCasts(String id) async => _fetchCredits(
-      ApiConstants.MOVIE_DETAIL + id + ApiConstants.CREDITS, "fetchCasts");
+  Future<Credits> fetchCasts(String id) async =>
+      _fetchCredits(id + ApiConstants.CREDITS, "fetchCasts");
 
   // RESULT
   Future<Credits> _fetchCredits(String endPoint, String errorContext) async {
