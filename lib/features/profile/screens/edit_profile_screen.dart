@@ -4,10 +4,13 @@ import 'package:seven/app/app.dart';
 class EditProfileScreen extends ConsumerWidget {
   const EditProfileScreen({super.key});
 
+  static const _padding = AppConstants.SIDE_PADDING;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profileState = ref.watch(profileProvider);
     final profileController = ref.read(profileProvider.notifier);
+    final bottomPadding = DimensionUtil().bottomBarHeight + _padding;
 
     void chooseAvatar() {
       final child = GridView.builder(
@@ -185,7 +188,7 @@ class EditProfileScreen extends ConsumerWidget {
                     text: profileState.tryEditing ? "Save" : "Edit",
                     weight: FontWeight.w900))
           ],
-        ).paddingAll(AppConstants.SIDE_PADDING);
+        ).paddingFromLTRB(left: _padding, right: _padding, bottom: bottomPadding);
 
     return PopScope(
         onPopInvokedWithResult: (didPop, result) =>
@@ -197,20 +200,19 @@ class EditProfileScreen extends ConsumerWidget {
                   profileController.loadData();
                 }, "Edit Profile"),
                 body: Container(
-                    width: 1.sw,
-                    padding: const EdgeInsets.all(AppConstants.SIDE_PADDING),
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: _padding, vertical: 2 * _padding),
                     decoration: getDecoration(),
                     child: Column(children: [
                       CustomImage(
                           imageType: ImageType.LOCAL,
                           imageUrl:
                               AppImages.AVATARS[profileState.profilePicIndex],
-                          height: 0.25.sh,
-                          width: 0.25.sh,
-                          borderRadius: BorderRadius.circular(1.sh)),
+                          height: 200.w,
+                          borderRadius: BorderRadius.circular(1000.r)),
                       const Spacer(),
                       showData(),
-                      const Spacer(flex: 3),
+                      const Spacer(flex: 4),
                     ])),
                 bottomNavigationBar: bottomButton())
             .onTap(event: () => FocusScope.of(context).unfocus()));

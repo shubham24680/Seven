@@ -14,8 +14,8 @@ class CreditsServices {
     try {
       final response = await BaseService.instance.fetchData(
           apiHost: ApiConstants.BASE_URL,
-          endPoint: endPoint,
-          responseType: ResponseType.GET);
+          version: ApiConstants.VERSION_3,
+          endPoint: endPoint);
 
       return Credits.fromJson(response);
     } on ApiException catch (e) {
