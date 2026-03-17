@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:seven/app/app.dart';
 
+enum HeaderType { TMDB, RAPID }
+
 enum ResponseType { GET, POST, PUT, DELETE }
 
 class BaseService {
@@ -13,34 +15,47 @@ class BaseService {
 
   http.Client get _client => http.Client();
 
-  Map<String, String> _headers() {
-    return {
-      'Authorization': ApiConstants.BEARER_TOKEN,
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-    };
+  Map<String, String> _headers({HeaderType headerType = HeaderType.TMDB}) {
+    switch (headerType) {
+      case HeaderType.RAPID:
+        return {
+          'X-RapidAPI-Key': ApiConstants.RAPID_API_KEY,
+          'X-RapidAPI-Host': ApiConstants.RAPID_API_HOST,
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        };
+      default:
+        return {
+          'Authorization': ApiConstants.BEARER_TOKEN,
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        };
+    }
   }
 
   Future<Map<String, dynamic>> fetchData(
       {required String apiHost,
       required String endPoint,
-      required ResponseType responseType,
-      String version = ApiConstants.VERSION_3,
+      ResponseType responseType = ResponseType.GET,
+      HeaderType headerType = HeaderType.TMDB,
+      String version = "",
       Map<String, String>? body,
       Map<String, String>? queryParams}) async {
     try {
-      Uri uri = _buildUri(apiHost, version, endPoint, queryParams);
-      log('${responseType.name} Request: $uri', name: 'BaseService');
+      final uri = _buildUri(apiHost, version, endPoint, queryParams);
+      final headers = _headers(headerType: headerType);
+      log('${headerType.name}-${responseType.name} Request: $uri',
+          name: 'BaseService');
 
       switch (responseType) {
         case ResponseType.GET:
-          return await _get(uri);
+          return await _get(uri, headers: headers);
         case ResponseType.POST:
-          return await _post(uri, body: body);
+          return await _post(uri, headers: headers, body: body);
         case ResponseType.PUT:
-          return await _put(uri, body: body);
+          return await _put(uri, headers: headers, body: body);
         case ResponseType.DELETE:
-          return await _delete(uri);
+          return await _delete(uri, headers: headers);
       }
     } on SocketException catch (e) {
       log('Network Error: $e', name: 'BaseService');
@@ -62,8 +77,9 @@ class BaseService {
   }
 
   // GET
-  Future<Map<String, dynamic>> _get(Uri uri) async {
-    final response = await _client.get(uri, headers: _headers()).timeout(
+  Future<Map<String, dynamic>> _get(Uri uri,
+      {Map<String, String>? headers}) async {
+    final response = await _client.get(uri, headers: headers).timeout(
         ApiConstants.CONNECTION_TIMEOUT,
         onTimeout: () => throw TimeoutException());
 
@@ -72,10 +88,10 @@ class BaseService {
 
   /// POST
   Future<Map<String, dynamic>> _post(Uri uri,
-      {Map<String, dynamic>? body}) async {
+      {Map<String, String>? headers, Map<String, dynamic>? body}) async {
     final response = await _client
         .post(uri,
-            headers: _headers(), body: body != null ? jsonEncode(body) : null)
+            headers: headers, body: body != null ? jsonEncode(body) : null)
         .timeout(ApiConstants.CONNECTION_TIMEOUT,
             onTimeout: () => throw TimeoutException());
 
@@ -83,10 +99,11 @@ class BaseService {
   }
 
   /// PUT
-  Future<dynamic> _put(Uri uri, {Map<String, dynamic>? body}) async {
+  Future<dynamic> _put(Uri uri,
+      {Map<String, String>? headers, Map<String, dynamic>? body}) async {
     final response = await _client
         .put(uri,
-            headers: _headers(), body: body != null ? jsonEncode(body) : null)
+            headers: headers, body: body != null ? jsonEncode(body) : null)
         .timeout(ApiConstants.CONNECTION_TIMEOUT,
             onTimeout: () => throw TimeoutException());
 
@@ -94,9 +111,10 @@ class BaseService {
   }
 
   /// DELETE
-  Future<Map<String, dynamic>> _delete(Uri uri) async {
+  Future<Map<String, dynamic>> _delete(Uri uri,
+      {Map<String, String>? headers}) async {
     final response = await _client
-        .delete(uri, headers: _headers())
+        .delete(uri, headers: headers)
         .timeout(ApiConstants.CONNECTION_TIMEOUT, onTimeout: () {
       throw TimeoutException();
     });

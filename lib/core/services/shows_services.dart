@@ -112,7 +112,6 @@ class ShowsServices {
       final response = await BaseService.instance.fetchData(
           apiHost: ApiConstants.BASE_URL,
           endPoint: endPoint,
-          responseType: ResponseType.GET,
           queryParams: queryParams);
 
       return ShowsModel.fromJson(response);
@@ -132,8 +131,8 @@ class ShowsServices {
     try {
       final response = await BaseService.instance.fetchData(
           apiHost: ApiConstants.BASE_URL,
-          endPoint: endPoint,
-          responseType: ResponseType.GET);
+          version: ApiConstants.VERSION_3,
+          endPoint: endPoint);
 
       return Result.fromJson(response);
     } on ApiException catch (e) {

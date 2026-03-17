@@ -27,23 +27,29 @@ class HomeCarousel extends ConsumerWidget {
 
     return trending.when(
         data: (show) {
-          final currentShow = show[carouselState.carouselCurrentIndex];
+          final trendingShows =
+              show.where((element) => element.posterPath != null).toList();
+          final currentShow = trendingShows[carouselState.carouselCurrentIndex];
           final bgImage = DimensionUtil().deviceSize == DeviceSize.SMALL
               ? currentShow.posterPath
               : currentShow.backdropPath;
 
           Widget buildCarousel() {
             return CarouselSlider.builder(
-                itemCount: show.length,
+                itemCount: trendingShows.length,
                 itemBuilder: (context, index, realIndex) {
                   final image = DimensionUtil().deviceSize == DeviceSize.SMALL
-                      ? show[index].posterPath
-                      : show[index].backdropPath;
+                      ? trendingShows[index].posterPath
+                      : trendingShows[index].backdropPath;
 
                   return CustomImage(
                       imageType: ImageType.REMOTE,
-                      onClick: () => context.push("/detail/${show[index].id}",
-                          extra: show[index].mediaType.name.toLowerCase()),
+                      onClick: () => context.push(
+                          "/detail/${trendingShows[index].id}",
+                          extra: trendingShows[index]
+                              .mediaType
+                              .name
+                              .toLowerCase()),
                       imageUrl: getImageUrl(image),
                       height: carouselHeight,
                       borderRadius:
@@ -66,7 +72,7 @@ class HomeCarousel extends ConsumerWidget {
                     end: Alignment.bottomCenter,
                     colors: [AppColors.transparent, AppColors.black3]));
 
-            final showGenre = getGenre(currentShow.genreIds?.first);
+            final showGenre = getGenre(currentShow.genreIds?.firstOrNull);
             final item = <String>[
               if (showGenre != null) showGenre,
               currentShow.mediaType.value

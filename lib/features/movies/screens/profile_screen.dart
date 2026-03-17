@@ -5,58 +5,52 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Consumer(builder: (_, ref, __) {
-          final profileState = ref.watch(profileProvider);
+    return SingleChildScrollView(
+        padding: EdgeInsets.only(
+            left: AppConstants.SIDE_PADDING,
+            right: AppConstants.SIDE_PADDING,
+            top: 5 * AppConstants.SIDE_PADDING,
+            bottom: AppConstants.SIDE_PADDING),
+        child: Column(children: [
+          Consumer(builder: (_, ref, __) {
+            final profileState = ref.watch(profileProvider);
+            final name = profileState.name;
 
-          return Column(children: [
-            CustomImage(
-                imageType: ImageType.LOCAL,
-                imageUrl: AppImages.AVATARS[profileState.profilePicIndex],
-                height: 0.15.sh,
-                borderRadius: BorderRadius.circular(1.sh)),
-            SizedBox(height: 0.01.sh),
-            if (profileState.name != null && profileState.name!.isNotEmpty)
-              CustomText(
-                  text: profileState.name ?? "",
-                  family: AppFonts.STAATLICHES,
-                  size: 0.03.sh)
-          ]);
-        }),
-        SizedBox(height: 0.02.sh),
-        buildButtons(context, false),
-        // contentList(context),
-        const Spacer(),
-        CustomText(
-            text: "Version 1.1.0",
-            size: 0.015.sh,
-            color: AppColors.lightSteel1.withAlpha(150))
-      ],
-    ).paddingFromLTRB(
-        left: AppConstants.SIDE_PADDING,
-        right: AppConstants.SIDE_PADDING,
-        top: 4 * AppConstants.SIDE_PADDING,
-        bottom: AppConstants.SIDE_PADDING);
+            return Column(children: [
+              CustomImage(
+                  imageType: ImageType.LOCAL,
+                  imageUrl: AppImages.AVATARS[profileState.profilePicIndex],
+                  height: 120.w,
+                  borderRadius: BorderRadius.circular(1000.r)),
+              SizedBox(height: 8.w),
+              if (name != null && name.isNotEmpty)
+                CustomText(text: name, family: AppFonts.STAATLICHES, size: 24.w)
+            ]);
+          }),
+          SizedBox(height: 16.w),
+          buildButtons(context, false),
+          // contentList(context),
+          // CustomText(
+          //     text: "Version 1.1.0",
+          //     size: 0.015.sh,
+          //     color: AppColors.lightSteel1.withAlpha(150))
+        ]));
   }
 
   Widget buildButtons(BuildContext context, bool isUserActive) {
-    final height = 0.065.sh;
+    final height = 50.w;
     final editButton = CustomButton(
         buttonType: ButtonType.ELEVATED,
         onPressed: () => context.push("/editProfile"),
         height: height,
         backgroundColor: AppColors.vividNightfall4,
         child: Row(mainAxisSize: MainAxisSize.min, children: [
-          const CustomText(
-            text: "Edit profile",
-            weight: FontWeight.w900,
-          ),
-          SizedBox(width: 0.02.sw),
+          const CustomText(text: "Edit profile", weight: FontWeight.w900),
+          SizedBox(width: 8.w),
           CustomImage(
               imageType: ImageType.SVG_LOCAL,
               imageUrl: AppSvgs.ARROW_RIGHT,
-              height: 0.02.sh,
+              height: 16.w,
               color: AppColors.lightSteel1)
         ]));
     final logOutButton = CustomButton(
@@ -65,17 +59,14 @@ class ProfileScreen extends StatelessWidget {
         height: height,
         backgroundColor: AppColors.red1.withAlpha(70),
         child: const CustomText(
-          text: "Log out",
-          color: AppColors.red1,
-          weight: FontWeight.w900,
-        ));
+            text: "Log out", color: AppColors.red1, weight: FontWeight.w900));
 
     return isUserActive
         ? Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Expanded(child: editButton),
-              SizedBox(width: 0.02.sw),
+              SizedBox(width: 8.w),
               Expanded(child: logOutButton)
             ],
           )
@@ -87,7 +78,7 @@ class ProfileScreen extends StatelessWidget {
         itemCount: AppConstants.PROFILE.length,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        padding: EdgeInsets.only(top: 0.08.sh),
+        padding: EdgeInsets.only(top: 32.w),
         itemBuilder: (_, index) => InkWell(
             onTap: () {
               final route = AppConstants.PROFILE[index].string3;
@@ -99,9 +90,9 @@ class ProfileScreen extends StatelessWidget {
                   CustomImage(
                       imageType: ImageType.SVG_LOCAL,
                       imageUrl: AppConstants.PROFILE[index].string1,
-                      height: 0.03.sh,
+                      height: 24.w,
                       color: AppColors.vividNightfall4),
-                  SizedBox(width: 0.04.sw),
+                  SizedBox(width: 16.w),
                   CustomText(
                       text: AppConstants.PROFILE[index].string2 ?? "",
                       weight: FontWeight.w600),
@@ -109,13 +100,13 @@ class ProfileScreen extends StatelessWidget {
                   if (index == 0)
                     CustomText(
                         text: "Disabled",
-                        size: 0.015.sh,
+                        size: 14.w,
                         color: AppColors.lightSteel1.withAlpha(150)),
-                  SizedBox(width: 0.02.sw),
+                  SizedBox(width: 8.w),
                   CustomImage(
                       imageType: ImageType.SVG_LOCAL,
                       imageUrl: AppSvgs.ARROW_RIGHT,
-                      height: 0.02.sh,
+                      height: 16.w,
                       color: AppColors.lightSteel1.withAlpha(150))
                 ]))),
         separatorBuilder: (_, index) =>
