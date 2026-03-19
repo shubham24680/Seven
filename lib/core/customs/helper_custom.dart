@@ -36,8 +36,8 @@ AppBar customAppBar(void Function()? onPressed, String appBarTitle) {
       icon: AppSvgs.ARROW_LEFT,
       forgroundColor: AppColors.lightSteel1,
       backgroundColor: AppColors.transparent);
-  final title = CustomText(
-      text: appBarTitle, family: AppFonts.STAATLICHES, size: 24.w);
+  final title =
+      CustomText(text: appBarTitle, family: AppFonts.STAATLICHES, size: 24.w);
 
   return AppBar(
     leading: leading,

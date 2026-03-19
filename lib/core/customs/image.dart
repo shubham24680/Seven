@@ -1,6 +1,13 @@
 import 'package:seven/app/app.dart';
 
-enum ImageType { REMOTE, LOCAL, SVG_REMOTE, SVG_LOCAL }
+enum ImageType {
+  REMOTE,
+  LOCAL,
+  SVG_REMOTE,
+  SVG_LOCAL,
+  LOTTIE_LOCAL,
+  LOTTIE_REMOTE
+}
 
 class CustomImage extends StatelessWidget {
   const CustomImage(
@@ -64,6 +71,13 @@ class CustomImage extends StatelessWidget {
             fit: fit ?? BoxFit.contain,
             height: height,
             width: width);
+        break;
+      case ImageType.LOTTIE_LOCAL:
+        image = Lottie.asset(imageUrl ?? AppLotties.BOUNCING_BALL);
+        break;
+      case ImageType.LOTTIE_REMOTE:
+        image = Lottie.asset(imageUrl ?? AppLotties.BOUNCING_BALL,
+            fit: fit ?? BoxFit.contain, height: height, width: width);
         break;
       default:
         image = localImage;

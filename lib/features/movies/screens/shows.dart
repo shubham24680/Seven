@@ -13,14 +13,17 @@ class Shows extends ConsumerWidget {
         bottomIcon.length,
         (index) => BottomNavigationBarItem(
             label: "Item_$index",
-            icon: buildIcon(bottomIcon[index].icon, currentIndex == index)));
+            icon: buildIcon(bottomIcon[index], currentIndex == index)));
 
     final bottomNavigationBar = BottomNavigationBar(
-        onTap: (index) => ref.read(bottomNavigationProvider.notifier).state = index,
+        onTap: (index) =>
+            ref.read(bottomNavigationProvider.notifier).state = index,
         currentIndex: currentIndex,
         backgroundColor: AppColors.black4,
         showSelectedLabels: false,
         showUnselectedLabels: false,
+        selectedFontSize: 0,
+        unselectedFontSize: 0,
         type: BottomNavigationBarType.fixed,
         items: items);
 
@@ -37,7 +40,12 @@ class Shows extends ConsumerWidget {
             duration: Duration(milliseconds: 300)));
   }
 
-  Widget buildIcon(String icon, bool isSelected) {
+  Widget buildIcon(BottomNavigation item, bool isSelected) {
+    final icon = isSelected ? item.selectedIcon ?? item.icon : item.icon;
+
+    if (icon.contains(".json")) {
+      return Lottie.asset(icon, fit: BoxFit.contain, height: 50);
+    }
     return SvgPicture.asset(icon,
         colorFilter: ColorFilter.mode(
             isSelected ? AppColors.vividNightfall4 : AppColors.black1,

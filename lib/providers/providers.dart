@@ -5,3 +5,4 @@ export 'search_providers.dart';
 export 'show_detail_provider.dart';
 export 'shows_provider.dart';
 export 'helper_providers.dart';
+export 'sports_providers.dart';

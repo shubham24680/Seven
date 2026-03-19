@@ -26,7 +26,9 @@ class HomeScreen extends ConsumerWidget {
               ).paddingSymmetric(horizontal: AppConstants.SIDE_PADDING),
             ]);
           },
-          loading: () => CustomCollection(collectionName: collectionName),
+          loading: () => CustomCollection(
+              collectionName: collectionName,
+              orientation: CardOrientation.POTRAIT),
           error: (_, __) => const SizedBox.shrink());
     }
 

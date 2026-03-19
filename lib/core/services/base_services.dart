@@ -19,10 +19,9 @@ class BaseService {
     switch (headerType) {
       case HeaderType.RAPID:
         return {
-          'X-RapidAPI-Key': ApiConstants.RAPID_API_KEY,
-          'X-RapidAPI-Host': ApiConstants.RAPID_API_HOST,
+          'x-rapidapi-key': ApiConstants.RAPID_API_KEY,
+          'x-rapidapi-host': ApiConstants.RAPID_API_HOST,
           "Content-Type": "application/json",
-          "Accept": "application/json",
         };
       default:
         return {

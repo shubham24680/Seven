@@ -2,9 +2,11 @@ import 'package:seven/app/app.dart';
 
 class BottomNavigation {
   final String icon;
+  final String? selectedIcon;
   final Widget screen;
 
-  BottomNavigation({required this.icon, required this.screen});
+  BottomNavigation(
+      {required this.icon, this.selectedIcon, required this.screen});
 }
 
 class HelperModel {

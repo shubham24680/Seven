@@ -9,6 +9,7 @@ export 'package:go_router/go_router.dart';
 // IMAGES & UI Enhancement
 export 'package:cached_network_image/cached_network_image.dart';
 export 'package:flutter_svg/svg.dart';
+export 'package:lottie/lottie.dart';
 export 'package:shimmer/shimmer.dart';
 
 // UTILITIES

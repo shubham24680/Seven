@@ -1,6 +1,6 @@
 class AppImages {
-  static final AVATARS =
-      List.generate(10, (index) => "assets/avatars/avatar (${index + 1}).jpeg");
+  static final AVATARS = List.generate(
+      10, (index) => "assets/images/avatars/avatar (${index + 1}).jpeg");
   static const ACTION = "assets/images/genre_cards/back_drop/action.jpg";
   static const ANIMATION = "assets/images/genre_cards/back_drop/animation.jpg";
   static const DRAMA = "assets/images/genre_cards/back_drop/drama.jpg";
@@ -12,8 +12,8 @@ class AppImages {
   static const SCIENCE_FICTION =
       "assets/images/genre_cards/back_drop/science_fiction.jpg";
   static const THRILLER = "assets/images/genre_cards/back_drop/thriller.jpg";
-  static const ONBOARDING_1 = "assets/images/onboarding (1).jpg";
-  static const ONBOARDING_2 = "assets/images/onboarding (2).jpg";
+  static const ONBOARDING_1 = "assets/images/onboarding_1.jpg";
+  static const ONBOARDING_2 = "assets/images/onboarding_2.jpg";
   static const PLACEHOLDER = "assets/images/placeholder_image.png";
 }
 
@@ -40,10 +40,12 @@ class AppSvgs {
   static const SEARCH_OUTLINED =
       "assets/icons/outlined_icons/search_outlined.svg";
   static const SAVE = "assets/icons/filled_icons/save.svg";
+  static const SPORTS = "assets/icons/filled_icons/sports.svg";
 }
 
-class AppGifs {
-  static const NO_INTERNET_GIF = "assets/gifs/no_internet.gif";
+class AppLotties {
+  static const NO_INTERNET_GIF = "assets/lotties/no_internet.gif";
+  static const BOUNCING_BALL = "assets/lotties/bouncing_ball.json";
 }
 
 class AppFonts {

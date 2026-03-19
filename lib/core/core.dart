@@ -17,6 +17,7 @@ export 'services/base_services.dart';
 export 'services/credits_services.dart';
 export 'services/shows_services.dart';
 export 'services/network.dart';
+export 'services/sports_services.dart';
 
 // STORAGE
 export 'storage/shared_preferences_data.dart';
@@ -28,6 +29,7 @@ export 'theme/dark_theme.dart';
 export 'utils/colors.dart';
 export 'utils/widgets.dart';
 export 'utils/dimension.dart';
+export 'utils/palette_generator.dart';
 
 // CUSTOM
 export 'customs/extension.dart';
@@ -36,6 +38,7 @@ export 'customs/card.dart';
 export 'customs/collection.dart';
 export 'customs/helper_custom.dart';
 export 'customs/image.dart';
+export 'customs/score_card.dart';
 export 'customs/tag.dart';
 export 'customs/text_field.dart';
 export 'customs/text.dart';

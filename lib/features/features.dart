@@ -7,9 +7,11 @@ export 'onboarding/screens/onboading_screen.dart';
 // SHOWS
 export 'movies/screens/shows.dart';
 export 'movies/screens/home_screen.dart';
-
 export 'movies/widgets/home_carousel.dart';
 export 'movies/widgets/home_app_bar.dart';
+
+//SPORTS
+export 'movies/screens/sports_screen.dart';
 
 //SEARCH
 export 'movies/screens/search_screen.dart';

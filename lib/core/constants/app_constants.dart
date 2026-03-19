@@ -37,6 +37,10 @@ class AppConstants {
 
   static final List<BottomNavigation> BOTTOM_NAVIGATION = [
     BottomNavigation(icon: AppSvgs.HOME, screen: HomeScreen()),
+    BottomNavigation(
+        icon: AppSvgs.SPORTS,
+        selectedIcon: AppLotties.BOUNCING_BALL,
+        screen: const SportsScreen()),
     BottomNavigation(icon: AppSvgs.SEARCH, screen: const SearchScreen()),
     BottomNavigation(icon: AppSvgs.PROFILE, screen: const ProfileScreen()),
   ];
