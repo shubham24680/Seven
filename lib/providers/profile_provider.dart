@@ -51,10 +51,10 @@ class ProfileProvider extends StateNotifier<ProfileState> {
   Future<void> loadData() async {
     final prefs = await SPD.getInstance();
     state = state.copyWith(
-      profilePicIndex: prefs.profilePicIndex,
-      name: prefs.name,
-      genderIndex: prefs.genderIndex,
-      dateOfBirth: prefs.dateOfBirth,
+      profilePicIndex: prefs.get<int>(StorageKey.PROFILE_PIC_INDEX) ?? 0,
+      name: prefs.get<String>(StorageKey.NAME),
+      genderIndex: prefs.get<int>(StorageKey.GENDER_INDEX) ?? -1,
+      dateOfBirth: prefs.get<String>(StorageKey.DATE_OF_BIRTH),
       tryEditing: false,
     );
   }
@@ -65,14 +65,10 @@ class ProfileProvider extends StateNotifier<ProfileState> {
         dateOfBirth: state.dateOfBirthController.text);
 
     final prefs = await SPD.getInstance();
-    await prefs.setProfilePicIndex(state.profilePicIndex);
-    await prefs.setGenderIndex(state.genderIndex);
-    if (state.name != null) {
-      await prefs.setName(state.name ?? "");
-    }
-    if (state.dateOfBirth != null) {
-      await prefs.setDateOfBirth(state.dateOfBirth ?? "");
-    }
+    await prefs.set(StorageKey.PROFILE_PIC_INDEX, state.profilePicIndex);
+    await prefs.set(StorageKey.GENDER_INDEX, state.genderIndex);
+    await prefs.set(StorageKey.NAME, state.name);
+    await prefs.set(StorageKey.DATE_OF_BIRTH, state.dateOfBirth);
 
     clearFromField();
     log("Saved succesfully at index ${state.profilePicIndex}");

@@ -37,18 +37,6 @@ class CustomButton extends StatelessWidget {
     final widgetBorderRadius = BorderRadius.circular(
         borderRadius ?? (buttonType == ButtonType.ICON ? 1000.r : 12.r));
 
-    Size? getSize() {
-      if (height != null && width != null) {
-        return Size(width ?? 0, height ?? 0);
-      } else if (height != null) {
-        return Size.fromHeight(height ?? 0);
-      } else if (width != null) {
-        return Size.fromWidth(width ?? 0);
-      }
-
-      return null;
-    }
-
     Widget baseButton;
     switch (buttonType) {
       case ButtonType.TEXT:
@@ -93,5 +81,17 @@ class CustomButton extends StatelessWidget {
       baseButton,
       borderRadius: widgetBorderRadius,
     );
+  }
+
+  Size? getSize() {
+    if (height != null && width != null) {
+      return Size(width ?? 0, height ?? 0);
+    } else if (height != null) {
+      return Size.fromHeight(height ?? 0);
+    } else if (width != null) {
+      return Size.fromWidth(width ?? 0);
+    }
+
+    return null;
   }
 }

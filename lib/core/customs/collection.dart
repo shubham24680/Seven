@@ -75,7 +75,7 @@ class CustomCollection extends StatelessWidget {
             left: AppConstants.SIDE_PADDING,
             right: AppConstants.SIDE_PADDING,
             top: isVertical ? verticalPadding : 0,
-            bottom: isVertical ? AppConstants.SIDE_PADDING : 0),
+            bottom: isVertical ? AppConstants.SIDE_PADDING + DimensionUtil().bottomBarHeight : 0),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: incresedCount * crossAxisCount,
             crossAxisSpacing: 0.5 * AppConstants.SIDE_PADDING,

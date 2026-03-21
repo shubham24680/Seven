@@ -57,7 +57,7 @@ class CastCollectionScreen extends ConsumerWidget {
           GridView.builder(
               itemCount: data.length,
               shrinkWrap: true,
-              padding: EdgeInsets.all(0),
+              padding: EdgeInsets.only(bottom: DimensionUtil().bottomBarHeight),
               physics: NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,

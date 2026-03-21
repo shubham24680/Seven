@@ -4,47 +4,31 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:seven/app/app.dart';
 
-enum HeaderType { TMDB, RAPID }
-
 enum ResponseType { GET, POST, PUT, DELETE }
 
 class BaseService {
   static BaseService? _instance;
   BaseService._();
   static BaseService get instance => _instance ??= BaseService._();
+  final http.Client _client = http.Client();
 
-  http.Client get _client => http.Client();
-
-  Map<String, String> _headers({HeaderType headerType = HeaderType.TMDB}) {
-    switch (headerType) {
-      case HeaderType.RAPID:
-        return {
-          'X-RapidAPI-Key': ApiConstants.RAPID_API_KEY,
-          'X-RapidAPI-Host': ApiConstants.RAPID_API_HOST,
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        };
-      default:
-        return {
-          'Authorization': ApiConstants.BEARER_TOKEN,
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        };
-    }
-  }
+  Map<String, String> _headers() => {
+        'Authorization': ApiConstants.BEARER_TOKEN,
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      };
 
   Future<Map<String, dynamic>> fetchData(
       {required String apiHost,
       required String endPoint,
       ResponseType responseType = ResponseType.GET,
-      HeaderType headerType = HeaderType.TMDB,
       String version = "",
       Map<String, String>? body,
       Map<String, String>? queryParams}) async {
     try {
       final uri = _buildUri(apiHost, version, endPoint, queryParams);
-      final headers = _headers(headerType: headerType);
-      log('${headerType.name}-${responseType.name} Request: $uri',
+      final headers = _headers();
+      log('${responseType.name} Request: $uri',
           name: 'BaseService');
 
       switch (responseType) {

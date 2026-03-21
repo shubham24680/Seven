@@ -10,7 +10,7 @@ class ProfileScreen extends StatelessWidget {
             left: AppConstants.SIDE_PADDING,
             right: AppConstants.SIDE_PADDING,
             top: 5 * AppConstants.SIDE_PADDING,
-            bottom: AppConstants.SIDE_PADDING),
+            bottom: AppConstants.SIDE_PADDING + DimensionUtil().bottomBarHeight),
         child: Column(children: [
           Consumer(builder: (_, ref, __) {
             final profileState = ref.watch(profileProvider);

@@ -42,7 +42,7 @@ class HomeScreen extends ConsumerWidget {
     return ListView.builder(
         itemCount: items.length,
         controller: scrollController,
-        padding: EdgeInsets.zero,
+        padding: EdgeInsets.only(bottom: DimensionUtil().bottomBarHeight),
         physics: ClampingScrollPhysics(),
         itemBuilder: (context, index) => items[index]);
   }

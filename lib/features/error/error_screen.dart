@@ -22,7 +22,6 @@ class ErrorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final errorData = AppConstants.ERRORDATA;
-    final topPadding = MediaQuery.of(context).padding.top;
 
     final title = CustomText(
         text: heading ?? errorData.string1 ?? "",
@@ -64,6 +63,7 @@ class ErrorScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Column(
+                mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [title, desc]),
               img,
@@ -71,10 +71,13 @@ class ErrorScreen extends StatelessWidget {
             ]);
     }
 
-    return screenType.paddingFromLTRB(
-        left: AppConstants.SIDE_PADDING,
-        right: AppConstants.SIDE_PADDING,
-        top: topPadding);
+    return SingleChildScrollView(
+      physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.only(
+          left: AppConstants.SIDE_PADDING,
+          right: AppConstants.SIDE_PADDING),
+      child: SizedBox(height: 1.sh, child: screenType),
+    );
   }
 
   Widget buildButton(String? value,

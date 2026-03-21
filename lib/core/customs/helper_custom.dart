@@ -36,8 +36,8 @@ AppBar customAppBar(void Function()? onPressed, String appBarTitle) {
       icon: AppSvgs.ARROW_LEFT,
       forgroundColor: AppColors.lightSteel1,
       backgroundColor: AppColors.transparent);
-  final title = CustomText(
-      text: appBarTitle, family: AppFonts.STAATLICHES, size: 24.w);
+  final title =
+      CustomText(text: appBarTitle, family: AppFonts.STAATLICHES, size: 24.w);
 
   return AppBar(
     leading: leading,
@@ -69,7 +69,11 @@ void customBottomSheet(BuildContext context, String title, Widget child,
             ),
             Divider(color: sheetColor.withAlpha(40)),
             child
-          ]).paddingAll(AppConstants.SIDE_PADDING),
+          ]).padding(
+              horizontal: AppConstants.SIDE_PADDING,
+              top: AppConstants.SIDE_PADDING,
+              bottom:
+                  AppConstants.SIDE_PADDING + DimensionUtil().bottomBarHeight),
           borderRadius: borderRadius));
 }
 

@@ -5,7 +5,7 @@ final GoRouter routes = GoRouter(
     initialLocation: "/",
     redirect: (context, state) async {
       final prefs = await SPD.getInstance();
-      final isFirstTimeVisit = prefs.isFirstTimeVisit;
+      final isFirstTimeVisit = prefs.get<bool>(StorageKey.FIRST_VISIT) ?? true;
 
       if (isFirstTimeVisit) return "/onboarding";
       return null;

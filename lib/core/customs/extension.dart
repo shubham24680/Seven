@@ -17,6 +17,26 @@ extension PaddingExtension on Widget {
   Widget paddingSymmetric({double horizontal = 0, double vertical = 0}) =>
       paddingFromLTRB(
           left: horizontal, right: horizontal, top: vertical, bottom: vertical);
+
+  Widget padding(
+      {double? all,
+      double? horizontal,
+      double? vertical,
+      double? left,
+      double? top,
+      double? right,
+      double? bottom}) {
+    final leftPadding = all ?? horizontal ?? left ?? 0;
+    final rightPadding = all ?? horizontal ?? right ?? 0;
+    final topPadding = all ?? vertical ?? top ?? 0;
+    final bottomPadding = all ?? vertical ?? bottom ?? 0;
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+          leftPadding, topPadding, rightPadding, bottomPadding),
+      child: this,
+    );
+  }
 }
 
 extension ClickExtension on Widget {

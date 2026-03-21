@@ -28,9 +28,9 @@ class PageProvider extends StateNotifier<PageState> {
 
   Future<void> changeFirstTimeVisitStatus() async {
     final prefs = await SPD.getInstance();
-    final isFirstTimeVisit = prefs.isFirstTimeVisit;
+    final isFirstTimeVisit = prefs.get<bool>(StorageKey.FIRST_VISIT) ?? true;
     if (isFirstTimeVisit) {
-      await prefs.setFirstTimeVisit(false);
+      await prefs.set(StorageKey.FIRST_VISIT, false);
     }
   }
 

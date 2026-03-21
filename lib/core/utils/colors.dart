@@ -1,12 +1,5 @@
 import 'package:seven/app/app.dart';
 
-Color black = const Color(0xFF212529);
-Color white = const Color(0xFFF8F9FA);
-Color voilet = const Color(0xFF7B2CBF);
-Color grey = Colors.grey.shade800;
-Color darkGrey = Colors.grey.shade900;
-Color red = Colors.red;
-
 class AppColors {
   static const Color transparent = Colors.transparent;
   static const Color red1 = Color(0xFFAD2831);

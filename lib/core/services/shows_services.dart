@@ -111,6 +111,7 @@ class ShowsServices {
     try {
       final response = await BaseService.instance.fetchData(
           apiHost: ApiConstants.BASE_URL,
+          version: ApiConstants.VERSION_3,
           endPoint: endPoint,
           queryParams: queryParams);
 

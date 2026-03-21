@@ -40,6 +40,7 @@ class DetailScreen extends ConsumerWidget {
       AsyncValue<Result> showCollection, AsyncValue<Credits> showCredits) {
     return SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
+        padding: EdgeInsets.only(bottom: DimensionUtil().bottomBarHeight),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           _buildHeroSection(context, detail),
           SizedBox(height: 16.w),

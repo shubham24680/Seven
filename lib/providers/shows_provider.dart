@@ -6,7 +6,7 @@ abstract class ShowNotifier extends AsyncNotifier<List<Result>> {
   int _currentPage = 1;
   bool _hasMorePages = true;
   Future<ShowsModel> fetchShows(int page);
-  String key;
+  StorageKey key;
 
   ShowNotifier(this.key);
 
@@ -14,7 +14,7 @@ abstract class ShowNotifier extends AsyncNotifier<List<Result>> {
   Future<List<Result>> build() async {
     final storage = await SPD.getInstance();
     try {
-      final cache = storage.getShows(key);
+      final cache = storage.get<Map<String, dynamic>>(key);
       if (cache != null) {
         final cacheData = ShowsModel.fromJson(cache);
         AsyncData(cacheData);
@@ -24,10 +24,10 @@ abstract class ShowNotifier extends AsyncNotifier<List<Result>> {
       final totalPages = response.totalPages?.toInt();
       if (totalPages != null) _hasMorePages = _currentPage < totalPages;
 
-      await storage.setShows(key, response.toJson());
+      await storage.set(key, response.toJson());
       return response.results ?? [];
     } on ApiException catch (_) {
-      final cache = storage.getShows(key);
+      final cache = storage.get<Map<String, dynamic>>(key);
       if (cache != null) {
         final cacheData = ShowsModel.fromJson(cache);
         return cacheData.results ?? [];
@@ -74,7 +74,7 @@ class TrendingShowNotifier extends ShowNotifier {
 
 final trendingShowProvider =
     AsyncNotifierProvider<TrendingShowNotifier, List<Result>>(
-  () => TrendingShowNotifier(StorageConstants.TRENDING),
+  () => TrendingShowNotifier(StorageKey.TRENDING),
 );
 
 class TopShowNotifier extends ShowNotifier {
@@ -88,7 +88,7 @@ class TopShowNotifier extends ShowNotifier {
 }
 
 final topShowsProvider = AsyncNotifierProvider<TopShowNotifier, List<Result>>(
-  () => TopShowNotifier(StorageConstants.TOP_20_MOVIES),
+  () => TopShowNotifier(StorageKey.TOP_20_MOVIES),
 );
 
 class NewReleaseShowsNotifier extends ShowNotifier {
@@ -103,7 +103,7 @@ class NewReleaseShowsNotifier extends ShowNotifier {
 
 final newReleaseShowsProvider =
     AsyncNotifierProvider<NewReleaseShowsNotifier, List<Result>>(
-  () => NewReleaseShowsNotifier(StorageConstants.NEW_RELEASE),
+  () => NewReleaseShowsNotifier(StorageKey.NEW_RELEASE),
 );
 
 class UpcomingShowsNotifier extends ShowNotifier {
@@ -118,7 +118,7 @@ class UpcomingShowsNotifier extends ShowNotifier {
 
 final upcomingShowsProvider =
     AsyncNotifierProvider<UpcomingShowsNotifier, List<Result>>(
-  () => UpcomingShowsNotifier(StorageConstants.UPCOMING),
+  () => UpcomingShowsNotifier(StorageKey.UPCOMING),
 );
 
 class AllTimeClassicShowsNotifier extends ShowNotifier {
@@ -133,7 +133,7 @@ class AllTimeClassicShowsNotifier extends ShowNotifier {
 
 final allTimeClassicShowsProvider =
     AsyncNotifierProvider<AllTimeClassicShowsNotifier, List<Result>>(
-  () => AllTimeClassicShowsNotifier(StorageConstants.ALL_TIME_CLASSIC),
+  () => AllTimeClassicShowsNotifier(StorageKey.ALL_TIME_CLASSIC),
 );
 
 class PopularInIndiaShowsNotifier extends ShowNotifier {
@@ -148,7 +148,7 @@ class PopularInIndiaShowsNotifier extends ShowNotifier {
 
 final popularInIndiaShowsProvider =
     AsyncNotifierProvider<PopularInIndiaShowsNotifier, List<Result>>(
-  () => PopularInIndiaShowsNotifier(StorageConstants.POPULAR_IN_INDIA),
+  () => PopularInIndiaShowsNotifier(StorageKey.POPULAR_IN_INDIA),
 );
 
 // STATE
@@ -200,8 +200,8 @@ class ShowsProvider extends StateNotifier<ShowsState> {
     final storage = await SPD.getInstance();
 
     try {
-      final key = StorageConstants.GENRES;
-      final cache = storage.getShows(key);
+      final key = StorageKey.GENRES;
+      final cache = storage.get<Map<String, dynamic>>(key);
       if (cache != null) {
         final cacheData = Result.fromJson(cache);
         state = state.copyWith(genres: cacheData);
@@ -209,7 +209,7 @@ class ShowsProvider extends StateNotifier<ShowsState> {
 
       final service = ShowsServices.instance;
       final genres = await service.fetchGenres();
-      await storage.setShows(key, genres.toJson());
+      await storage.set(key, genres.toJson());
       state = state.copyWith(genres: genres);
     } on ApiException catch (e) {
       log("Genre Exception -> $e");
@@ -232,16 +232,6 @@ class ShowsProvider extends StateNotifier<ShowsState> {
         state.scrollController.position.userScrollDirection ==
             ScrollDirection.reverse;
     state = state.copyWith(crossFadeState: crossFadeState);
-  }
-
-  // Update navigation index with validation
-  void moveToPage(int index) {
-    if (index < 0) {
-      log("Invalid navigation index: $index");
-      return;
-    }
-    state = state.copyWith(navigationCurrentIndex: index);
-    log("Navigation to: $index", name: "Bottom Navigation");
   }
 
   // Update carousel index with validation

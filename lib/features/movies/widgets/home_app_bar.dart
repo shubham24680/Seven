@@ -6,7 +6,7 @@ class HomeAppBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profileIndex = ref.watch(profileProvider).profilePicIndex;
-    final showController = ref.watch(showsProvider.notifier);
+    final bottomNavController = ref.watch(bottomNavigationProvider.notifier);
     final topPadding =
         DimensionUtil().statusBarHeight;
     
@@ -16,8 +16,7 @@ class HomeAppBar extends ConsumerWidget {
           imageUrl: AppImages.AVATARS[profileIndex],
           height: 36.w,
           borderRadius: BorderRadius.circular(1.sw),
-          onClick: () => showController
-              .moveToPage(AppConstants.BOTTOM_NAVIGATION.length - 1)),
+          onClick: () => bottomNavController.state = AppConstants.BOTTOM_NAVIGATION.length - 1),
       CustomButton(
           buttonType: ButtonType.ICON,
           icon: AppSvgs.SEARCH_OUTLINED,
