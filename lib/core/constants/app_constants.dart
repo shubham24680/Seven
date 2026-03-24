@@ -109,10 +109,17 @@ class AppConstants {
   ];
 
   // ERROR
-  static HelperModel ERRORDATA = HelperModel(
+  static HelperModel NO_INTERNET = HelperModel(
       string1: "OH NO!",
       string2: "No internet connection.\nCheck your network and try again.",
       string3: AppSvgs.NO_CONNECTION,
+      string4: "Try again",
+      string5: "Back");
+
+  static HelperModel NO_DATA = HelperModel(
+      string1: "OOPS!",
+      string2: "No shows found",
+      string3: AppSvgs.NO_DATA,
       string4: "Try again",
       string5: "Back");
 }

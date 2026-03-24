@@ -73,9 +73,10 @@ class Result extends Network<Result> {
   final bool? inProduction;
   final List<String>? languages;
   final DateTime? lastAirDate;
-  final LastEpisodeToAir? lastEpisodeToAir;
+  final EpisodeToAir? lastEpisodeToAir;
   final MediaType mediaType;
   final List<ProductionCompany>? networks;
+  final EpisodeToAir? nextEpisodeToAir;
   final int? numberOfEpisodes;
   final int? numberOfSeasons;
   final List<String>? originCountry;
@@ -140,7 +141,8 @@ class Result extends Network<Result> {
       this.type,
       this.inProduction,
       this.languages,
-      this.lastAirDate});
+      this.lastAirDate,
+      this.nextEpisodeToAir});
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
       adult: json["adult"],
@@ -212,8 +214,12 @@ class Result extends Network<Result> {
           ?.map((x) => x as int)
           .toList(),
       lastEpisodeToAir: json["last_episode_to_air"] != null
-          ? LastEpisodeToAir.fromJson(
+          ? EpisodeToAir.fromJson(
               json["last_episode_to_air"] as Map<String, dynamic>)
+          : null,
+      nextEpisodeToAir: json["next_episode_to_air"] != null
+          ? EpisodeToAir.fromJson(
+              json["next_episode_to_air"] as Map<String, dynamic>)
           : null);
 
   Map<String, dynamic> toJson() => {
@@ -261,7 +267,8 @@ class Result extends Network<Result> {
         "type": type,
         "created_by": createdBy?.map((x) => x.toJson()).toList(),
         "episode_run_time": episodeRunTime,
-        "last_episode_to_air": lastEpisodeToAir?.toJson()
+        "last_episode_to_air": lastEpisodeToAir?.toJson(),
+        "next_episode_to_air": nextEpisodeToAir?.toJson(),
       };
 }
 
@@ -408,7 +415,7 @@ class Season {
       };
 }
 
-class LastEpisodeToAir {
+class EpisodeToAir {
   final int? id;
   final String? name;
   final String? overview;
@@ -422,7 +429,7 @@ class LastEpisodeToAir {
   final int? showId;
   final String? stillPath;
 
-  LastEpisodeToAir({
+  EpisodeToAir({
     this.id,
     this.name,
     this.overview,
@@ -437,8 +444,7 @@ class LastEpisodeToAir {
     this.stillPath,
   });
 
-  factory LastEpisodeToAir.fromJson(Map<String, dynamic> json) =>
-      LastEpisodeToAir(
+  factory EpisodeToAir.fromJson(Map<String, dynamic> json) => EpisodeToAir(
         id: json["id"],
         name: json["name"],
         overview: json["overview"],

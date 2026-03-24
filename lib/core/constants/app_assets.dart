@@ -1,20 +1,20 @@
 class AppImages {
-  static final AVATARS =
-      List.generate(10, (index) => "assets/avatars/avatar (${index + 1}).jpeg");
-  static const ACTION = "assets/images/genre_cards/back_drop/action.jpg";
-  static const ANIMATION = "assets/images/genre_cards/back_drop/animation.jpg";
-  static const DRAMA = "assets/images/genre_cards/back_drop/drama.jpg";
-  static const FAMILY = "assets/images/genre_cards/back_drop/family.jpg";
-  static const FANTASY = "assets/images/genre_cards/back_drop/fanstasy.jpg";
-  static const HISTORY = "assets/images/genre_cards/back_drop/history.jpg";
-  static const HORROR = "assets/images/genre_cards/back_drop/horror.jpg";
-  static const MYSTERY = "assets/images/genre_cards/back_drop/mystery.jpg";
+  static final AVATARS = List.generate(
+      10, (index) => "assets/images/avatars/avatar (${index + 1}).webp");
+  static const ACTION = "assets/images/genre_cards/back_drop/action.webp";
+  static const ANIMATION = "assets/images/genre_cards/back_drop/animation.webp";
+  static const DRAMA = "assets/images/genre_cards/back_drop/drama.webp";
+  static const FAMILY = "assets/images/genre_cards/back_drop/family.webp";
+  static const FANTASY = "assets/images/genre_cards/back_drop/fanstasy.webp";
+  static const HISTORY = "assets/images/genre_cards/back_drop/history.webp";
+  static const HORROR = "assets/images/genre_cards/back_drop/horror.webp";
+  static const MYSTERY = "assets/images/genre_cards/back_drop/mystery.webp";
   static const SCIENCE_FICTION =
-      "assets/images/genre_cards/back_drop/science_fiction.jpg";
-  static const THRILLER = "assets/images/genre_cards/back_drop/thriller.jpg";
-  static const ONBOARDING_1 = "assets/images/onboarding (1).jpg";
-  static const ONBOARDING_2 = "assets/images/onboarding (2).jpg";
-  static const PLACEHOLDER = "assets/images/placeholder_image.png";
+      "assets/images/genre_cards/back_drop/science_fiction.webp";
+  static const THRILLER = "assets/images/genre_cards/back_drop/thriller.webp";
+  static const ONBOARDING_1 = "assets/images/onboarding_1.webp";
+  static const ONBOARDING_2 = "assets/images/onboarding_2.webp";
+  static const PLACEHOLDER = "assets/images/placeholder_image.webp";
 }
 
 class AppSvgs {
@@ -29,9 +29,8 @@ class AppSvgs {
   static const LINK = "assets/icons/outlined_icons/link.svg";
   static const MALE = "assets/icons/outlined_icons/male.svg";
   static const NOTIFICATION = "assets/icons/outlined_icons/notification.svg";
-  static const NO_INTERNET = "assets/images/no_internet.svg";
+  static const NO_DATA = "assets/images/no_result.svg";
   static const NO_CONNECTION = "assets/images/no_connection.svg";
-  static const NO_RESULT = "assets/images/no_result.svg";
   static const PROFILE = "assets/icons/filled_icons/profile.svg";
   static const PLAY = "assets/icons/outlined_icons/play.svg";
   static const REMOVE_TO_FAVOURITE = "assets/icons/filled_icons/remove.svg";
@@ -42,9 +41,7 @@ class AppSvgs {
   static const SAVE = "assets/icons/filled_icons/save.svg";
 }
 
-class AppGifs {
-  static const NO_INTERNET_GIF = "assets/gifs/no_internet.gif";
-}
+class AppLotties {}
 
 class AppFonts {
   static const POPPINS = 'poppins';

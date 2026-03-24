@@ -27,7 +27,7 @@ class SPD {
       const (bool) => _prefs?.getBool(key) as T?,
       const (String) => _prefs?.getString(key) as T?,
       const (List<String>) => _prefs?.getStringList(key) as T?,
-      const (Map<String, dynamic>) => jsonDecode(_prefs?.getString(key) ?? "{}") as T?,
+      const (Map<String, dynamic>) => _prefs?.getString(key) != null ? Map<String, dynamic>.from(jsonDecode(_prefs!.getString(key)!)) as T : null,
       _ => null,
     };
   }

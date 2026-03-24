@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:seven/app/app.dart';
 
 class DetailScreen extends ConsumerWidget {
@@ -47,7 +49,8 @@ class DetailScreen extends ConsumerWidget {
           if (detail.overview?.isNotEmpty ?? false)
             _buildOverviewSection(context, detail),
           SizedBox(height: 16.w),
-          _buildLastEpisode(context, detail),
+          _buildEpisode(context, detail.nextEpisodeToAir, "Upcoming Episode"),
+          _buildEpisode(context, detail.lastEpisodeToAir, "Recent Episode"),
           _buildSeasons(context, detail),
           _buildCollection(context, showCollection, detail),
           _buildCredits(context, showCredits),
@@ -174,17 +177,16 @@ class DetailScreen extends ConsumerWidget {
     ]);
   }
 
-  Widget _buildLastEpisode(BuildContext context, Result detail) {
-    final lastEpisode = detail.lastEpisodeToAir;
-    if (lastEpisode == null) return SizedBox.shrink();
+  Widget _buildEpisode(
+      BuildContext context, EpisodeToAir? episodes, String title) {
+    if (episodes == null) return SizedBox.shrink();
 
     final height = 80.w;
-    final voteAverage = lastEpisode.voteAverage?.toStringAsFixed(1);
-    final year =
-        getDateFormat(lastEpisode.airDate, formatType: FormatType.YMMMD);
-    final runtime = getRuntime(lastEpisode.runtime);
-    final season = lastEpisode.seasonNumber;
-    final episode = lastEpisode.episodeNumber;
+    final voteAverage = episodes.voteAverage?.toStringAsFixed(1);
+    final year = getDateFormat(episodes.airDate, formatType: FormatType.YMMMD);
+    final runtime = getRuntime(episodes.runtime);
+    final season = episodes.seasonNumber;
+    final episode = episodes.episodeNumber;
     final seasonEpisode =
         "${(season != null ? "S$season" : "")} ${episode != null ? "E$episode" : ""}";
     final metadataItems = [
@@ -192,12 +194,13 @@ class DetailScreen extends ConsumerWidget {
       if (year != null) year,
       if (runtime != null) runtime,
     ].join(" • ");
+    final overview = episodes.overview;
 
     return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          buildHeader("Last Episode"),
+          buildHeader(title),
           Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: _sidePadding,
@@ -205,7 +208,7 @@ class DetailScreen extends ConsumerWidget {
                 Stack(alignment: Alignment.topRight, children: [
                   CustomImage(
                       imageType: ImageType.REMOTE,
-                      imageUrl: getImageUrl(lastEpisode.stillPath),
+                      imageUrl: getImageUrl(episodes.stillPath),
                       height: height,
                       width: AppConstants.CARD_RATIO_LANDSCAPE * height,
                       borderRadius: BorderRadius.circular(0.1 * height)),
@@ -222,7 +225,7 @@ class DetailScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText(
-                        text: lastEpisode.name ?? "",
+                        text: episodes.name ?? "",
                         size: 16.w,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
@@ -231,12 +234,14 @@ class DetailScreen extends ConsumerWidget {
                   ],
                 ))
               ]).paddingSymmetric(horizontal: _sidePadding),
-          SizedBox(height: 8.w),
-          CustomText(
-                  text: lastEpisode.overview ?? "",
-                  size: 10.w,
-                  color: AppColors.lightSteel1.withAlpha(150))
-              .paddingSymmetric(horizontal: _sidePadding),
+          if (overview != null && overview.isNotEmpty) ...[
+            SizedBox(height: 8.w),
+            CustomText(
+                    text: episodes.overview ?? "",
+                    size: 10.w,
+                    color: AppColors.lightSteel1.withAlpha(150))
+                .paddingSymmetric(horizontal: _sidePadding),
+          ],
           SizedBox(height: 24.w),
           const Divider(color: AppColors.black2)
               .paddingSymmetric(horizontal: _sidePadding)
@@ -247,7 +252,6 @@ class DetailScreen extends ConsumerWidget {
     final seasons = detail.seasons;
     if (seasons == null || seasons.isEmpty) return SizedBox.shrink();
 
-    final height = 260.w;
     int lastEpisode = 1;
     final episodes = seasons.map((season) {
       final currentEpisode = season.episodeCount?.toInt();
@@ -258,11 +262,18 @@ class DetailScreen extends ConsumerWidget {
       lastEpisode = lastEpisode + (currentEpisode ?? 0);
       return seasonEpisode;
     }).toList();
+    final overview = seasons.where((season) {
+      final view = season.overview?.trim();
+      return view != null && view.isNotEmpty;
+    }).toList();
+    final imgHeight = 260.w;
+    log("Overview - $overview");
+    final totalHeight = imgHeight + 25.w + (overview.isEmpty ? 0 : 77.w);
 
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       buildHeader("Seasons"),
       SizedBox(
-          height: height + 102.w,
+          height: totalHeight,
           child: ListView.builder(
               itemCount: seasons.length,
               scrollDirection: Axis.horizontal,
@@ -273,19 +284,19 @@ class DetailScreen extends ConsumerWidget {
                 final seasonNumber = "Season ${currentSeason.seasonNumber}";
                 final title =
                     "Season ${currentSeason.seasonNumber}${(seasonNumber != currentSeason.name) ? "\n${currentSeason.name}" : ""}";
-                final overview = seasons[index].overview;
+                final desc = seasons[index].overview;
                 final year = getDateFormat(currentSeason.airDate,
                     formatType: FormatType.YMMMD);
 
                 return SizedBox(
-                    width: AppConstants.CARD_RATIO_PORTRAIT * height,
+                    width: AppConstants.CARD_RATIO_PORTRAIT * imgHeight,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                            height: height,
-                            width: AppConstants.CARD_RATIO_PORTRAIT * height,
+                            height: imgHeight,
+                            width: AppConstants.CARD_RATIO_PORTRAIT * imgHeight,
                             child: CustomCard(
                                 orientation: CardOrientation.POTRAIT,
                                 title: title,
@@ -293,10 +304,10 @@ class DetailScreen extends ConsumerWidget {
                                 voteAverage: currentSeason.voteAverage
                                     ?.toStringAsFixed(1),
                                 episodes: episodes[index])),
-                        if (overview != null && overview.isNotEmpty) ...[
+                        if (desc != null && desc.isNotEmpty) ...[
                           SizedBox(height: 8.w),
                           CustomText(
-                                  text: overview,
+                                  text: desc,
                                   size: 10.w,
                                   maxLines: 5,
                                   overflow: TextOverflow.ellipsis,

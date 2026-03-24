@@ -75,6 +75,7 @@ class SearchCollectionScreen extends ConsumerWidget {
                 })));
 
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         extendBodyBehindAppBar: true,
         appBar: AppBar(
             automaticallyImplyLeading: false,
@@ -89,11 +90,7 @@ class SearchCollectionScreen extends ConsumerWidget {
                   if (data == null) return const SizedBox.shrink();
                   if (data.isEmpty) {
                     return ErrorScreen(
-                        type: Type.TYPE2,
-                        goBack: true,
-                        image: AppSvgs.NO_RESULT,
-                        heading: "Oops!",
-                        description: "No Results Found");
+                        errorType: ErrorType.NO_DATA, goBack: false);
                   }
 
                   return CustomCollection(
@@ -113,7 +110,7 @@ class SearchCollectionScreen extends ConsumerWidget {
                     crossAxisCount: 2,
                     loadingItemCount: 2),
                 error: (error, stackTrace) =>
-                    ErrorScreen(type: Type.TYPE2, goBack: true))
+                    ErrorScreen(type: Type.TYPE_2, goBack: false))
             .onTap(event: () => FocusScope.of(context).unfocus()),
         floatingActionButton: AnimatedCrossFade(
             firstChild: FloatingActionButton.small(
