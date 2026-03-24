@@ -90,7 +90,9 @@ class SearchCollectionScreen extends ConsumerWidget {
                   if (data == null) return const SizedBox.shrink();
                   if (data.isEmpty) {
                     return ErrorScreen(
-                        errorType: ErrorType.NO_DATA, goBack: false);
+                        errorType: ErrorType.NO_DATA,
+                        type: Type.TYPE_2,
+                        goBack: false);
                   }
 
                   return CustomCollection(

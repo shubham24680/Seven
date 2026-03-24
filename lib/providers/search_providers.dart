@@ -54,7 +54,7 @@ abstract class SearchNotifier extends AutoDisposeAsyncNotifier<List<Result>?> {
           return showGenre.any((gen) => filterId.contains(gen));
         }).toList();
 
-        return filteredShows;
+        return filteredShows ?? [];
       } on ApiException catch (_) {
         return _filterResponse;
       }

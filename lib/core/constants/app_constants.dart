@@ -41,6 +41,33 @@ class AppConstants {
     BottomNavigation(icon: AppSvgs.PROFILE, screen: const ProfileScreen()),
   ];
 
+  static final List<HomeModel> HOME_COLLECTIONS = [
+    HomeModel(
+        type: HomeWidgetType.CAROUSEL,
+        title: "",
+        provider: trendingShowProvider),
+    HomeModel(
+        type: HomeWidgetType.COLLECTION,
+        title: "New Release",
+        provider: newReleaseShowsProvider),
+    HomeModel(
+        type: HomeWidgetType.COLLECTION,
+        title: "Popular in India",
+        provider: popularInIndiaShowsProvider),
+    HomeModel(
+        type: HomeWidgetType.COLLECTION,
+        title: "Upcoming",
+        provider: upcomingShowsProvider),
+    HomeModel(
+        type: HomeWidgetType.COLLECTION,
+        title: "Top Movies",
+        provider: topShowsProvider),
+    HomeModel(
+        type: HomeWidgetType.COLLECTION,
+        title: "All time classic",
+        provider: allTimeClassicShowsProvider),
+  ];
+
   static List<Result> GENRES = [
     Result(
         id: 28,

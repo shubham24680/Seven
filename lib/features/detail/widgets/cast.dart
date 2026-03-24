@@ -8,16 +8,31 @@ Widget buildHeader(String value) {
 }
 
 Widget buildCastAndCrew(CastAndCrew castOrCrew) {
+  final name = castOrCrew.name ?? "";
+  final errorWidget = name.isEmpty
+      ? null
+      : Container(
+          height: 75.w,
+          width: 75.w,
+          color: AppColors.black2,
+          alignment: Alignment.center,
+          child: CustomText(
+              family: AppFonts.STAATLICHES,
+              text: name.split(" ").map((e) => e.substring(0, 1)).join(""),
+              size: 24.w,
+              weight: FontWeight.w900));
+
   return Column(children: [
     CustomImage(
         imageType: ImageType.REMOTE,
         imageUrl: getImageUrl(castOrCrew.profilePath),
+        errorWidget: errorWidget,
         height: 75.w,
         width: 75.w,
-        borderRadius: BorderRadius.circular(1.sh)),
+        borderRadius: BorderRadius.circular(1000.r)),
     SizedBox(height: 8.w),
     CustomText(
-        text: castOrCrew.name ?? "",
+        text: name,
         size: 12.w,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,

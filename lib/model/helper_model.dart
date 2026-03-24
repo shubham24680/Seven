@@ -42,3 +42,13 @@ class ProfileModel {
 
   ProfileModel({required this.icon, required this.title});
 }
+
+enum HomeWidgetType { CAROUSEL, COLLECTION }
+
+class HomeModel {
+  final HomeWidgetType type;
+  final String title;
+  final AsyncNotifierProvider<ShowNotifier, List<Result>> provider;
+
+  HomeModel({required this.type, required this.title, required this.provider});
+}

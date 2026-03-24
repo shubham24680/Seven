@@ -195,6 +195,18 @@ class DetailScreen extends ConsumerWidget {
       if (runtime != null) runtime,
     ].join(" • ");
     final overview = episodes.overview;
+    final errorWidget = seasonEpisode.isEmpty
+        ? null
+        : Container(
+            height: height,
+            width: AppConstants.CARD_RATIO_LANDSCAPE * height,
+            color: AppColors.black2,
+            alignment: Alignment.center,
+            child: CustomText(
+                family: AppFonts.STAATLICHES,
+                text: seasonEpisode,
+                size: 32.w,
+                weight: FontWeight.w900));
 
     return Column(
         mainAxisSize: MainAxisSize.min,
@@ -211,6 +223,7 @@ class DetailScreen extends ConsumerWidget {
                       imageUrl: getImageUrl(episodes.stillPath),
                       height: height,
                       width: AppConstants.CARD_RATIO_LANDSCAPE * height,
+                      errorWidget: errorWidget,
                       borderRadius: BorderRadius.circular(0.1 * height)),
                   if (voteAverage != null && voteAverage != "0.0")
                     CustomTag(

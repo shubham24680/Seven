@@ -3,9 +3,24 @@ import 'package:seven/app/app.dart';
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
+  static final _collections = AppConstants.HOME_COLLECTIONS;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = ref.watch(scrollProvider(0)).scrollController;
+    final states = _collections.map((e) => ref.watch(e.provider)).toList();
+    final errorCount = states.where((s) => s.hasError && !s.isLoading).length;
+
+    if (errorCount == _collections.length) {
+      return ErrorScreen(
+        goBack: false,
+        onPressed: () {
+          for (var element in _collections) {
+            ref.invalidate(element.provider);
+          }
+        },
+      );
+    }
 
     Widget buildCollection(String collectionName,
         AsyncNotifierProvider<ShowNotifier, List<Result>> provider) {
@@ -30,20 +45,20 @@ class HomeScreen extends ConsumerWidget {
           error: (_, __) => const SizedBox.shrink());
     }
 
-    final items = [
-      const HomeCarousel().paddingFromLTRB(bottom: AppConstants.SIDE_PADDING),
-      buildCollection("New Release", newReleaseShowsProvider),
-      buildCollection("Popular in India", popularInIndiaShowsProvider),
-      buildCollection("Upcoming", upcomingShowsProvider),
-      buildCollection("Top Movies", topShowsProvider),
-      buildCollection("All time classic", allTimeClassicShowsProvider)
-    ];
-
     return ListView.builder(
-        itemCount: items.length,
+        itemCount: _collections.length,
         controller: scrollController,
         padding: EdgeInsets.only(bottom: DimensionUtil().bottomBarHeight),
         physics: ClampingScrollPhysics(),
-        itemBuilder: (context, index) => items[index]);
+        itemBuilder: (context, index) {
+          final item = _collections[index];
+
+          return switch (item.type) {
+            HomeWidgetType.CAROUSEL => const HomeCarousel()
+                .paddingFromLTRB(bottom: AppConstants.SIDE_PADDING),
+            HomeWidgetType.COLLECTION =>
+              buildCollection(item.title, item.provider),
+          };
+        });
   }
 }
