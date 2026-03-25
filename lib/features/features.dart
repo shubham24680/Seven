@@ -5,19 +5,19 @@ export 'error/error_screen.dart';
 export 'onboarding/screens/onboading_screen.dart';
 
 // SHOWS
-export 'movies/screens/shows.dart';
-export 'movies/screens/home_screen.dart';
+export 'shows/screens/shows.dart';
+export 'shows/screens/home_screen.dart';
 
-export 'movies/widgets/home_carousel.dart';
-export 'movies/widgets/home_app_bar.dart';
+export 'shows/widgets/home_carousel.dart';
+export 'shows/widgets/home_app_bar.dart';
 
 //SEARCH
-export 'movies/screens/search_screen.dart';
+export 'shows/screens/search_screen.dart';
 export 'collections/screens/search_collection_screen.dart';
 export 'collections/screens/genre_collection_screen.dart';
 
 // PROFILE
-export 'movies/screens/profile_screen.dart';
+export 'shows/screens/profile_screen.dart';
 export 'profile/screens/edit_profile_screen.dart';
 export 'profile/screens/help_screen.dart';
 export 'profile/screens/notification_settings_screen.dart';

@@ -42,14 +42,14 @@ class HomeCarousel extends ConsumerWidget {
                       ? trendingShows[index].posterPath
                       : trendingShows[index].backdropPath;
 
+                  final query = {
+                    "path": trendingShows[index].mediaType?.toLowerCase(),
+                    "id": trendingShows[index].id.toString(),
+                  };
+
                   return CustomImage(
                       imageType: ImageType.REMOTE,
-                      onClick: () => context.push(
-                          "/detail/${trendingShows[index].id}",
-                          extra: trendingShows[index]
-                              .mediaType
-                              .name
-                              .toLowerCase()),
+                      onClick: () => context.push("/detail", extra: query),
                       imageUrl: getImageUrl(image),
                       height: carouselHeight,
                       borderRadius:
@@ -73,9 +73,10 @@ class HomeCarousel extends ConsumerWidget {
                     colors: [AppColors.transparent, AppColors.black3]));
 
             final showGenre = getGenre(currentShow.genreIds?.firstOrNull);
+            final mediaType = currentShow.mediaType;
             final item = <String>[
               if (showGenre != null) showGenre,
-              currentShow.mediaType.value
+              if(mediaType != null) mediaType,
             ];
             final overview = currentShow.overview ?? "";
             final child = Container(

@@ -12,11 +12,12 @@ final GoRouter routes = GoRouter(
     },
     routes: [
       GoRoute(
-          path: "/detail/:id",
+          path: "/detail",
           pageBuilder: (context, state) {
-            final id = state.pathParameters['id'] ?? "";
-            final type = state.extra as String?;
-            return FadeTransistionPage(child: DetailScreen(id, type ?? ""));
+            final extra = state.extra as Map<String, dynamic>?;
+            final path = extra?['path'] ?? "";
+            final id  = extra?['id'] ?? "";
+            return FadeTransistionPage(child: DetailScreen(path, id));
           }),
       GoRoute(
           path: "/collection/:collectionName",

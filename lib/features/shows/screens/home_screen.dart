@@ -23,7 +23,8 @@ class HomeScreen extends ConsumerWidget {
     }
 
     Widget buildCollection(String collectionName,
-        AsyncNotifierProvider<ShowNotifier, List<Result>> provider) {
+        AsyncNotifierProvider<ShowNotifier, List<Result>> provider,
+        {String screenPath = "movie"}) {
       final shows = ref.watch(provider);
 
       return shows.when(
@@ -34,6 +35,7 @@ class HomeScreen extends ConsumerWidget {
                   isLoading: false,
                   results: show,
                   orientation: CardOrientation.POTRAIT,
+                  type: screenPath,
                   onPressed: () => context.push("/collection/$collectionName",
                       extra: provider)),
               Divider(
@@ -41,7 +43,9 @@ class HomeScreen extends ConsumerWidget {
               ).paddingSymmetric(horizontal: AppConstants.SIDE_PADDING),
             ]);
           },
-          loading: () => CustomCollection(collectionName: collectionName),
+          loading: () => CustomCollection(
+              collectionName: collectionName,
+              orientation: CardOrientation.POTRAIT),
           error: (_, __) => const SizedBox.shrink());
     }
 
@@ -56,8 +60,9 @@ class HomeScreen extends ConsumerWidget {
           return switch (item.type) {
             HomeWidgetType.CAROUSEL => const HomeCarousel()
                 .paddingFromLTRB(bottom: AppConstants.SIDE_PADDING),
-            HomeWidgetType.COLLECTION =>
-              buildCollection(item.title, item.provider),
+            HomeWidgetType.COLLECTION => buildCollection(
+                item.title, item.provider,
+                screenPath: item.screenPath ?? "movie"),
           };
         });
   }

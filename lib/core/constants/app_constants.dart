@@ -56,8 +56,19 @@ class AppConstants {
         provider: popularInIndiaShowsProvider),
     HomeModel(
         type: HomeWidgetType.COLLECTION,
-        title: "Upcoming",
-        provider: upcomingShowsProvider),
+        title: "On The Air",
+        provider: onTheAirTVShowsNotifier,
+        screenPath: "tv"),
+    HomeModel(
+        type: HomeWidgetType.COLLECTION,
+        title: "Airing Today",
+        provider: airingTodayTVShowsNotifier,
+        screenPath: "tv"),
+    HomeModel(
+        type: HomeWidgetType.COLLECTION,
+        title: "Popular TV Shows",
+        provider: popularTVShowsNotifier,
+        screenPath: "tv"),
     HomeModel(
         type: HomeWidgetType.COLLECTION,
         title: "Top Movies",
@@ -66,6 +77,10 @@ class AppConstants {
         type: HomeWidgetType.COLLECTION,
         title: "All time classic",
         provider: allTimeClassicShowsProvider),
+    HomeModel(
+        type: HomeWidgetType.COLLECTION,
+        title: "Upcoming",
+        provider: upcomingShowsProvider),
   ];
 
   static List<Result> GENRES = [

@@ -49,6 +49,7 @@ class HomeModel {
   final HomeWidgetType type;
   final String title;
   final AsyncNotifierProvider<ShowNotifier, List<Result>> provider;
+  final String? screenPath;
 
-  HomeModel({required this.type, required this.title, required this.provider});
+  HomeModel({required this.type, required this.title, required this.provider, this.screenPath});
 }

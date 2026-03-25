@@ -3,10 +3,10 @@ import 'dart:developer';
 import 'package:seven/app/app.dart';
 
 class DetailScreen extends ConsumerWidget {
-  const DetailScreen(this.id, this.type, {super.key});
+  const DetailScreen(this.path, this.id, {super.key});
 
   final String id;
-  final String type;
+  final String path;
 
   static const _sidePadding = AppConstants.SIDE_PADDING;
   static const _gradientDecoration = BoxDecoration(
@@ -20,7 +20,7 @@ class DetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final showPath = "$type/$id";
+    final showPath = "$path/$id";
     final showDetail = ref.watch(showDetailProvider(showPath));
     final showCollection = ref.watch(showCollectionProvider(showPath));
     final showCredits = ref.watch(showCreditsProvider(showPath));
@@ -378,7 +378,7 @@ class DetailScreen extends ConsumerWidget {
                     collectionName: "Cast & Crew",
                     isLoading: false,
                     onPressed: () =>
-                        context.push("/castCollection/$id", extra: type))
+                        context.push("/castCollection/$id", extra: path))
                 .buildText(),
             SizedBox(
                 height: 160.w,

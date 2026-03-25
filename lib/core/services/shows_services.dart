@@ -85,6 +85,24 @@ class ShowsServices {
         ApiConstants.MOVIES, queryParams, "fetchPopularInIndiaShows");
   }
 
+  Future<ShowsModel> fetchOnTheAirTVShows({int page = 1}) async {
+    final queryParams = {'page': page.toString()};
+    return _fetchShows(
+        ApiConstants.TV_ON_THE_AIR, queryParams, "fetchOnTheAirTVShows");
+  }
+
+  Future<ShowsModel> fetchAiringTodayTVShows({int page = 1}) async {
+    final queryParams = {'page': page.toString()};
+    return _fetchShows(
+        ApiConstants.TV_AIRING_TODAY, queryParams, "fetchAiringTodayTVShows");
+  }
+
+  Future<ShowsModel> fetchPopularTVShows({int page = 1}) async {
+    final queryParams = {'page': page.toString()};
+    return _fetchShows(
+        ApiConstants.TV_POPULAR, queryParams, "fetchPopularTVShows");
+  }
+
   Future<ShowsModel> fetchGenreCollection(
       {int page = 1, String genreId = ""}) async {
     final queryParams = {
