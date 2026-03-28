@@ -55,20 +55,24 @@ class AppConstants {
         title: "Popular in India",
         provider: popularInIndiaShowsProvider),
     HomeModel(
-        type: HomeWidgetType.COLLECTION,
-        title: "On The Air",
-        provider: onTheAirTVShowsNotifier,
-        screenPath: "tv"),
+        type: HomeWidgetType.POSTER, title: AppImages.SPIDERMAN, id: 531241),
     HomeModel(
         type: HomeWidgetType.COLLECTION,
         title: "Airing Today",
         provider: airingTodayTVShowsNotifier,
-        screenPath: "tv"),
+        mediaType: "tv"),
+    HomeModel(
+        type: HomeWidgetType.COLLECTION,
+        title: "On The Air",
+        provider: onTheAirTVShowsNotifier,
+        mediaType: "tv"),
     HomeModel(
         type: HomeWidgetType.COLLECTION,
         title: "Popular TV Shows",
         provider: popularTVShowsNotifier,
-        screenPath: "tv"),
+        mediaType: "tv"),
+    HomeModel(
+        type: HomeWidgetType.POSTER, title: AppImages.IRON_MAN, id: 131292),
     HomeModel(
         type: HomeWidgetType.COLLECTION,
         title: "Top Movies",

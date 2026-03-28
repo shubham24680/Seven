@@ -16,7 +16,7 @@ final GoRouter routes = GoRouter(
           pageBuilder: (context, state) {
             final extra = state.extra as Map<String, dynamic>?;
             final path = extra?['path'] ?? "";
-            final id  = extra?['id'] ?? "";
+            final id = extra?['id'] ?? "";
             return FadeTransistionPage(child: DetailScreen(path, id));
           }),
       GoRoute(
@@ -31,19 +31,16 @@ final GoRouter routes = GoRouter(
                     collectionProvider: collectionProvider));
           }),
       GoRoute(
-          path: "/detailCollection/:collectionName",
-          pageBuilder: (context, state) {
-            final collectionName = state.pathParameters['collectionName'] ?? "";
-            final detailCollection = state.extra as List<Result>;
-            return FadeTransistionPage(
-                child: DetailCollectionScreen(
-                    collectionName: collectionName,
-                    detailCollection: detailCollection));
-          }),
-      GoRoute(
-          path: "/genreCollection/:id",
+          path: "/detailCollection/:id",
           pageBuilder: (context, state) {
             final id = state.pathParameters['id'] ?? "";
+            return FadeTransistionPage(child: DetailCollectionScreen(id: id));
+          }),
+      GoRoute(
+          path: "/genreCollection",
+          pageBuilder: (context, state) {
+            final data = state.extra as Map<String, dynamic>?;
+            final id = data?['id'] ?? "";
             return FadeTransistionPage(child: GenreCollectionScreen(id));
           }),
       GoRoute(

@@ -112,6 +112,6 @@ class HomeCarousel extends ConsumerWidget {
           ]);
         },
         loading: () => customShimmer(height: height),
-        error: (error, stackTrace) => const SizedBox.shrink());
+        error: (error, stackTrace) => const HomeAppBar());
   }
 }

@@ -43,13 +43,22 @@ class ProfileModel {
   ProfileModel({required this.icon, required this.title});
 }
 
-enum HomeWidgetType { CAROUSEL, COLLECTION }
+enum HomeWidgetType { CAROUSEL, COLLECTION, POSTER }
 
 class HomeModel {
   final HomeWidgetType type;
   final String title;
-  final AsyncNotifierProvider<ShowNotifier, List<Result>> provider;
+  final AsyncNotifierProvider<ShowNotifier, List<Result>>? provider;
   final String? screenPath;
+  final String? mediaType;
+  final int? id;
 
-  HomeModel({required this.type, required this.title, required this.provider, this.screenPath});
+  HomeModel({
+    required this.type,
+    required this.title,
+    this.provider,
+    this.screenPath,
+    this.mediaType,
+    this.id,
+  });
 }

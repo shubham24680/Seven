@@ -50,7 +50,7 @@ class DetailScreen extends ConsumerWidget {
             _buildOverviewSection(context, detail),
           SizedBox(height: 16.w),
           _buildEpisode(context, detail.nextEpisodeToAir, "Upcoming Episode"),
-          _buildEpisode(context, detail.lastEpisodeToAir, "Recent Episode"),
+          _buildEpisode(context, detail.lastEpisodeToAir, "Last Episode"),
           _buildSeasons(context, detail),
           _buildCollection(context, showCollection, detail),
           _buildCredits(context, showCredits),
@@ -343,9 +343,11 @@ class DetailScreen extends ConsumerWidget {
 
   Widget _buildCollection(BuildContext context,
       AsyncValue<Result> collectionDetail, Result detail) {
-    final collectionName =
-        detail.belongsToCollection?.title ?? "More in the series";
+    final belongsToCollection = detail.belongsToCollection;
+    final id = belongsToCollection?.id;
+    final collectionName = belongsToCollection?.title ?? "More in the series";
 
+    if (id == null) return SizedBox.shrink();
     return collectionDetail.when(
         data: (show) {
           final filteredParts =
@@ -356,9 +358,8 @@ class DetailScreen extends ConsumerWidget {
                 collectionName: collectionName,
                 isLoading: false,
                 results: filteredParts,
-                onPressed: () => context.push(
-                    "/detailCollection/$collectionName",
-                    extra: show.parts)),
+                onPressed: () =>
+                    context.push("/detailCollection/$id")),
             const Divider(color: AppColors.black2)
                 .paddingSymmetric(horizontal: _sidePadding)
           ]);
