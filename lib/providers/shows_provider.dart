@@ -37,6 +37,8 @@ abstract class ShowNotifier extends AsyncNotifier<List<Result>> {
   }
 
   Future<void> refresh() async {
+    _currentPage = 1;
+    _hasMorePages = true;
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       return build();
@@ -162,8 +164,8 @@ class OnTheAirTVShowsNotifier extends ShowNotifier {
 }
 
 final onTheAirTVShowsNotifier =
-AsyncNotifierProvider<OnTheAirTVShowsNotifier, List<Result>>(
-      () => OnTheAirTVShowsNotifier(StorageKey.ON_THE_AIR),
+    AsyncNotifierProvider<OnTheAirTVShowsNotifier, List<Result>>(
+  () => OnTheAirTVShowsNotifier(StorageKey.ON_THE_AIR),
 );
 
 class AiringTodayTVShowsNotifier extends ShowNotifier {
@@ -177,8 +179,8 @@ class AiringTodayTVShowsNotifier extends ShowNotifier {
 }
 
 final airingTodayTVShowsNotifier =
-AsyncNotifierProvider<AiringTodayTVShowsNotifier, List<Result>>(
-      () => AiringTodayTVShowsNotifier(StorageKey.AIRING_TODAY_TV),
+    AsyncNotifierProvider<AiringTodayTVShowsNotifier, List<Result>>(
+  () => AiringTodayTVShowsNotifier(StorageKey.AIRING_TODAY_TV),
 );
 
 class PopularTVShowsNotifier extends ShowNotifier {
@@ -192,8 +194,8 @@ class PopularTVShowsNotifier extends ShowNotifier {
 }
 
 final popularTVShowsNotifier =
-AsyncNotifierProvider<PopularTVShowsNotifier, List<Result>>(
-      () => PopularTVShowsNotifier(StorageKey.POPULAR_TV),
+    AsyncNotifierProvider<PopularTVShowsNotifier, List<Result>>(
+  () => PopularTVShowsNotifier(StorageKey.POPULAR_TV),
 );
 
 // STATE
@@ -260,15 +262,6 @@ class ShowsProvider extends StateNotifier<ShowsState> {
       log("Genre Exception -> $e");
     } catch (e) {
       log("Genre Error -> $e");
-    }
-  }
-
-  Future<void> _getNative() async {
-    try {
-      final deviceName = await NativeBridge.getDeviceName();
-      log("Device name -> $deviceName");
-    } catch (e) {
-      log("Native Exception -> $e");
     }
   }
 

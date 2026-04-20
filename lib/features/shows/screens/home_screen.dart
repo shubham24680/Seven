@@ -8,16 +8,17 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = ref.watch(scrollProvider(0)).scrollController;
-    final states = _collections.map((e) {
+    final providerStates = _collections.map((e) {
       final prov = e.provider;
       if (prov == null) return null;
       return ref.watch(prov);
     }).toList();
-    final errorCount = states
+    final providerCount = providerStates.whereType<AsyncValue<List<Result>>>().length;
+    final errorCount = providerStates
         .where((s) => s?.hasError == true && s?.isLoading == false)
         .length;
 
-    if (errorCount == _collections.length) {
+    if (providerCount > 0 && errorCount == providerCount) {
       return ErrorScreen(
         goBack: false,
         onPressed: () {

@@ -11,19 +11,19 @@ class OnboadingScreen extends ConsumerWidget {
     bool isLastIndex = pageState.currentIndex != onboarding.length - 1;
 
     Widget buildButton(int index) {
-      final buttonNature =
-          (DimensionUtil().deviceSize == DeviceSize.SMALL)
-              ? ButtonNature.UNBOUND
-              : ButtonNature.BOUND;
+      final buttonNature = (DimensionUtil().deviceSize == DeviceSize.SMALL)
+          ? ButtonNature.UNBOUND
+          : ButtonNature.BOUND;
 
       return CustomButton(
           buttonType: ButtonType.ELEVATED,
           buttonNature: buttonNature,
-          onPressed: () {
+          onPressed: () async {
             if (index + 1 < onboarding.length) {
               pageController.jumpToPage(pageState.currentIndex + 1);
             } else {
-              pageController.changeFirstTimeVisitStatus();
+              await pageController.changeFirstTimeVisitStatus();
+              if (!context.mounted) return;
               context.go('/');
             }
           },
