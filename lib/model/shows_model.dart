@@ -1,13 +1,5 @@
 import 'package:seven/app/app.dart';
 
-enum MediaType {
-  MOVIE("Movie"),
-  TV("TV");
-
-  final String value;
-  const MediaType(this.value);
-}
-
 class ShowsModel extends Network<ShowsModel> {
   final Dates? dates;
   final int? page;
@@ -74,7 +66,7 @@ class Result extends Network<Result> {
   final List<String>? languages;
   final DateTime? lastAirDate;
   final EpisodeToAir? lastEpisodeToAir;
-  final MediaType mediaType;
+  final String? mediaType;
   final List<ProductionCompany>? networks;
   final EpisodeToAir? nextEpisodeToAir;
   final int? numberOfEpisodes;
@@ -129,7 +121,7 @@ class Result extends Network<Result> {
       this.video,
       this.voteAverage,
       this.voteCount,
-      this.mediaType = MediaType.MOVIE,
+      this.mediaType,
       this.createdBy,
       this.episodeRunTime,
       this.lastEpisodeToAir,
@@ -186,10 +178,7 @@ class Result extends Network<Result> {
       video: json["video"],
       voteAverage: json["vote_average"]?.toStringAsFixed(1),
       voteCount: json["vote_count"],
-      mediaType: MediaType.values.firstWhere(
-        (type) => type.name.toLowerCase() == json["media_type"]?.toLowerCase(),
-        orElse: () => MediaType.MOVIE,
-      ),
+      mediaType: json["media_type"],
       inProduction: json["in_production"],
       languages: (json["languages"] as List<dynamic>?)
           ?.map((x) => x as String)
@@ -255,7 +244,7 @@ class Result extends Network<Result> {
         "video": video,
         "vote_average": double.parse(voteAverage ?? "0.0"),
         "vote_count": voteCount,
-        "media_type": mediaType.name.toLowerCase(),
+        "media_type": mediaType,
         "in_production": inProduction,
         "languages": languages,
         "last_air_date": dateFormat(lastAirDate),

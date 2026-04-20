@@ -29,10 +29,17 @@ class HomeCarousel extends ConsumerWidget {
         data: (show) {
           final trendingShows =
               show.where((element) => element.posterPath != null).toList();
-          final currentShow = trendingShows[carouselState.carouselCurrentIndex];
+          if (trendingShows.isEmpty) {
+            return SizedBox(height: height, child: const HomeAppBar());
+          }
+          final currentIndex =
+              carouselState.carouselCurrentIndex >= trendingShows.length
+                  ? trendingShows.length - 1
+                  : carouselState.carouselCurrentIndex;
+          final currentShow = trendingShows[currentIndex];
           final bgImage = DimensionUtil().deviceSize == DeviceSize.SMALL
               ? currentShow.posterPath
-              : currentShow.backdropPath;
+              : (currentShow.backdropPath ?? currentShow.posterPath);
 
           Widget buildCarousel() {
             return CarouselSlider.builder(
@@ -42,14 +49,14 @@ class HomeCarousel extends ConsumerWidget {
                       ? trendingShows[index].posterPath
                       : trendingShows[index].backdropPath;
 
+                  final query = {
+                    "path": trendingShows[index].mediaType?.toLowerCase(),
+                    "id": trendingShows[index].id.toString(),
+                  };
+
                   return CustomImage(
                       imageType: ImageType.REMOTE,
-                      onClick: () => context.push(
-                          "/detail/${trendingShows[index].id}",
-                          extra: trendingShows[index]
-                              .mediaType
-                              .name
-                              .toLowerCase()),
+                      onClick: () => context.push("/detail", extra: query),
                       imageUrl: getImageUrl(image),
                       height: carouselHeight,
                       borderRadius:
@@ -58,7 +65,7 @@ class HomeCarousel extends ConsumerWidget {
                 options: CarouselOptions(
                     onPageChanged: (index, _) =>
                         carouselController.nextTo(index),
-                    initialPage: carouselState.carouselCurrentIndex,
+                    initialPage: currentIndex,
                     height: carouselHeight,
                     viewportFraction: viewportFraction,
                     autoPlay: true,
@@ -73,9 +80,10 @@ class HomeCarousel extends ConsumerWidget {
                     colors: [AppColors.transparent, AppColors.black3]));
 
             final showGenre = getGenre(currentShow.genreIds?.firstOrNull);
+            final mediaType = currentShow.mediaType;
             final item = <String>[
               if (showGenre != null) showGenre,
-              currentShow.mediaType.value
+              if (mediaType != null) mediaType,
             ];
             final overview = currentShow.overview ?? "";
             final child = Container(
@@ -111,6 +119,6 @@ class HomeCarousel extends ConsumerWidget {
           ]);
         },
         loading: () => customShimmer(height: height),
-        error: (error, stackTrace) => const SizedBox.shrink());
+        error: (error, stackTrace) => const HomeAppBar());
   }
 }

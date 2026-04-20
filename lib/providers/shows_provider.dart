@@ -37,6 +37,8 @@ abstract class ShowNotifier extends AsyncNotifier<List<Result>> {
   }
 
   Future<void> refresh() async {
+    _currentPage = 1;
+    _hasMorePages = true;
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       return build();
@@ -88,7 +90,7 @@ class TopShowNotifier extends ShowNotifier {
 }
 
 final topShowsProvider = AsyncNotifierProvider<TopShowNotifier, List<Result>>(
-  () => TopShowNotifier(StorageKey.TOP_20_MOVIES),
+  () => TopShowNotifier(StorageKey.TOP_SHOWS),
 );
 
 class NewReleaseShowsNotifier extends ShowNotifier {
@@ -149,6 +151,51 @@ class PopularInIndiaShowsNotifier extends ShowNotifier {
 final popularInIndiaShowsProvider =
     AsyncNotifierProvider<PopularInIndiaShowsNotifier, List<Result>>(
   () => PopularInIndiaShowsNotifier(StorageKey.POPULAR_IN_INDIA),
+);
+
+class OnTheAirTVShowsNotifier extends ShowNotifier {
+  OnTheAirTVShowsNotifier(super.key);
+
+  @override
+  Future<ShowsModel> fetchShows(int page) async {
+    final service = ShowsServices.instance;
+    return service.fetchOnTheAirTVShows(page: page);
+  }
+}
+
+final onTheAirTVShowsNotifier =
+    AsyncNotifierProvider<OnTheAirTVShowsNotifier, List<Result>>(
+  () => OnTheAirTVShowsNotifier(StorageKey.ON_THE_AIR),
+);
+
+class AiringTodayTVShowsNotifier extends ShowNotifier {
+  AiringTodayTVShowsNotifier(super.key);
+
+  @override
+  Future<ShowsModel> fetchShows(int page) async {
+    final service = ShowsServices.instance;
+    return service.fetchAiringTodayTVShows(page: page);
+  }
+}
+
+final airingTodayTVShowsNotifier =
+    AsyncNotifierProvider<AiringTodayTVShowsNotifier, List<Result>>(
+  () => AiringTodayTVShowsNotifier(StorageKey.AIRING_TODAY_TV),
+);
+
+class PopularTVShowsNotifier extends ShowNotifier {
+  PopularTVShowsNotifier(super.key);
+
+  @override
+  Future<ShowsModel> fetchShows(int page) async {
+    final service = ShowsServices.instance;
+    return service.fetchPopularTVShows(page: page);
+  }
+}
+
+final popularTVShowsNotifier =
+    AsyncNotifierProvider<PopularTVShowsNotifier, List<Result>>(
+  () => PopularTVShowsNotifier(StorageKey.POPULAR_TV),
 );
 
 // STATE
@@ -215,15 +262,6 @@ class ShowsProvider extends StateNotifier<ShowsState> {
       log("Genre Exception -> $e");
     } catch (e) {
       log("Genre Error -> $e");
-    }
-  }
-
-  Future<void> _getNative() async {
-    try {
-      final deviceName = await NativeBridge.getDeviceName();
-      log("Device name -> $deviceName");
-    } catch (e) {
-      log("Native Exception -> $e");
     }
   }
 

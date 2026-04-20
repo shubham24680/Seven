@@ -3,10 +3,10 @@ import 'dart:developer';
 import 'package:seven/app/app.dart';
 
 class DetailScreen extends ConsumerWidget {
-  const DetailScreen(this.id, this.type, {super.key});
+  const DetailScreen(this.path, this.id, {super.key});
 
   final String id;
-  final String type;
+  final String path;
 
   static const _sidePadding = AppConstants.SIDE_PADDING;
   static const _gradientDecoration = BoxDecoration(
@@ -20,7 +20,7 @@ class DetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final showPath = "$type/$id";
+    final showPath = "$path/$id";
     final showDetail = ref.watch(showDetailProvider(showPath));
     final showCollection = ref.watch(showCollectionProvider(showPath));
     final showCredits = ref.watch(showCreditsProvider(showPath));
@@ -50,7 +50,7 @@ class DetailScreen extends ConsumerWidget {
             _buildOverviewSection(context, detail),
           SizedBox(height: 16.w),
           _buildEpisode(context, detail.nextEpisodeToAir, "Upcoming Episode"),
-          _buildEpisode(context, detail.lastEpisodeToAir, "Recent Episode"),
+          _buildEpisode(context, detail.lastEpisodeToAir, "Last Episode"),
           _buildSeasons(context, detail),
           _buildCollection(context, showCollection, detail),
           _buildCredits(context, showCredits),
@@ -343,9 +343,11 @@ class DetailScreen extends ConsumerWidget {
 
   Widget _buildCollection(BuildContext context,
       AsyncValue<Result> collectionDetail, Result detail) {
-    final collectionName =
-        detail.belongsToCollection?.title ?? "More in the series";
+    final belongsToCollection = detail.belongsToCollection;
+    final id = belongsToCollection?.id;
+    final collectionName = belongsToCollection?.title ?? "More in the series";
 
+    if (id == null) return SizedBox.shrink();
     return collectionDetail.when(
         data: (show) {
           final filteredParts =
@@ -356,9 +358,8 @@ class DetailScreen extends ConsumerWidget {
                 collectionName: collectionName,
                 isLoading: false,
                 results: filteredParts,
-                onPressed: () => context.push(
-                    "/detailCollection/$collectionName",
-                    extra: show.parts)),
+                onPressed: () =>
+                    context.push("/detailCollection/$id")),
             const Divider(color: AppColors.black2)
                 .paddingSymmetric(horizontal: _sidePadding)
           ]);
@@ -378,7 +379,7 @@ class DetailScreen extends ConsumerWidget {
                     collectionName: "Cast & Crew",
                     isLoading: false,
                     onPressed: () =>
-                        context.push("/castCollection/$id", extra: type))
+                        context.push("/castCollection/$id", extra: path))
                 .buildText(),
             SizedBox(
                 height: 160.w,

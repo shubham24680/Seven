@@ -8,9 +8,10 @@ class AppImages {
   static const FANTASY = "assets/images/genre_cards/back_drop/fanstasy.webp";
   static const HISTORY = "assets/images/genre_cards/back_drop/history.webp";
   static const HORROR = "assets/images/genre_cards/back_drop/horror.webp";
+  static const IRON_MAN = "assets/images/genre_cards/back_drop/iron_man.webp";
   static const MYSTERY = "assets/images/genre_cards/back_drop/mystery.webp";
-  static const SCIENCE_FICTION =
-      "assets/images/genre_cards/back_drop/science_fiction.webp";
+  static const SCIENCE_FICTION = "assets/images/genre_cards/back_drop/science_fiction.webp";
+  static const SPIDERMAN = "assets/images/genre_cards/back_drop/spiderman.webp";
   static const THRILLER = "assets/images/genre_cards/back_drop/thriller.webp";
   static const ONBOARDING_1 = "assets/images/onboarding_1.webp";
   static const ONBOARDING_2 = "assets/images/onboarding_2.webp";

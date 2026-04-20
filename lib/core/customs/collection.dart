@@ -14,7 +14,8 @@ class CustomCollection extends StatelessWidget {
       this.onPressed,
       this.results,
       this.blurValue = 6.0,
-      this.screenPath = "/detail/",
+      this.screenPath = "/detail",
+      this.type = "movie",
       this.isSafeHeight = false});
 
   final ScrollController? scrollController;
@@ -30,6 +31,7 @@ class CustomCollection extends StatelessWidget {
   final List<Result>? results;
   final double blurValue;
   final String screenPath;
+  final String? type;
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +61,13 @@ class CustomCollection extends StatelessWidget {
           width: isVertical ? width : null,
           results: results?[index],
           blurValue: blurValue,
-          event: () => context.push("$screenPath${results?[index].id}",
-              extra: results?[index].mediaType.name.toLowerCase()));
+          event: () {
+            final query = {
+              "path": (results?[index].mediaType ?? type ?? "").toLowerCase(),
+              "id": results?[index].id.toString(),
+            };
+            context.push(screenPath, extra: query);
+          });
     }
 
     final itemCount =
@@ -75,7 +82,9 @@ class CustomCollection extends StatelessWidget {
             left: AppConstants.SIDE_PADDING,
             right: AppConstants.SIDE_PADDING,
             top: isVertical ? verticalPadding : 0,
-            bottom: isVertical ? AppConstants.SIDE_PADDING + DimensionUtil().bottomBarHeight : 0),
+            bottom: isVertical
+                ? AppConstants.SIDE_PADDING + DimensionUtil().bottomBarHeight
+                : 0),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: incresedCount * crossAxisCount,
             crossAxisSpacing: 0.5 * AppConstants.SIDE_PADDING,
