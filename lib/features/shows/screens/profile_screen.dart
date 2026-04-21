@@ -30,7 +30,7 @@ class ProfileScreen extends StatelessWidget {
           }),
           SizedBox(height: 16.w),
           buildButtons(context, false),
-          // contentList(context),
+          contentList(context),
           // CustomText(
           //     text: "Version 1.1.0",
           //     size: 0.015.sh,
@@ -75,41 +75,52 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget contentList(BuildContext context) {
+    final profile = AppConstants.PROFILE;
     return ListView.separated(
-        itemCount: AppConstants.PROFILE.length,
+        itemCount: profile.length,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         padding: EdgeInsets.only(top: 32.w),
-        itemBuilder: (_, index) => InkWell(
-            onTap: () {
-              final route = AppConstants.PROFILE[index].string3;
-              if (route != null) context.push(route);
-            },
-            child: SizedBox(
-                height: 0.07.sh,
-                child: Row(children: [
-                  CustomImage(
-                      imageType: ImageType.SVG_LOCAL,
-                      imageUrl: AppConstants.PROFILE[index].string1,
-                      height: 24.w,
-                      color: AppColors.vividNightfall4),
-                  SizedBox(width: 16.w),
-                  CustomText(
-                      text: AppConstants.PROFILE[index].string2 ?? "",
-                      weight: FontWeight.w600),
-                  const Spacer(),
-                  if (index == 0)
+        itemBuilder: (_, index) {
+          final item = profile[index];
+          final status = item.string4;
+
+          return InkWell(
+              onTap: () {
+                final route = item.string3;
+                if (route != null) {
+                  if (route.startsWith("http")) {
+                    customUrlLauncher(route);
+                  } else {
+                    context.push(route);
+                  }
+                }
+              },
+              child: SizedBox(
+                  height: 0.07.sh,
+                  child: Row(children: [
+                    CustomImage(
+                        imageType: ImageType.SVG_LOCAL,
+                        imageUrl: item.string1,
+                        height: 24.w,
+                        color: AppColors.vividNightfall4),
+                    SizedBox(width: 16.w),
                     CustomText(
-                        text: "Disabled",
-                        size: 14.w,
-                        color: AppColors.lightSteel1.withAlpha(150)),
-                  SizedBox(width: 8.w),
-                  CustomImage(
-                      imageType: ImageType.SVG_LOCAL,
-                      imageUrl: AppSvgs.ARROW_RIGHT,
-                      height: 16.w,
-                      color: AppColors.lightSteel1.withAlpha(150))
-                ]))),
+                        text: item.string2 ?? "", weight: FontWeight.w600),
+                    const Spacer(),
+                    if (status != null)
+                      CustomText(
+                          text: status,
+                          size: 14.w,
+                          color: AppColors.lightSteel1.withAlpha(150)),
+                    SizedBox(width: 8.w),
+                    CustomImage(
+                        imageType: ImageType.SVG_LOCAL,
+                        imageUrl: AppSvgs.ARROW_RIGHT,
+                        height: 16.w,
+                        color: AppColors.lightSteel1.withAlpha(150))
+                  ])));
+        },
         separatorBuilder: (_, index) =>
             Divider(color: AppColors.black2, height: 0));
   }

@@ -10,7 +10,8 @@ class AppImages {
   static const HORROR = "assets/images/genre_cards/back_drop/horror.webp";
   static const IRON_MAN = "assets/images/genre_cards/back_drop/iron_man.webp";
   static const MYSTERY = "assets/images/genre_cards/back_drop/mystery.webp";
-  static const SCIENCE_FICTION = "assets/images/genre_cards/back_drop/science_fiction.webp";
+  static const SCIENCE_FICTION =
+      "assets/images/genre_cards/back_drop/science_fiction.webp";
   static const SPIDERMAN = "assets/images/genre_cards/back_drop/spiderman.webp";
   static const THRILLER = "assets/images/genre_cards/back_drop/thriller.webp";
   static const ONBOARDING_1 = "assets/images/onboarding_1.webp";
@@ -26,7 +27,9 @@ class AppSvgs {
   static const CALENDAR = "assets/icons/outlined_icons/calendar.svg";
   static const FEMALE = "assets/icons/outlined_icons/female.svg";
   static const HOME = "assets/icons/filled_icons/home.svg";
-  static const HELP = "assets/icons/outlined_icons/help.svg";
+  static const TOC = "assets/icons/outlined_icons/toc.svg";
+  static const PRIVACY_POLICY =
+      "assets/icons/outlined_icons/privacy_policy.svg";
   static const LINK = "assets/icons/outlined_icons/link.svg";
   static const MALE = "assets/icons/outlined_icons/male.svg";
   static const NOTIFICATION = "assets/icons/outlined_icons/notification.svg";
