@@ -77,10 +77,11 @@ void customBottomSheet(BuildContext context, String title, Widget child,
           borderRadius: borderRadius));
 }
 
-Future<void> customUrlLauncher(String url) async {
+Future<void> customUrlLauncher(String url,
+    {LaunchMode launchMode = LaunchMode.platformDefault}) async {
   log("Url -> $url");
   final uri = Uri.parse(url);
-  if (!await launchUrl(uri)) {
+  if (!await launchUrl(uri, mode: launchMode)) {
     log("Error while launch url");
   }
 }

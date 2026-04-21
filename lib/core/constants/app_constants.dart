@@ -142,11 +142,19 @@ class AppConstants {
 
   // PROFILE
   static List<HelperModel> PROFILE = [
+    // HelperModel(
+    //     string1: AppSvgs.NOTIFICATION,
+    //     string2: "Notifications",
+    //     string3: "/notificationSettings"),
+    // HelperModel(string1: AppSvgs.HELP, string2: "Help", string3: "/help"),
     HelperModel(
-        string1: AppSvgs.NOTIFICATION,
-        string2: "Notifications",
-        string3: "/notificationSettings"),
-    HelperModel(string1: AppSvgs.HELP, string2: "Help", string3: "/help"),
+        string1: AppSvgs.TOC,
+        string2: "Term and conditions",
+        string3: ApiConstants.TERMS_AND_CONDITIONS),
+    HelperModel(
+        string1: AppSvgs.PRIVACY_POLICY,
+        string2: "Privacy policy",
+        string3: ApiConstants.PRIVACY_POLICY),
   ];
 
   static List<HelperModel> GENDER = [
