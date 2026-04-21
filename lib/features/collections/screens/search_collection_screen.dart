@@ -79,7 +79,7 @@ class SearchCollectionScreen extends ConsumerWidget {
         extendBodyBehindAppBar: true,
         appBar: AppBar(
             automaticallyImplyLeading: false,
-            toolbarHeight: 0.065.sh,
+            toolbarHeight: 60.w,
             title: title,
             bottom: bottomOption,
             flexibleSpace: blurEffect(
