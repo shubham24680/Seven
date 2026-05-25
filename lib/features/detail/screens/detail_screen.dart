@@ -358,8 +358,7 @@ class DetailScreen extends ConsumerWidget {
                 collectionName: collectionName,
                 isLoading: false,
                 results: filteredParts,
-                onPressed: () =>
-                    context.push("/detailCollection/$id")),
+                onPressed: () => context.push("/detailCollection/$id")),
             const Divider(color: AppColors.black2)
                 .paddingSymmetric(horizontal: _sidePadding)
           ]);

@@ -1,8 +1,11 @@
 import 'dart:developer' as developer;
 import 'dart:math';
+
+import 'package:flutter/foundation.dart';
 import 'package:seven/app/app.dart';
 
 enum ScaleType { WIDTH, HEIGHT, MIN, MAX, AVG }
+
 enum DeviceSize {
   SMALL(550, 1.0),
   MEDIUM(1100, 0.5),
@@ -27,6 +30,11 @@ class DimensionUtil {
   factory DimensionUtil() => _instance ??= DimensionUtil._();
   static const _defaultSize = Size(360.0, 800.0);
 
+  @visibleForTesting
+  static void resetForTesting() {
+    _instance = null;
+  }
+
   late Size _designSize;
   late MediaQueryData _mediaQueryData;
   late ScaleType _scaleType;
@@ -47,9 +55,11 @@ class DimensionUtil {
   Size get designSize => _designSize;
   double get deviceWidth => _mediaQueryData.size.width;
   double get deviceHeight => _mediaQueryData.size.height;
-  DeviceSize get deviceSize => DeviceSize.values.firstWhere((device) => device.minWidth > deviceWidth);
+  DeviceSize get deviceSize =>
+      DeviceSize.values.firstWhere((device) => device.minWidth > deviceWidth);
 
-  double get scaleWidth => (deviceSize.reductionPercentage * deviceWidth) / _designSize.width;
+  double get scaleWidth =>
+      (deviceSize.reductionPercentage * deviceWidth) / _designSize.width;
   double get scaleHeight => deviceHeight / _designSize.height;
   double get scaleMin => min(scaleWidth, scaleHeight);
   double get scaleMax => max(scaleWidth, scaleHeight);
@@ -68,7 +78,8 @@ class DimensionUtil {
   double setSp(num fontSize) => fontSize * scale;
 }
 
-typedef DimensionUtilInitBuilder = Widget Function(BuildContext context, Widget? child);
+typedef DimensionUtilInitBuilder = Widget Function(
+    BuildContext context, Widget? child);
 
 class DimensionUtilInit extends StatelessWidget {
   const DimensionUtilInit(
@@ -90,16 +101,18 @@ class DimensionUtilInit extends StatelessWidget {
         DimensionUtil.init(context, designSize, scaleType);
 
         Future.microtask(() {
-          developer.log("\ndeviceWidth - ${DimensionUtil().deviceWidth}\n"
+          developer.log(
+              "\ndeviceWidth - ${DimensionUtil().deviceWidth}\n"
               "deviceHeight - ${DimensionUtil().deviceHeight}\n"
               "deviceSize - ${DimensionUtil().deviceSize}\n"
               "scaleWidth - ${DimensionUtil().scaleWidth}\n"
               "scaleHeight - ${DimensionUtil().scaleHeight}\n"
               "scaleMin - ${DimensionUtil().scaleMin}\n"
-              "isLandscape - ${DimensionUtil().isLandscape}\n", name: "Dimension");
+              "isLandscape - ${DimensionUtil().isLandscape}\n",
+              name: "Dimension");
         });
 
-        if(builder != null) {
+        if (builder != null) {
           return builder!(context, child);
         }
 

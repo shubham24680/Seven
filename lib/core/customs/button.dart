@@ -1,7 +1,8 @@
 import 'package:seven/app/app.dart';
 
 enum ButtonType { ELEVATED, ICON, TEXT }
-enum ButtonNature {UNBOUND, BOUND}
+
+enum ButtonNature { UNBOUND, BOUND }
 
 class CustomButton extends StatelessWidget {
   const CustomButton(
@@ -64,8 +65,10 @@ class CustomButton extends StatelessWidget {
             onPressed: onPressed,
             style: ElevatedButton.styleFrom(
                 backgroundColor: widgetBackgroundColor,
-                fixedSize: (buttonNature == ButtonNature.BOUND) ? getSize() : null,
-                minimumSize: (buttonNature == ButtonNature.UNBOUND) ? getSize() : null,
+                fixedSize:
+                    (buttonNature == ButtonNature.BOUND) ? getSize() : null,
+                minimumSize:
+                    (buttonNature == ButtonNature.UNBOUND) ? getSize() : null,
                 shape: RoundedRectangleBorder(
                     side: BorderSide(
                         color: onPressed == null

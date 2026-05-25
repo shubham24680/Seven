@@ -2,7 +2,8 @@ import 'package:intl/intl.dart';
 import 'package:seven/app/app.dart';
 
 // IMAGE
-String? getImageUrl(String? endPoint, {ImageQuality quality = ImageQuality.ORIGINAL}) {
+String? getImageUrl(String? endPoint,
+    {ImageQuality quality = ImageQuality.ORIGINAL}) {
   if (endPoint == null || endPoint.isEmpty) return null;
 
   final imageUrl = ApiConstants.IMAGE_PATH + quality.pixel + endPoint;
@@ -19,6 +20,7 @@ String? getRuntime(int? runtime) {
 
 // DATE
 enum FormatType { YMMMD, Y, DATE }
+
 dynamic getDateFormat(dynamic date, {FormatType formatType = FormatType.Y}) {
   if (date == null) return null;
 

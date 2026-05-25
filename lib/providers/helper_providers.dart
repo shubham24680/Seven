@@ -28,7 +28,7 @@ class ScrollNotifier extends StateNotifier<ScrollState> {
   }
 
   void _onScroll() {
-    if(!state.scrollController.hasClients) return;
+    if (!state.scrollController.hasClients) return;
     final position = state.scrollController.position;
     final pixels = position.pixels;
     final delta = pixels - _lastScroll;

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:seven/app/app.dart';
 
 class SPD {
@@ -8,13 +9,19 @@ class SPD {
 
   SPD._(this._prefs);
 
+  @visibleForTesting
+  static void resetForTesting() {
+    _instance = null;
+  }
+
   static Future<SPD> getInstance() async {
-    if(_instance != null) return _instance!;
+    if (_instance != null) return _instance!;
     final prefs = await SharedPreferences.getInstance();
     return _instance ??= SPD._(prefs);
   }
 
-  bool containsKey(StorageKey storageKey) => _prefs?.containsKey(storageKey.name.toLowerCase()) ?? false;
+  bool containsKey(StorageKey storageKey) =>
+      _prefs?.containsKey(storageKey.name.toLowerCase()) ?? false;
   Set<String> getAllKeys() => _prefs?.getKeys() ?? {};
 
   //GET
@@ -27,7 +34,9 @@ class SPD {
       const (bool) => _prefs?.getBool(key) as T?,
       const (String) => _prefs?.getString(key) as T?,
       const (List<String>) => _prefs?.getStringList(key) as T?,
-      const (Map<String, dynamic>) => _prefs?.getString(key) != null ? Map<String, dynamic>.from(jsonDecode(_prefs!.getString(key)!)) as T : null,
+      const (Map<String, dynamic>) => _prefs?.getString(key) != null
+          ? Map<String, dynamic>.from(jsonDecode(_prefs!.getString(key)!)) as T
+          : null,
       _ => null,
     };
   }
@@ -45,13 +54,14 @@ class SPD {
       final bool v => await prefs.setBool(key, v),
       final String v => await prefs.setString(key, v),
       final List<String> v => await prefs.setStringList(key, v),
-    final Map<String, dynamic> v => await prefs.setString(key, jsonEncode(v)),
+      final Map<String, dynamic> v => await prefs.setString(key, jsonEncode(v)),
       _ => false,
     };
   }
 
   //CLEAR
-  Future<bool> remove(StorageKey storageKey) async => await _prefs?.remove(storageKey.name.toLowerCase()) ?? false;
+  Future<bool> remove(StorageKey storageKey) async =>
+      await _prefs?.remove(storageKey.name.toLowerCase()) ?? false;
   Future<bool> clearAll() async => await _prefs?.clear() ?? false;
   Future<bool> clearProfileData() async {
     final prefs = _prefs;

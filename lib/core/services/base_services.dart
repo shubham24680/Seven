@@ -28,8 +28,7 @@ class BaseService {
     try {
       final uri = _buildUri(apiHost, version, endPoint, queryParams);
       final headers = _headers();
-      log('${responseType.name} Request: $uri',
-          name: 'BaseService');
+      log('${responseType.name} Request: $uri', name: 'BaseService');
 
       switch (responseType) {
         case ResponseType.GET:

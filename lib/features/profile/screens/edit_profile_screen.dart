@@ -188,7 +188,8 @@ class EditProfileScreen extends ConsumerWidget {
                     text: profileState.tryEditing ? "Save" : "Edit",
                     weight: FontWeight.w900))
           ],
-        ).paddingFromLTRB(left: _padding, right: _padding, bottom: bottomPadding);
+        ).paddingFromLTRB(
+            left: _padding, right: _padding, bottom: bottomPadding);
 
     return PopScope(
         onPopInvokedWithResult: (didPop, result) =>
@@ -201,7 +202,8 @@ class EditProfileScreen extends ConsumerWidget {
                 }, "Edit Profile"),
                 body: Container(
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: _padding, vertical: 2 * _padding),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: _padding, vertical: 2 * _padding),
                     decoration: getDecoration(),
                     child: Column(children: [
                       CustomImage(

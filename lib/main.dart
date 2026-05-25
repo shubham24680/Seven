@@ -11,18 +11,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProviderScope(
-      child: DimensionUtilInit(
-        scaleType: ScaleType.WIDTH,
-          builder: (context, child) {
-            final screenWidth = MediaQuery.of(context).size.width;
-            return MaterialApp.router(
-              key: ValueKey('app_router_$screenWidth'),
-              debugShowCheckedModeBanner: false,
-              title: "Seven",
-              routerConfig: routes,
-              theme: darkTheme,
-            );
-          },
-        child: SizedBox.shrink()));
+        child: DimensionUtilInit(
+            scaleType: ScaleType.WIDTH,
+            builder: (context, child) {
+              final screenWidth = MediaQuery.of(context).size.width;
+              return MaterialApp.router(
+                key: ValueKey('app_router_$screenWidth'),
+                debugShowCheckedModeBanner: false,
+                title: "Seven",
+                routerConfig: routes,
+                theme: darkTheme,
+              );
+            },
+            child: SizedBox.shrink()));
   }
 }

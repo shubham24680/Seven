@@ -16,7 +16,8 @@ class Shows extends ConsumerWidget {
             icon: buildIcon(bottomIcon[index].icon, currentIndex == index)));
 
     final bottomNavigationBar = BottomNavigationBar(
-        onTap: (index) => ref.read(bottomNavigationProvider.notifier).state = index,
+        onTap: (index) =>
+            ref.read(bottomNavigationProvider.notifier).state = index,
         currentIndex: currentIndex,
         backgroundColor: AppColors.black4,
         showSelectedLabels: false,

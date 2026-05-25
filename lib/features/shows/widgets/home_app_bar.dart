@@ -7,16 +7,16 @@ class HomeAppBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profileIndex = ref.watch(profileProvider).profilePicIndex;
     final bottomNavController = ref.watch(bottomNavigationProvider.notifier);
-    final topPadding =
-        DimensionUtil().statusBarHeight;
-    
+    final topPadding = DimensionUtil().statusBarHeight;
+
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       CustomImage(
           imageType: ImageType.LOCAL,
           imageUrl: AppImages.AVATARS[profileIndex],
           height: 36.w,
           borderRadius: BorderRadius.circular(1.sw),
-          onClick: () => bottomNavController.state = AppConstants.BOTTOM_NAVIGATION.length - 1),
+          onClick: () => bottomNavController.state =
+              AppConstants.BOTTOM_NAVIGATION.length - 1),
       CustomButton(
           buttonType: ButtonType.ICON,
           icon: AppSvgs.SEARCH_OUTLINED,

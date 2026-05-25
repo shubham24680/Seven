@@ -13,7 +13,8 @@ class HomeScreen extends ConsumerWidget {
       if (prov == null) return null;
       return ref.watch(prov);
     }).toList();
-    final providerCount = providerStates.whereType<AsyncValue<List<Result>>>().length;
+    final providerCount =
+        providerStates.whereType<AsyncValue<List<Result>>>().length;
     final errorCount = providerStates
         .where((s) => s?.hasError == true && s?.isLoading == false)
         .length;

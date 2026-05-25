@@ -44,8 +44,10 @@ class ProfileState {
 }
 
 class ProfileProvider extends StateNotifier<ProfileState> {
-  ProfileProvider() : super(ProfileState.initial()) {
-    loadData();
+  ProfileProvider({bool loadOnInit = true}) : super(ProfileState.initial()) {
+    if (loadOnInit) {
+      loadData();
+    }
   }
 
   Future<void> loadData() async {
