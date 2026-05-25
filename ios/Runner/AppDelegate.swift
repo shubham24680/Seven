@@ -9,7 +9,7 @@ import UIKit
   ) -> Bool {
           GeneratedPluginRegistrant.register(with: self)
       let controller = window?.rootViewController as! FlutterViewController
-      let channel = FlutterMethodChannel(name: "com.example.seven/native", binaryMessenger: controller.binaryMessenger)
+      let channel = FlutterMethodChannel(name: "com.shubham.seven/native", binaryMessenger: controller.binaryMessenger)
       
       channel.setMethodCallHandler {(call, result) in
           if call.method == "getDeviceName" {

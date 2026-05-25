@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:flutter/services.dart';
 
 class NativeBridge {
-  // static const _channel = MethodChannel("com.example.seven/native");
+  // static const _channel = MethodChannel("com.shubham.seven/native");
 
   // static Future<String?> getDeviceName() async {
   //   try {

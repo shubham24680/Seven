@@ -1,4 +1,4 @@
-package com.example.seven
+package com.shubham.seven
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -6,7 +6,7 @@ import io.flutter.plugin.common.MethodChannel
 import android.os.Build
 
 class MainActivity : FlutterActivity() {
-    private val CHANNEL = "com.example.seven/native"
+    private val CHANNEL = "com.shubham.seven/native"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
