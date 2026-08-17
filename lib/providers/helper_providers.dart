@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:seven/core/packages/app_packages.dart';
 
 final bottomNavigationProvider = StateProvider<int>((ref) => 0);
